@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import { CustomTable } from "../components/CustomTable";
 import HeaderBar from "../components/HeaderBar";
 import CustomModal from "../components/Modal";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 
 const FoodCategory = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -20,6 +22,9 @@ const FoodCategory = () => {
   const handleEdit = () => {
     setOpenModal(true);
     setIsEditing(true);
+  };
+  const handleHide = () => {
+    setIsHidden(!isHidden);
   };
 
   const handleDelete = () => {};
@@ -37,7 +42,7 @@ const FoodCategory = () => {
       dataIndex: "actions",
       key: "actions",
       render: (_, data) => (
-        <>
+        <div className="flex flex-wrap">
           <Button
             className="bg-blue-600 font-medium text-gray-100"
             onClick={() => handleEdit(data)}
@@ -46,7 +51,7 @@ const FoodCategory = () => {
           </Button>
           &nbsp;
           <Popconfirm
-            title="Are you sure to delete this User?"
+            title="Are you sure to delete this Category?"
             onConfirm={() => handleDelete(data)}
             okText="Yes"
             cancelText="No"
@@ -54,8 +59,19 @@ const FoodCategory = () => {
             <Button className="bg-red-600 font-medium text-gray-100">
               Delete
             </Button>
+          </Popconfirm>{" "}
+          &nbsp;
+          <Popconfirm
+            title="Are you sure to Hide category?"
+            onConfirm={() => handleHide(data)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button className="bg-indigo-700 font-medium text-gray-100 text-xl flex items-center">
+              {isHidden ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+            </Button>
           </Popconfirm>
-        </>
+        </div>
       ),
     },
   ];
