@@ -9,7 +9,7 @@ const AdminLayout = () => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider theme="light" width={250}>
-        <div className="logo h-14 flex items-center justify-center font-semibold text-xl text-blue-900">
+        <div className="logo h-14 flex items-center justify-center font-semibold text-xl text-blue -900">
           PIE ADMIN PANEL
         </div>
         <MenuBar />
@@ -19,7 +19,7 @@ const AdminLayout = () => {
         <Header />
 
         <Content className=" ">
-          <div className="bg-slate-200 min-h-[93.5vh] container">
+          <div className="bg-slate-200 min-h-[93.5vh] mx-auto">
             {/* {children} */}
             <Routes>
               {AdminRoutes.map((r, index) => (
