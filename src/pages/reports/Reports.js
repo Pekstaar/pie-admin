@@ -1,6 +1,6 @@
 import React from "react";
-import { CustomTable } from "../components/CustomTable";
-import HeaderBar from "../components/HeaderBar";
+import { CustomTable } from "../../components/CustomTable";
+import HeaderBar from "../../components/HeaderBar";
 
 const Reports = () => {
   const columns = [

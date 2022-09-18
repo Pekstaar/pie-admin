@@ -1,12 +1,14 @@
 import { Button, Form, Input, Popconfirm } from "antd";
 import React, { useState } from "react";
-import { CustomTable } from "../components/CustomTable";
-import HeaderBar from "../components/HeaderBar";
-import CustomModal from "../components/Modal";
+import { CustomTable } from "../../components/CustomTable";
+import HeaderBar from "../../components/HeaderBar";
+import CustomModal from "../../components/Modal";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 
-const Questions = () => {
+const FoodCategory = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -20,6 +22,9 @@ const Questions = () => {
   const handleEdit = () => {
     setOpenModal(true);
     setIsEditing(true);
+  };
+  const handleHide = () => {
+    setIsHidden(!isHidden);
   };
 
   const handleDelete = () => {};
@@ -37,7 +42,7 @@ const Questions = () => {
       dataIndex: "actions",
       key: "actions",
       render: (_, data) => (
-        <>
+        <div className="flex flex-wrap">
           <Button
             className="bg-blue-600 font-medium text-gray-100"
             onClick={() => handleEdit(data)}
@@ -46,7 +51,7 @@ const Questions = () => {
           </Button>
           &nbsp;
           <Popconfirm
-            title="Are you sure to delete this User?"
+            title="Are you sure to delete this Category?"
             onConfirm={() => handleDelete(data)}
             okText="Yes"
             cancelText="No"
@@ -54,8 +59,19 @@ const Questions = () => {
             <Button className="bg-red-600 font-medium text-gray-100">
               Delete
             </Button>
+          </Popconfirm>{" "}
+          &nbsp;
+          <Popconfirm
+            title="Are you sure to Hide category?"
+            onConfirm={() => handleHide(data)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button className="bg-indigo-700 font-medium text-gray-100 text-xl flex items-center">
+              {isHidden ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+            </Button>
           </Popconfirm>
-        </>
+        </div>
       ),
     },
   ];
@@ -64,9 +80,9 @@ const Questions = () => {
       <div className="container mx-auto flex flex-col p-3">
         <HeaderBar
           handlePress={handleOpenModal}
-          text={"ADD Question"}
-          title={"User Question"}
-          subtext={"Manage user Questions"}
+          text={"ADD CATEGORY"}
+          title={"Food Category"}
+          subtext={"Manage food categories"}
         />
 
         <CustomTable
@@ -80,7 +96,7 @@ const Questions = () => {
         handleCancel={handleCloseModal}
         handleOk={handleCloseModal}
         isModalOpen={openModal}
-        title={isEditing ? "Update Question" : "Create Question"}
+        title={isEditing ? "Update Category" : "Create Category"}
         w={800}
       >
         <Form.Item label="Description" name="description">
@@ -91,11 +107,35 @@ const Questions = () => {
   );
 };
 
-export default Questions;
+export default FoodCategory;
 
 const sampleUsers = [
   // },onst sampleUsers = [
   {
-    time: "new question ",
+    time: "Vitamins",
+  },
+  {
+    time: "drinks",
+  },
+  {
+    time: "snacks",
+  },
+  {
+    time: "Vitamins",
+  },
+  {
+    time: "drinks",
+  },
+  {
+    time: "snacks",
+  },
+  {
+    time: "Vitamins",
+  },
+  {
+    time: "drinks",
+  },
+  {
+    time: "snacks",
   },
 ];

@@ -1,14 +1,13 @@
-import { Button, Form, Input, Popconfirm } from "antd";
+import { Button, Form, Popconfirm, TimePicker } from "antd";
+import moment from "moment";
 import React, { useState } from "react";
-import { CustomTable } from "../components/CustomTable";
-import HeaderBar from "../components/HeaderBar";
-import CustomModal from "../components/Modal";
-import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import { CustomTable } from "../../components/CustomTable";
+import HeaderBar from "../../components/HeaderBar";
+import CustomModal from "../../components/Modal";
 
-const Currency = () => {
+const DeliveryTime = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [isHidden, setIsHidden] = useState(false);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -25,9 +24,6 @@ const Currency = () => {
   };
 
   const handleDelete = () => {};
-  const handleHide = () => {
-    setIsHidden(!isHidden);
-  };
 
   const columns = [
     {
@@ -42,7 +38,7 @@ const Currency = () => {
       dataIndex: "actions",
       key: "actions",
       render: (_, data) => (
-        <div className="flex flex-wrap">
+        <>
           <Button
             className="bg-blue-600 font-medium text-gray-100"
             onClick={() => handleEdit(data)}
@@ -51,7 +47,7 @@ const Currency = () => {
           </Button>
           &nbsp;
           <Popconfirm
-            title="Are you sure to delete this Currency?"
+            title="Are you sure to delete this User?"
             onConfirm={() => handleDelete(data)}
             okText="Yes"
             cancelText="No"
@@ -60,20 +56,7 @@ const Currency = () => {
               Delete
             </Button>
           </Popconfirm>
-          &nbsp;
-          <Popconfirm
-            title={`Are you sure to ${
-              !isHidden ? "activate" : "deactivate"
-            } currency?`}
-            onConfirm={() => handleHide(data)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button className="bg-indigo-700 font-medium text-gray-100 text-xl flex items-center">
-              {isHidden ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-            </Button>
-          </Popconfirm>
-        </div>
+        </>
       ),
     },
   ];
@@ -82,9 +65,9 @@ const Currency = () => {
       <div className="container mx-auto flex flex-col p-3">
         <HeaderBar
           handlePress={handleOpenModal}
-          text={"ADD CURRENCY"}
-          title={"Currencies"}
-          subtext={"Manage Currencies"}
+          text={"ADD TIME"}
+          title={"Delivery Time"}
+          subtext={"Manage time to deliver"}
         />
 
         <CustomTable
@@ -98,28 +81,35 @@ const Currency = () => {
         handleCancel={handleCloseModal}
         handleOk={handleCloseModal}
         isModalOpen={openModal}
-        title={isEditing ? "Update Currency" : "Create Currency"}
+        title={isEditing ? "Update Time" : "Create Time"}
         w={800}
       >
-        <Form.Item label="Currency" name="currency">
-          <Input />
+        <Form.Item label="Time" name="description">
+          <TimePicker
+            className="w-full"
+            onChange={() => {}}
+            defaultOpenValue={moment("00:00:00", "HH:mm:ss")}
+          />
         </Form.Item>
       </CustomModal>
     </>
   );
 };
 
-export default Currency;
+export default DeliveryTime;
 
 const sampleUsers = [
   // },onst sampleUsers = [
   {
-    time: "Dollar ",
+    time: "09:00 ",
   },
   {
-    time: "Yen ",
+    time: "12:00 ",
   },
   {
-    time: "kshs ",
+    time: "15:00",
+  },
+  {
+    time: " 16:00",
   },
 ];

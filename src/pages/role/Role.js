@@ -1,11 +1,10 @@
-import { Button, Form, Popconfirm, TimePicker } from "antd";
-import moment from "moment";
+import { Button, Form, Input, Popconfirm } from "antd";
 import React, { useState } from "react";
-import { CustomTable } from "../components/CustomTable";
-import HeaderBar from "../components/HeaderBar";
-import CustomModal from "../components/Modal";
+import { CustomTable } from "../../components/CustomTable";
+import HeaderBar from "../../components/HeaderBar";
+import CustomModal from "../../components/Modal";
 
-const DeliveryTime = () => {
+const Roles = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -65,9 +64,9 @@ const DeliveryTime = () => {
       <div className="container mx-auto flex flex-col p-3">
         <HeaderBar
           handlePress={handleOpenModal}
-          text={"ADD TIME"}
-          title={"Delivery Time"}
-          subtext={"Manage time to deliver"}
+          text={"ADD ROLE"}
+          title={"User Roles"}
+          subtext={"Manage user Roles"}
         />
 
         <CustomTable
@@ -81,35 +80,37 @@ const DeliveryTime = () => {
         handleCancel={handleCloseModal}
         handleOk={handleCloseModal}
         isModalOpen={openModal}
-        title={isEditing ? "Update Time" : "Create Time"}
+        title={isEditing ? "Update Role" : "Create Role"}
         w={800}
       >
-        <Form.Item label="Time" name="description">
-          <TimePicker
-            className="w-full"
-            onChange={() => {}}
-            defaultOpenValue={moment("00:00:00", "HH:mm:ss")}
-          />
+        <Form.Item label="Description" name="description">
+          <Input />
         </Form.Item>
       </CustomModal>
     </>
   );
 };
 
-export default DeliveryTime;
+export default Roles;
 
 const sampleUsers = [
   // },onst sampleUsers = [
   {
-    time: "09:00 ",
+    time: "Admin ",
   },
   {
-    time: "12:00 ",
+    time: "User ",
   },
   {
-    time: "15:00",
+    time: "Rider",
   },
   {
-    time: " 16:00",
+    time: "Admin ",
+  },
+  {
+    time: "User ",
+  },
+  {
+    time: "Rider",
   },
 ];

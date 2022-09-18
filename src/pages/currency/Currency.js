@@ -1,12 +1,14 @@
 import { Button, Form, Input, Popconfirm } from "antd";
 import React, { useState } from "react";
-import { CustomTable } from "../components/CustomTable";
-import HeaderBar from "../components/HeaderBar";
-import CustomModal from "../components/Modal";
+import { CustomTable } from "../../components/CustomTable";
+import HeaderBar from "../../components/HeaderBar";
+import CustomModal from "../../components/Modal";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 
-const Roles = () => {
+const Currency = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -23,6 +25,9 @@ const Roles = () => {
   };
 
   const handleDelete = () => {};
+  const handleHide = () => {
+    setIsHidden(!isHidden);
+  };
 
   const columns = [
     {
@@ -37,7 +42,7 @@ const Roles = () => {
       dataIndex: "actions",
       key: "actions",
       render: (_, data) => (
-        <>
+        <div className="flex flex-wrap">
           <Button
             className="bg-blue-600 font-medium text-gray-100"
             onClick={() => handleEdit(data)}
@@ -46,7 +51,7 @@ const Roles = () => {
           </Button>
           &nbsp;
           <Popconfirm
-            title="Are you sure to delete this User?"
+            title="Are you sure to delete this Currency?"
             onConfirm={() => handleDelete(data)}
             okText="Yes"
             cancelText="No"
@@ -55,7 +60,20 @@ const Roles = () => {
               Delete
             </Button>
           </Popconfirm>
-        </>
+          &nbsp;
+          <Popconfirm
+            title={`Are you sure to ${
+              !isHidden ? "activate" : "deactivate"
+            } currency?`}
+            onConfirm={() => handleHide(data)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button className="bg-indigo-700 font-medium text-gray-100 text-xl flex items-center">
+              {isHidden ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+            </Button>
+          </Popconfirm>
+        </div>
       ),
     },
   ];
@@ -64,9 +82,9 @@ const Roles = () => {
       <div className="container mx-auto flex flex-col p-3">
         <HeaderBar
           handlePress={handleOpenModal}
-          text={"ADD ROLE"}
-          title={"User Roles"}
-          subtext={"Manage user Roles"}
+          text={"ADD CURRENCY"}
+          title={"Currencies"}
+          subtext={"Manage Currencies"}
         />
 
         <CustomTable
@@ -80,10 +98,10 @@ const Roles = () => {
         handleCancel={handleCloseModal}
         handleOk={handleCloseModal}
         isModalOpen={openModal}
-        title={isEditing ? "Update Role" : "Create Role"}
+        title={isEditing ? "Update Currency" : "Create Currency"}
         w={800}
       >
-        <Form.Item label="Description" name="description">
+        <Form.Item label="Currency" name="currency">
           <Input />
         </Form.Item>
       </CustomModal>
@@ -91,26 +109,17 @@ const Roles = () => {
   );
 };
 
-export default Roles;
+export default Currency;
 
 const sampleUsers = [
   // },onst sampleUsers = [
   {
-    time: "Admin ",
+    time: "Dollar ",
   },
   {
-    time: "User ",
+    time: "Yen ",
   },
   {
-    time: "Rider",
-  },
-  {
-    time: "Admin ",
-  },
-  {
-    time: "User ",
-  },
-  {
-    time: "Rider",
+    time: "kshs ",
   },
 ];

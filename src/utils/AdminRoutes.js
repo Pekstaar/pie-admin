@@ -1,14 +1,17 @@
-import Things from "../pages/Things";
-import Users from "../pages/Users";
-import DeliveryTime from "../pages/DeliveryTime";
-import ResponseTime from "../pages/ResponseTime";
-import Roles from "../pages/Role";
-import FoodCategory from "../pages/FoodCategory";
-import Reports from "../pages/Reports";
-import Questions from "../pages/Questions";
-import Currency from "../pages/Currency";
-// import { Dashboard } from "../pages/admin/Dashboard";
-
+import {
+  Users,
+  Things,
+  DeliveryTime,
+  ResponseTime,
+  Roles,
+  FoodCategory,
+  Reports,
+  Questions,
+  Currency,
+} from "../pages";
+import BlockedUsers from "../pages/Activities/BlockedUsers";
+import UpdateThingsStatus from "../pages/Activities/UpdateThingsStatus";
+import Permissions from "../pages/permissions/Permissions";
 export const AdminRoutes = [
   {
     path: "/",
@@ -19,8 +22,16 @@ export const AdminRoutes = [
     element: <Users />,
   },
   {
+    path: "/users/blocked",
+    element: <BlockedUsers />,
+  },
+  {
     path: "/things",
     element: <Things />,
+  },
+  {
+    path: "/things/status",
+    element: <UpdateThingsStatus />,
   },
   {
     path: "/delivery_time",
@@ -49,6 +60,10 @@ export const AdminRoutes = [
   {
     path: "/currency",
     element: <Currency />,
+  },
+  {
+    path: "/permissions",
+    element: <Permissions />,
   },
 
   //

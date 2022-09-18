@@ -1,11 +1,10 @@
-import { Button, Form, Popconfirm, TimePicker } from "antd";
-import moment from "moment";
+import { Button, Form, Input, Popconfirm } from "antd";
 import React, { useState } from "react";
-import { CustomTable } from "../components/CustomTable";
-import HeaderBar from "../components/HeaderBar";
-import CustomModal from "../components/Modal";
+import { CustomTable } from "../../components/CustomTable";
+import HeaderBar from "../../components/HeaderBar";
+import CustomModal from "../../components/Modal";
 
-const ResponseTime = () => {
+const Questions = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -65,9 +64,9 @@ const ResponseTime = () => {
       <div className="container mx-auto flex flex-col p-3">
         <HeaderBar
           handlePress={handleOpenModal}
-          text={"ADD TIME"}
-          title={"Response Time"}
-          subtext={"Manage time to respond"}
+          text={"ADD Question"}
+          title={"User Question"}
+          subtext={"Manage user Questions"}
         />
 
         <CustomTable
@@ -81,35 +80,22 @@ const ResponseTime = () => {
         handleCancel={handleCloseModal}
         handleOk={handleCloseModal}
         isModalOpen={openModal}
-        title={isEditing ? "Update Time" : "Create Time"}
+        title={isEditing ? "Update Question" : "Create Question"}
         w={800}
       >
-        <Form.Item label="Time" name="description">
-          <TimePicker
-            className="w-full"
-            onChange={() => {}}
-            defaultOpenValue={moment("00:00:00", "HH:mm:ss")}
-          />
+        <Form.Item label="Description" name="description">
+          <Input />
         </Form.Item>
       </CustomModal>
     </>
   );
 };
 
-export default ResponseTime;
+export default Questions;
 
 const sampleUsers = [
   // },onst sampleUsers = [
   {
-    time: "09:00 ",
-  },
-  {
-    time: "12:00 ",
-  },
-  {
-    time: "15:00",
-  },
-  {
-    time: " 16:00",
+    time: "new question ",
   },
 ];

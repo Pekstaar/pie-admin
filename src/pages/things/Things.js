@@ -1,8 +1,8 @@
 import { Button, Form, Input, Popconfirm } from "antd";
 import React, { useState } from "react";
-import { CustomTable } from "../components/CustomTable";
-import HeaderBar from "../components/HeaderBar";
-import CustomModal from "../components/Modal";
+import { CustomTable } from "../../components/CustomTable";
+import HeaderBar from "../../components/HeaderBar";
+import CustomModal from "../../components/Modal";
 
 const Things = () => {
   const [openModal, setOpenModal] = useState(false);

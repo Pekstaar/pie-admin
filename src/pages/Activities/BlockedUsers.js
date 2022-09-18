@@ -1,10 +1,10 @@
 import { Button, Form, Input, Popconfirm } from "antd";
 import React, { useState } from "react";
-import { CustomTable } from "../components/CustomTable";
-import HeaderBar from "../components/HeaderBar";
-import CustomModal from "../components/Modal";
+import { CustomTable } from "../../components/CustomTable";
+import HeaderBar from "../../components/HeaderBar";
+import CustomModal from "../../components/Modal";
 
-const Users = () => {
+const BlockedUsers = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -15,11 +15,6 @@ const Users = () => {
   const handleCloseModal = () => {
     setOpenModal(false);
     setIsEditing(false);
-  };
-
-  const handleEdit = () => {
-    setOpenModal(true);
-    setIsEditing(true);
   };
 
   const handleDelete = () => {};
@@ -57,21 +52,14 @@ const Users = () => {
       key: "actions",
       render: (_, data) => (
         <>
-          <Button
-            className="bg-blue-600 font-medium text-gray-100"
-            onClick={() => handleEdit(data)}
-          >
-            Edit
-          </Button>
-          &nbsp;
           <Popconfirm
-            title="Are you sure to delete this User?"
+            title="Are you sure to unblock this User?"
             onConfirm={() => handleDelete(data)}
             okText="Yes"
             cancelText="No"
           >
-            <Button className="bg-red-600 font-medium text-gray-100">
-              Delete
+            <Button className="bg-indigo-600 font-medium text-gray-100">
+              Unblock
             </Button>
           </Popconfirm>
         </>
@@ -83,9 +71,10 @@ const Users = () => {
       <div className="container mx-auto flex flex-col p-3">
         <HeaderBar
           handlePress={handleOpenModal}
-          text={"ADD USER"}
-          title={"Users"}
-          subtext={"Manage users"}
+          //   text={"ADD USER"}
+          title={"Blocked Users"}
+          subtext={"Manage blocked users"}
+          hideBtn
         />
 
         <CustomTable
@@ -122,7 +111,7 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default BlockedUsers;
 
 const sampleUsers = [
   {

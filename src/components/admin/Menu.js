@@ -7,7 +7,9 @@ import {
   QuestionCircleOutlined,
   MoneyCollectOutlined,
   SettingOutlined,
+  UnlockOutlined,
   LockOutlined,
+  UsergroupDeleteOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import React from "react";
@@ -65,9 +67,19 @@ const MenuBar = () => {
         <Link to="/currency">Currency</Link>
       </Menu.Item>
 
-      <Menu.Item key="10" icon={<SettingOutlined />}>
-        <Link to="/user_settings">User Settings</Link>
-      </Menu.Item>
+      <Menu.SubMenu key="10" icon={<SettingOutlined />} title={"Activities"}>
+        <Menu.Item key="12" icon={<ApartmentOutlined />}>
+          <Link to="/things/status">Things Status</Link>
+        </Menu.Item>
+
+        <Menu.Item key="13" icon={<UsergroupDeleteOutlined />}>
+          <Link to="/users/blocked">Blocked Users</Link>
+        </Menu.Item>
+
+        <Menu.Item key="14" icon={<UnlockOutlined />}>
+          <Link to="/">Privacy Settings</Link>
+        </Menu.Item>
+      </Menu.SubMenu>
 
       <Menu.Item key="11" icon={<LockOutlined />}>
         <Link to="/permissions">Permissions</Link>
