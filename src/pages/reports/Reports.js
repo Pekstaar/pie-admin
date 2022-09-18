@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import React from "react";
 import { CustomTable } from "../../components/CustomTable";
 import HeaderBar from "../../components/HeaderBar";
@@ -9,6 +10,28 @@ const Reports = () => {
       dataIndex: "report",
       key: "report",
       //   sorter: (a, b) => a?.first.localeCompare(b?.first),
+    },
+    {
+      title: "User",
+      dataIndex: "user",
+      key: "user",
+      //   sorter: (a, b) => a?.first.localeCompare(b?.first),
+    },
+
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      key: "actions",
+      render: (_, data) => (
+        <>
+          <Button
+            className="bg-indigo-600 font-medium text-gray-100"
+            // onClick={() => handleEdit(data)}
+          >
+            Generate Report
+          </Button>
+        </>
+      ),
     },
   ];
   return (
@@ -37,8 +60,10 @@ const sampleUsers = [
   // },onst sampleUsers = [
   {
     report: "Lorem ipsum dolor ",
+    user: "User One ",
   },
   {
-    report: "sit amet consectetur",
+    report: "sit amet ",
+    user: "Jane Doe ",
   },
 ];
