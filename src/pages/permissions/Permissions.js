@@ -1,4 +1,4 @@
-import { Button, Form, Input, Popconfirm } from "antd";
+import { Checkbox, Form, Input } from "antd";
 import React, { useState } from "react";
 import { CustomTable } from "../../components/CustomTable";
 import HeaderBar from "../../components/HeaderBar";
@@ -17,14 +17,32 @@ const Permissions = () => {
     setIsEditing(false);
   };
 
-  const handleEdit = () => {
-    setOpenModal(true);
-    setIsEditing(true);
+  // const handleEdit = () => {
+  //   setOpenModal(true);
+  //   setIsEditing(true);
+  // };
+
+  // const handleDelete = () => {};
+  const handleCheck = (e, data) => {
+    // handle data
+    console.log(data?.name, "IS CHECKED: ", e.target.checked);
   };
 
-  const handleDelete = () => {};
-
   const columns = [
+    {
+      title: "#",
+      dataIndex: "#",
+      key: "#",
+      //   sorter: (a, b) => a?.first.localeCompare(b?.first),
+      render: (_, data) => (
+        <>
+          <Checkbox
+            defaultChecked={data?.isChecked}
+            onChange={(e) => handleCheck(e, data)}
+          />
+        </>
+      ),
+    },
     {
       title: "Name",
       dataIndex: "name",
@@ -32,32 +50,32 @@ const Permissions = () => {
       //   sorter: (a, b) => a?.first.localeCompare(b?.first),
     },
 
-    {
-      title: "Actions",
-      dataIndex: "actions",
-      key: "actions",
-      render: (_, data) => (
-        <>
-          <Button
-            className="bg-blue-600 font-medium text-gray-100"
-            onClick={() => handleEdit(data)}
-          >
-            Edit
-          </Button>
-          &nbsp;
-          <Popconfirm
-            title="Are you sure to delete this Permission?"
-            onConfirm={() => handleDelete(data)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button className="bg-red-600 font-medium text-gray-100">
-              Delete
-            </Button>
-          </Popconfirm>
-        </>
-      ),
-    },
+    // {
+    //   title: "Actions",
+    //   dataIndex: "actions",
+    //   key: "actions",
+    //   render: (_, data) => (
+    //     <>
+    //       <Button
+    //         className="bg-blue-600 font-medium text-gray-100"
+    //         onClick={() => handleEdit(data)}
+    //       >
+    //         Edit
+    //       </Button>
+    //       &nbsp;
+    //       <Popconfirm
+    //         title="Are you sure to delete this Permission?"
+    //         onConfirm={() => handleDelete(data)}
+    //         okText="Yes"
+    //         cancelText="No"
+    //       >
+    //         <Button className="bg-red-600 font-medium text-gray-100">
+    //           Delete
+    //         </Button>
+    //       </Popconfirm>
+    //     </>
+    //   ),
+    // },
   ];
   return (
     <>
@@ -97,17 +115,22 @@ const sampleUsers = [
   // },onst sampleUsers = [
   {
     name: "Lorem ",
+    isChecked: false,
   },
   {
     name: " dolor ",
+    isChecked: true,
   },
   {
     name: "amet",
+    isChecked: false,
   },
   {
     name: " adipisicing.",
+    isChecked: true,
   },
   {
     name: "Repellat",
+    isChecked: true,
   },
 ];
