@@ -22,8 +22,13 @@ function App() {
       <BrowserRouter>
         <PanelLayout>
           <Routes>
-            {routes.map((route) => (
-              <Route path={route?.path} element={route?.element} />
+            {routes.map((route, key) => (
+              <Route
+                key={key}
+                exact
+                path={route?.path}
+                element={route?.element}
+              />
             ))}
           </Routes>
         </PanelLayout>
