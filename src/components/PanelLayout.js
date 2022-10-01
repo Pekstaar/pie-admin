@@ -1,13 +1,19 @@
 import { Box } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import SideNav from "./general/SideNav";
+import TopNav from "./general/TopNav";
 
 const PanelLayout = ({ children }) => {
+  const [showSideBar, setShowSideBar] = useState(true);
+  const handleToggle = () => {
+    setShowSideBar((prev) => !prev);
+  };
   return (
-    <Box bg={"bg_gray"} className={"min-h-screen"}>
-      <SideNav />
+    <Box display={"flex"} flexDir={"row"} bg={"bg_gray"} className={"h-screen"}>
+      <SideNav show={showSideBar} />
 
-      <Box ml={"250px"} bg={"orange.200"}>
+      <Box minH={"full"} flexGrow={"1"} ml={0}>
+        <TopNav toggleSideBar={handleToggle} />
         {children}
       </Box>
     </Box>

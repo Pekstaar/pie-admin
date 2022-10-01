@@ -13,7 +13,7 @@ import { FiSettings } from "react-icons/fi";
 import LogoutBtn from "../sidenav/LogoutBtn";
 import { useNavigate } from "react-router-dom";
 
-const SideNav = () => {
+const SideNav = ({ show }) => {
   const navigate = useNavigate();
   const [current, setCurrent] = useState("dashboard");
   const [currentSub, setCurrentSub] = useState("users");
@@ -32,7 +32,11 @@ const SideNav = () => {
   };
 
   return (
-    <Box w={"250px"} bg={"white"} position={"fixed"} className={"h-screen "}>
+    <Box
+      w={"250px"}
+      bg={"white"}
+      className={`h-screen ${!show && "hidden"} ease-in-out `}
+    >
       {/* Logo */}
       <Center h={"150px"}>
         <Logo />
