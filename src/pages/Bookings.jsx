@@ -13,8 +13,13 @@ const Bookings = () => {
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<Transaction />} title={"Bookings"} />
 
-      <Wrapper my={"4"}>
-        <HStack gap={"2"} className={"border-b-2 border-zinc-200"} h={"10"}>
+      <Wrapper my={"4"} p={"5 "}>
+        <HStack
+          gap={"2"}
+          className={"border-b-2 border-zinc-200"}
+          h={"14"}
+          mx={"4"}
+        >
           <SubNavItem isCurrent title={"Ongoing"} handleClick={() => {}} />
           <SubNavItem title={"Scheduled"} handleClick={() => {}} />
           <SubNavItem title={"Completed"} handleClick={() => {}} />
@@ -87,7 +92,7 @@ const SubNavItem = ({ title, isCurrent }) => (
 
   // </Button>
   <Button
-    h={"10"}
+    h={"14"}
     cursor={"pointer"}
     borderRadius={"none"}
     bg={"white "}
@@ -103,7 +108,7 @@ const SubNavItem = ({ title, isCurrent }) => (
     _focus={{ bg: "white" }}
     fontWeight={isCurrent ? "semibold" : "normal"}
     px={"6"}
-    py={"3"}
+    // py={"3"}
     borderBottomWidth={"2px"}
     borderBottomColor={isCurrent ? "dark_green" : "none"}
   >
