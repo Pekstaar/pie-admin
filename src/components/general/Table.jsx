@@ -2,7 +2,7 @@ import React from "react";
 
 const Table = ({ headers, children }) => {
   return (
-    <div className=" pt-8 w-full">
+    <div className="  w-full">
       <div className=" overflow-hidden ">
         <table className="min-w-full bg-white">
           <thead className="bg-[#F3F3F3] ">

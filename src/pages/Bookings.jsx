@@ -7,6 +7,10 @@ import Wrapper from "../components/general/Wrapper";
 
 import { FiEye } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { IoSearchOutline } from "react-icons/io5";
+import { VscFilter } from "react-icons/vsc";
+import CInput from "../components/general/Input";
+import { BiSort } from "react-icons/bi";
 
 const Bookings = () => {
   return (
@@ -23,6 +27,20 @@ const Bookings = () => {
           <SubNavItem isCurrent title={"Ongoing"} handleClick={() => {}} />
           <SubNavItem title={"Scheduled"} handleClick={() => {}} />
           <SubNavItem title={"Completed"} handleClick={() => {}} />
+        </HStack>
+
+        {/* search and table actions */}
+        <HStack py={"6"} justifyContent={"space-between"}>
+          {/* /search input */}
+          <CInput icon={<IoSearchOutline className="text-xl" />} />
+          {/* actions */}
+          <HStack gap={"2"}>
+            <TableAction
+              icon={<VscFilter className="text-lg" />}
+              text={"Filter"}
+            />
+            <TableAction icon={<BiSort className="text-lg" />} text={"Sort"} />
+          </HStack>
         </HStack>
 
         {/* body */}
@@ -199,4 +217,10 @@ const ActionButton = ({ bg, children }) => (
   >
     {children}
   </Button>
+);
+const TableAction = ({ icon, text }) => (
+  <button className="bg-zinc-200 px-3 py-1.5 gap-1 rounded-md text-sm capitalize flex  ">
+    {icon}
+    {text}
+  </button>
 );
