@@ -1,6 +1,5 @@
 import { Box, Button, HStack } from "@chakra-ui/react";
 import React from "react";
-import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
@@ -97,35 +96,6 @@ const Fleet = () => {
 };
 
 export default Fleet;
-
-const SubNavItem = ({ title, isCurrent }) => (
-  // <Button>
-
-  // </Button>
-  <Button
-    h={"14"}
-    cursor={"pointer"}
-    borderRadius={"none"}
-    bg={"white "}
-    className={`text-primary_yellow text-xl ${
-      isCurrent ? "text-dark_green " : "text-zinc-400 "
-    }`}
-    //  onClick={handleLogout}
-    _hover={{
-      bg: "white",
-      borderBottomColor: "dark_green",
-      textColor: "dark_green",
-    }}
-    _focus={{ bg: "white" }}
-    fontWeight={isCurrent ? "semibold" : "normal"}
-    px={"6"}
-    // py={"3"}
-    borderBottomWidth={"2px"}
-    borderBottomColor={isCurrent ? "dark_green" : "none"}
-  >
-    {title}
-  </Button>
-);
 
 const tableData = [
   {
