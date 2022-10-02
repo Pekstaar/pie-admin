@@ -4,5 +4,6 @@ import { ReactComponent as Picked } from "./Picked.svg";
 import { ReactComponent as Requests } from "./Requests.svg";
 import { ReactComponent as Completed } from "./Completed.svg";
 import { ReactComponent as Transaction } from "./Transaction.svg";
+import { ReactComponent as Lorry } from "./Lorry.svg";
 
-export { Logo, Completed, Picked, Cancelled, Requests, Transaction };
+export { Logo, Completed, Picked, Cancelled, Requests, Transaction, Lorry };
