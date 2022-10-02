@@ -1,4 +1,4 @@
-import { Box, HStack } from "@chakra-ui/react";
+import { Box, HStack, Text } from "@chakra-ui/react";
 import React from "react";
 import { Cancelled, Completed, Picked, Requests } from "../../assets/svg";
 // import Example from "../charts/Pie";
@@ -20,7 +20,25 @@ const ActivitiesCard = () => {
           />
         ))}
 
-        <Box>{/* <Example /> */}</Box>
+        <Box>
+          {/* <Example /> */}
+
+          <Text
+            textAlign={"center"}
+            color={"primary_green"}
+            fontWeight={"semibold"}
+            fontSize={"xl"}
+          >
+            75/100
+          </Text>
+          <Text
+            fontSize={"sm"}
+            fontWeight={"light"}
+            className={"text-zinc-400"}
+          >
+            Completed Bookings
+          </Text>
+        </Box>
       </HStack>
     </Wrapper>
   );
