@@ -11,8 +11,14 @@ import { VscFilter } from "react-icons/vsc";
 import CInput from "../components/general/Input";
 import { BiSort } from "react-icons/bi";
 import { Lorry } from "../assets/svg";
+import { useNavigate } from "react-router-dom";
 
 const Fleet = () => {
+  const navigate = useNavigate();
+
+  const handleViewFleet = (plate) => {
+    navigate(`${plate}`, plate);
+  };
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<RiCarLine />} title={"Fleet management"} />
@@ -83,7 +89,12 @@ const Fleet = () => {
                   {/* actions table */}
                   <td className={`text-center text-white py-3 px-4`}>
                     <Box className="flex gap-4">
-                      <ActionButton bg={bg}>
+                      <ActionButton
+                        handlePress={() =>
+                          handleViewFleet(data?.registration.toLowerCase())
+                        }
+                        bg={bg}
+                      >
                         <FiEye />
                       </ActionButton>
 
@@ -160,12 +171,13 @@ const STATUS_LIST = {
   2: "available",
   0: "offline",
 };
-const ActionButton = ({ bg, children }) => (
+const ActionButton = ({ bg, children, handlePress }) => (
   <Button
     fontSize={"lg"}
     p={"0"}
     h={"30px"}
     className={`${bg} rounded-md  text-dark_green border border-dark_green`}
+    onClick={handlePress}
   >
     {children}
   </Button>

@@ -9,6 +9,7 @@ import {
   SettingsUser,
   Users,
 } from "../pages";
+import FleetView from "../pages/FleetView";
 
 export const routes = [
   {
@@ -30,6 +31,10 @@ export const routes = [
   {
     path: "/fleet",
     element: <Fleet />,
+  },
+  {
+    path: "/fleet/:plate",
+    element: <FleetView />,
   },
   {
     path: "/partners",

@@ -208,7 +208,7 @@ const STATUS_LIST = {
   0: "cancelled",
   5: "completed",
 };
-const ActionButton = ({ bg, children }) => (
+export const ActionButton = ({ bg, children }) => (
   <Button
     fontSize={"lg"}
     p={"0"}
