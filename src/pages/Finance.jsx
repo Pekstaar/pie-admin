@@ -1,17 +1,17 @@
 import { Box, Button, HStack, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import BreadCrumb from "../components/general/BreadCrumb";
-import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 
-import { IoSearchOutline } from "react-icons/io5";
-import CInput from "../components/general/Input";
-import { AiFillCreditCard } from "react-icons/ai";
 import { GoGraph } from "react-icons/go";
-import PayButton from "../components/finance/PayButton";
 import FinanceCard from "../components/finance/FinanceCard";
+import Withdrawal from "../components/finance/sub_screens/Withdrawal";
+import Processing from "../components/finance/sub_screens/Processing";
+import Paid from "../components/finance/sub_screens/Paid";
 
 const Finance = () => {
+  const [currentSubNav, setCurrent] = useState("withdrawal"); //processing,paid
+
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<GoGraph />} title={"Finance"} />
@@ -31,63 +31,29 @@ const Finance = () => {
             mx={"4"}
           >
             <SubNavItem
-              isCurrent
+              isCurrent={currentSubNav.toLowerCase() === "withdrawal"}
               title={"Withdrawal requests"}
-              handleClick={() => {}}
+              handleClick={() => setCurrent("withdrawal")}
             />
-            <SubNavItem title={"Processing invoices"} handleClick={() => {}} />
-            <SubNavItem title={"Paid invoices"} handleClick={() => {}} />
+            <SubNavItem
+              isCurrent={currentSubNav.toLowerCase() === "processing"}
+              handleClick={() => setCurrent("processing")}
+              title={"Processing invoices"}
+            />
+            <SubNavItem
+              isCurrent={currentSubNav.toLowerCase() === "paid"}
+              handleClick={() => setCurrent("paid")}
+              title={"Paid invoices"}
+            />
           </HStack>
 
-          {/* search and table actions */}
-          <HStack py={"6"} justifyContent={"space-between"} px={"4"}>
-            {/* /search input */}
-            <CInput icon={<IoSearchOutline className="text-xl" />} />
-            {/* pay invoices button */}
-            <Box gap={"2"} textAlign={"center"}>
-              {/* text */}
-              <Text fontWeight={"bold"} fontSize={"xl"} mb={"2"}>
-                KES. 75,000
-              </Text>
-              {/* button */}
-              <PayButton
-                icon={<AiFillCreditCard className="text-xl" />}
-                text={"Pay invoices"}
-              />
-            </Box>
-          </HStack>
-
-          {/* body */}
-          <Box className="">
-            <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {tableData?.map((data, key) => {
-                const isEven = key % 2;
-
-                return (
-                  <tr
-                    className={`h-20 capitalize ${
-                      isEven ? "bg-[#F9F9F9]" : "white"
-                    }`}
-                  >
-                    <td className=" text-center py-3 px-4">{data?.date}</td>
-
-                    <td className="text-center py-3 px-4">{data?.name}</td>
-                    <td className="text-center py-3 px-4">{data?.amount}</td>
-
-                    {/* actions table */}
-                    <td className={`text-center py-3 px-4 w-[20%1]`}>
-                      <Box className="flex justify-end gap-4">
-                        <PayButton
-                          icon={<AiFillCreditCard className="text-xl" />}
-                          text={"Pay invoices"}
-                        />
-                      </Box>
-                    </td>
-                  </tr>
-                );
-              })}
-            </Table>
-          </Box>
+          {currentSubNav === "withdrawal" ? (
+            <Withdrawal />
+          ) : currentSubNav === "processing" ? (
+            <Processing />
+          ) : (
+            <Paid />
+          )}
         </Wrapper>
 
         <Box className="flex flex-col gap-5" w={1 / 3} p={"3"}>
@@ -216,7 +182,7 @@ const Finance = () => {
 
 export default Finance;
 
-const SubNavItem = ({ title, isCurrent }) => (
+const SubNavItem = ({ title, isCurrent, handleClick }) => (
   // <Button>
 
   // </Button>
@@ -240,53 +206,12 @@ const SubNavItem = ({ title, isCurrent }) => (
     // py={"3"}
     borderBottomWidth={"2px"}
     borderBottomColor={isCurrent ? "dark_green" : "none"}
+    onClick={handleClick}
   >
     {title}
   </Button>
 );
 
-const tableData = [
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "Collins joe",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "Collins joe",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "Collins joe",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "Collins joe",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "Collins joe",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "Collins joe",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "Collins joe",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "Collins joe",
-  },
-];
 const cards_data = [
   {
     text: "Revenue",
