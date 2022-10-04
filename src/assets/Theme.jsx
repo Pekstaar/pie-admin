@@ -18,7 +18,7 @@ export const colors = {
   bg_gray: "#F5F5F5",
 };
 
-export const font = `'Rubik', sans-serif`;
+export const font = `'Rubik','Poppins', sans-serif`;
 export const styles = {
   "html, body": {
     color: "dark_green",
