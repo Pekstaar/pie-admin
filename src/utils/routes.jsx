@@ -8,6 +8,7 @@ import {
   SettingsPartner,
   SettingsUser,
   Users,
+  ViewApp,
 } from "../pages";
 import FleetView from "../pages/FleetView";
 
@@ -27,6 +28,10 @@ export const routes = [
   {
     path: "/applications",
     element: <Apps />,
+  },
+  {
+    path: "/applications/:name",
+    element: <ViewApp />,
   },
   {
     path: "/fleet",

@@ -7,6 +7,7 @@ import SettingsPartner from "./SettingsPartner";
 import SettingsUser from "./SettingsUser";
 import Users from "./Users";
 import Apps from "./Apps";
+import ViewApp from "./ViewApp";
 
 export {
   Dashboard,
@@ -18,4 +19,5 @@ export {
   SettingsUser,
   Users,
   Apps,
+  ViewApp,
 };
