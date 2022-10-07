@@ -9,6 +9,7 @@ import {
   SettingsUser,
   Users,
   ViewApp,
+  ViewUser,
 } from "../pages";
 import FleetView from "../pages/FleetView";
 
@@ -48,6 +49,11 @@ export const routes = [
   {
     path: "/users",
     element: <Users />,
+  },
+
+  {
+    path: "/users/:id",
+    element: <ViewUser />,
   },
   {
     path: "/settings/users",

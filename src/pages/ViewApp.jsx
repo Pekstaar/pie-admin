@@ -16,7 +16,7 @@ const ViewApp = () => {
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb
         icon={<BiIdCard />}
-        title={`Fleet management /`}
+        title={`Applications /`}
         subtitle={location[location?.length - 1]}
         c={"capitalize"}
       />

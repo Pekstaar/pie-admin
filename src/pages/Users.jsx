@@ -22,8 +22,8 @@ const Users = () => {
 
   const [openModal, setOpenModal] = useState(false);
 
-  const handleViewFleet = (plate) => {
-    navigate(`${plate}`, plate);
+  const handleViewUser = (user) => {
+    navigate(`${user}`, user);
   };
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
@@ -135,9 +135,7 @@ const Users = () => {
                   <td className={`text-center text-white py-3 px-4`}>
                     <Box className="flex gap-6 justify-center">
                       <ActionButton
-                        handlePress={() =>
-                          handleViewFleet(data?.registration.toLowerCase())
-                        }
+                        handlePress={() => handleViewUser(data?.fullname)}
                         bg={bg}
                       >
                         <FiEye />
