@@ -1,4 +1,4 @@
-import { Box, Button, Center, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, Center, HStack, Text, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
@@ -11,11 +11,12 @@ import { VscFilter } from "react-icons/vsc";
 import CInput from "../components/general/Input";
 import { BiSort } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { BsPeople } from "react-icons/bs";
+import { BsPeople, BsPerson, BsTelephone } from "react-icons/bs";
 import PrimaryButton from "../components/general/PrimaryButton";
-import { GrAdd } from "react-icons/gr";
+import { GrAdd, GrLocation } from "react-icons/gr";
 import PrimaryOutlinedButton from "../components/general/PrimaryOutlinedButton";
 import CustomModal from "../components/general/CustomModal";
+import { AiOutlineMail } from "react-icons/ai";
 
 const Users = () => {
   const navigate = useNavigate();
@@ -87,7 +88,68 @@ const Users = () => {
                   <Text fontWeight={"medium"}>Add User</Text>
                 </PrimaryButton>
               }
-            ></CustomModal>
+            >
+              <VStack gap={"2"} w={"full"}>
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Full name</Text>
+
+                  <CInput
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    icon={<BsPerson className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box>
+
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Category</Text>
+
+                  <CInput
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    borderRadius={"md"}
+                  />
+                </Box>
+
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Location</Text>
+
+                  <CInput
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    icon={<GrLocation className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box>
+
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Email</Text>
+
+                  <CInput
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    icon={<AiOutlineMail className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box>
+
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Phone</Text>
+
+                  <CInput
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    icon={<BsTelephone className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box>
+              </VStack>
+            </CustomModal>
           </HStack>
         </HStack>
 
