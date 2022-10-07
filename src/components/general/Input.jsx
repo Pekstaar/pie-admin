@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
 
-const CInput = ({ icon }) => {
+const CInput = ({ icon, placeholder = "search", ...rest }) => {
   return (
     <Box
       display={"flex"}
@@ -13,11 +13,12 @@ const CInput = ({ icon }) => {
       overflow={"hidden"}
       borderRadius={"xl"}
       borderColor={"primary_yellow"}
+      {...rest}
     >
       {icon}
 
       <input
-        placeholder="search"
+        placeholder={placeholder}
         className="border-0 outline-none focus:outline-none  h-10 flex-grow"
       />
     </Box>
