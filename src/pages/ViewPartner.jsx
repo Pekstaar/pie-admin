@@ -14,6 +14,7 @@ import { BiSort } from "react-icons/bi";
 import { useNavigate, useParams } from "react-router-dom";
 import { GoGraph } from "react-icons/go";
 import BusinessImage from "../assets/images/business_image.png";
+import PrimaryButton from "../components/general/PrimaryButton";
 
 const ViewPartner = () => {
   const navigate = useNavigate();
@@ -176,6 +177,10 @@ const ViewPartner = () => {
                 icon={<BiSort className="text-lg" />}
                 text={"Sort"}
               />
+
+              <PrimaryButton className={"font-medium"}>
+                Reconcile payments
+              </PrimaryButton>
             </HStack>
           </HStack>
 
