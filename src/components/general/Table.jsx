@@ -1,5 +1,5 @@
 import React from "react";
-const Table = ({ headers, children, hasCheckbox = false }) => {
+const Table = ({ headers, children, hasCheckbox = false, headerClass }) => {
   return (
     <div className="  w-full">
       <div className=" overflow-hidden ">
@@ -12,7 +12,9 @@ const Table = ({ headers, children, hasCheckbox = false }) => {
                 </th>
               )}
               {headers.map((h) => (
-                <th className="text-center py-3 px-4 uppercase font-semibold text-sm">
+                <th
+                  className={`text-center py-3 px-4 uppercase font-semibold text-sm ${headerClass}`}
+                >
                   {h}
                 </th>
               ))}
