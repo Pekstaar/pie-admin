@@ -23,8 +23,8 @@ const Partners = () => {
 
   const [openModal, setOpenModal] = useState(false);
 
-  const handleViewUser = (user) => {
-    navigate(`${user}`, user);
+  const handleViewUser = (partner) => {
+    navigate(`${partner}`, partner);
   };
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
@@ -140,7 +140,9 @@ const Partners = () => {
                   <td className={`text-center text-white py-3 px-4`}>
                     <Box className="flex gap-6 justify-center">
                       <ActionButton
-                        handlePress={() => handleViewUser(data?.fullname)}
+                        handlePress={() =>
+                          handleViewUser(data?.["partner name"])
+                        }
                       >
                         <FiEye />
                       </ActionButton>

@@ -9,6 +9,7 @@ import Users from "./Users";
 import Apps from "./Apps";
 import ViewApp from "./ViewApp";
 import ViewUser from "./ViewUser";
+import ViewPartner from "./ViewPartner";
 
 export {
   Dashboard,
@@ -22,4 +23,5 @@ export {
   Apps,
   ViewApp,
   ViewUser,
+  ViewPartner,
 };
