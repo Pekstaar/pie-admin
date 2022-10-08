@@ -1,5 +1,7 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
 import React from "react";
+import { BarChart } from "../components/charts/Bar";
+import { MultiDoughnut } from "../components/charts/MultiDoughnut";
 import ActivitiesCard from "../components/dashboard/ActivitiesCard";
 import Breadcrumb from "../components/dashboard/Breadcrumb";
 import Wrapper from "../components/general/Wrapper";
@@ -15,7 +17,7 @@ const Dashboard = () => {
 
       {/* Bookings and customer satisfaction */}
       <HStack my={"4"} gap={"2"}>
-        <Wrapper className={"w-2/3"} h={"350px"}>
+        <Wrapper className={"w-2/3"} h={"390px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
             <Text fontWeight={"semibold"}>Bookings Overview</Text>
@@ -27,15 +29,21 @@ const Dashboard = () => {
           </HStack>
 
           {/* body */}
+          <div className="h-[96%] mt-2">
+            <BarChart />
+          </div>
         </Wrapper>
 
-        <Wrapper className={"w-1/3"} h={"350px"}>
+        <Wrapper className={"w-1/3 flex flex-col  "} h={"390px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
             <Text fontWeight={"semibold"}>Customer Satisfaction</Text>
           </HStack>
 
           {/* body */}
+          <div className="h-[300px] w-[300px] m-auto">
+            <MultiDoughnut />
+          </div>
         </Wrapper>
       </HStack>
 
@@ -70,16 +78,16 @@ const Dashboard = () => {
         <Wrapper className={"w-1/3"} h={"350px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
-            <Text fontWeight={"semibold"}>Revenue Breakdown</Text>
+            <Text fontWeight={"semibold"}>Bookings by product category</Text>
           </HStack>
 
           {/* body */}
         </Wrapper>
 
-        <Wrapper className={"w-2/3"} h={"350px"}>
+        <Wrapper className={"w-2/3"} h={"390px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
-            <Text fontWeight={"semibold"}>Ranking</Text>
+            <Text fontWeight={"semibold"}>Bookings by vehicle type</Text>
 
             <Box display={"flex"} gap={"2"}>
               <Text>This Week</Text>
@@ -88,6 +96,7 @@ const Dashboard = () => {
           </HStack>
 
           {/* body */}
+          <BarChart />
         </Wrapper>
       </HStack>
     </Box>

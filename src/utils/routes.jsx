@@ -13,8 +13,13 @@ import {
   ViewUser,
 } from "../pages";
 import FleetView from "../pages/FleetView";
+import Junk from "../pages/Junk";
 
 export const routes = [
+  {
+    path: "/junk",
+    element: <Junk />,
+  },
   {
     path: "/",
     element: <Dashboard />,
