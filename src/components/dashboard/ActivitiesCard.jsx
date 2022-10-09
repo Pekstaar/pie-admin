@@ -9,6 +9,29 @@ import ActivityItem from "./ActivityItem";
 const ActivitiesCard = () => {
   //   const handleChart = useCallback(() => {}, []);
   // const handleChart = React.useMemo(() => );
+  const chartOptions = {
+    plugins: {
+      centerText: {
+        display: true,
+        text: "90%",
+      },
+      legend: {
+        display: false,
+      },
+    },
+  };
+
+  const chartData = {
+    labels: ["Red", "Blue"],
+    datasets: [
+      {
+        label: "# of Votes",
+        data: [75, 25],
+        backgroundColor: ["#16AC52", "#2DFC3430"],
+      },
+    ],
+    text: "40",
+  };
 
   return (
     <Wrapper p={"5"}>
@@ -26,7 +49,7 @@ const ActivitiesCard = () => {
           {/* <Example /> */}
           {/* <div className="h-100px w-100px"> */}
           <div className="h-[80px] w-[80px] ml-8">
-            <Doughnat />
+            <Doughnat options={chartOptions} data={chartData} />
           </div>
           <Text
             textAlign={"center"}

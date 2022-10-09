@@ -19,38 +19,6 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
-  // responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: "bottom",
-    },
-    // title: {
-    //   display: true,
-    //   text: "Chart.js Bar Chart",
-    // },
-  },
-};
-
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Created booking",
-      data: labels.map(() => Math.random() * 1000),
-      backgroundColor: "#EFAF1D",
-    },
-    {
-      label: "Complete booking",
-      data: labels.map(() => Math.random() * 1000),
-      backgroundColor: "#00A406",
-    },
-  ],
-};
-
-export function BarChart() {
+export function BarChart({ options, data }) {
   return <Bar options={options} data={data} />;
 }
