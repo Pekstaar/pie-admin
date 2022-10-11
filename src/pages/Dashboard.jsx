@@ -1,53 +1,57 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { BarChart } from "../components/charts/Bar";
+import { Doughnat } from "../components/charts/Doughnat";
 // import { Doughnat } from "../components/charts/Doughnat";
 import { CustomLineChart } from "../components/charts/LineChart";
 import RadialChart from "../components/charts/Radial";
 import ActivitiesCard from "../components/dashboard/ActivitiesCard";
 import Breadcrumb from "../components/dashboard/Breadcrumb";
+import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 
 const Dashboard = () => {
-  // const customerSatisfaction = useMemo(
-  //   () => ({
-  //     options: {
-  //       plugins: {
-  //         centerText: {
-  //           display: true,
-  //           text: "90%",
-  //         },
-  //         legend: {
-  //           display: false,
-  //           position: "bottom",
-  //         },
-  //       },
-  //     },
+  const bookingsByProduct = useMemo(
+    () => ({
+      options: {
+        plugins: {
+          centerText: {
+            display: true,
+            text: "90%",
+          },
+          legend: {
+            display: true,
+            position: "right",
+          },
+        },
+      },
 
-  //     data: {
-  //       labels: [
-  //         "Very satisfied",
-  //         "Satisfied",
-  //         "Dissatisfied",
-  //         "Very dissatisfied",
-  //       ],
-  //       datasets: [
-  //         {
-  //           label: "# of Votes",
-  //           data: [
-  //             Math.random() * 20,
-  //             Math.random() * 30,
-  //             Math.random() * 40,
-  //             Math.random() * 50,
-  //           ],
-  //           backgroundColor: ["#16AC52", "#EAC625", "#D9D9D9", "#BB1600"],
-  //         },
-  //       ],
-  //       text: "40",
-  //     },
-  //   }),
-  //   []
-  // );
+      data: {
+        labels: ["Gifts", "Electronics", "Documents", "Package", "Others"],
+        datasets: [
+          {
+            label: "# of Votes",
+            data: [
+              (Math.random() * 20) / 100,
+              (Math.random() * 30) / 100,
+              (Math.random() * 40) / 100,
+              (Math.random() * 50) / 100,
+              (Math.random() * 60) / 100,
+            ],
+            backgroundColor: [
+              "#6EF07B",
+              "#6FCDFB",
+              "#FF65C1",
+              "#BB1600",
+              "#FFCF63",
+            ],
+          },
+        ],
+        text: "40",
+      },
+    }),
+    []
+  );
 
   const labels = [
     "January",
@@ -140,7 +144,7 @@ const Dashboard = () => {
 
       {/* ranking and revenue breakdown */}
       <HStack my={"4"} gap={"2"}>
-        <Wrapper className={"w-1/2 flex flex-col"} h={"350px"}>
+        <Wrapper className={"w-1/2 flex flex-col"} h={"390px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
             <Text fontWeight={"semibold"}>Revenue Breakdown</Text>
@@ -152,30 +156,55 @@ const Dashboard = () => {
           {/* </div> */}
         </Wrapper>
 
-        <Wrapper className={"w-1/2"} h={"350px"}>
+        <Wrapper className={"w-1/2"} h={"390px"}>
           {/* header */}
-          <HStack justifyContent={"space-between"} px={"5"}>
+          <HStack justifyContent={"space-between"} px={"5"} mb={"2"}>
             <Text fontWeight={"semibold"}>Ranking</Text>
 
-            <Box display={"flex"} gap={"2"}>
-              <Text>This Week</Text>
-              <Text className={"text-zinc-300"}>Monthly</Text>
+            <Box className={"flex items-center text-sm"} gap={"2"}>
+              <Box className="bg-zinc-100 rounded-md p-2">Top locations</Box>
+              <Text className={"text-zinc-300 "}>Top Drivers</Text>
+              <Text className={"text-zinc-300 "}>Top Products</Text>
             </Box>
           </HStack>
 
           {/* body */}
+          <Table size={"sm"} headers={[...Object.keys(sampleRanking[0])]}>
+            {sampleRanking?.map((data, key) => {
+              const isEven = key % 2;
+
+              return (
+                <tr
+                  className={`h-10 capitalize text-[12px] ${
+                    isEven ? "bg-[#F9F9F9]" : "white"
+                  }`}
+                >
+                  <td className=" text-center py-1 px-4">{data?.location}</td>
+                  <td className=" text-center py-1 px-4">{data?.created}</td>
+                  <td className="text-center py-1 px-4">{data?.completed}</td>
+                  <td className="text-center py-1 px-4">{data?.revenue}</td>
+                </tr>
+              );
+            })}
+          </Table>
         </Wrapper>
       </HStack>
 
       {/* Bookings by product category and vehicle type*/}
       <HStack my={"4"} gap={"2"}>
-        <Wrapper className={"w-1/3"} h={"350px"}>
+        <Wrapper className={"w-1/3 flex flex-col "} h={"390px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
             <Text fontWeight={"semibold"}>Bookings by product category</Text>
           </HStack>
 
           {/* body */}
+          <div className="h-[350px] w-[410px] flex justify-start m-auto">
+            <Doughnat
+              data={bookingsByProduct.data}
+              options={bookingsByProduct.options}
+            />
+          </div>
         </Wrapper>
 
         <Wrapper className={"w-2/3"} h={"390px"}>
@@ -190,6 +219,7 @@ const Dashboard = () => {
           </HStack>
 
           {/* body */}
+
           <BarChart data={barChart?.data} options={barChart?.options} />
         </Wrapper>
       </HStack>
@@ -198,3 +228,48 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+const sampleRanking = [
+  {
+    location: "Kasarani",
+    created: "20",
+    completed: "18",
+    revenue: "18000",
+  },
+  {
+    location: "Ngong",
+    created: "15",
+    completed: "14",
+    revenue: "14000",
+  },
+  {
+    location: "Kasarani",
+    created: "20",
+    completed: "18",
+    revenue: "18000",
+  },
+  {
+    location: "Ngong",
+    created: "15",
+    completed: "14",
+    revenue: "14000",
+  },
+  {
+    location: "Kasarani",
+    created: "20",
+    completed: "18",
+    revenue: "18000",
+  },
+  {
+    location: "Ngong",
+    created: "15",
+    completed: "14",
+    revenue: "14000",
+  },
+  {
+    location: "Ngong",
+    created: "15",
+    completed: "14",
+    revenue: "14000",
+  },
+];
