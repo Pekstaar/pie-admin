@@ -21,7 +21,7 @@ const Apps = () => {
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<Transaction />} title={"Applications"} />
 
-      <Wrapper my={"4"} p={"5 "}>
+      <Wrapper my={"4"} p={"3  "}>
         <HStack
           gap={"2"}
           className={"border-b-2 border-zinc-200"}
