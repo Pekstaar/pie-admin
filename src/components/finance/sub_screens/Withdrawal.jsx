@@ -22,7 +22,7 @@ const Withdrawal = () => {
           </Text>
           {/* button */}
           <PayButton
-            icon={<AiFillCreditCard className="text-xl" />}
+            icon={<AiFillCreditCard className="text-md" />}
             text={"Pay invoices"}
           />
         </Box>
@@ -35,20 +35,20 @@ const Withdrawal = () => {
 
             return (
               <tr
-                className={`h-20 capitalize ${
+                className={`h-14 capitalize ${
                   isEven ? "bg-[#F9F9F9]" : "white"
                 }`}
               >
-                <td className=" text-center py-3 px-4">{data?.date}</td>
+                <td className="py-3 px-4">{data?.date}</td>
 
-                <td className="text-center py-3 px-4">{data?.name}</td>
-                <td className="text-center py-3 px-4">KES. {data?.amount}</td>
+                <td className=" py-3 px-4">{data?.name}</td>
+                <td className=" py-3 px-4">KES. {data?.amount}</td>
 
                 {/* actions table */}
-                <td className={`text-center py-3 px-4 w-[20%]`}>
+                <td className={` py-3 px-4 w-[20%]`}>
                   <Box className="flex justify-end gap-4">
                     <PayButton
-                      icon={<AiFillCreditCard className="text-xl" />}
+                      icon={<AiFillCreditCard className="text-lg" />}
                       text={"Pay invoices"}
                     />
                   </Box>

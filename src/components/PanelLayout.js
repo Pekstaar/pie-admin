@@ -12,7 +12,7 @@ const PanelLayout = ({ children }) => {
     <Box display={"flex"} flexDir={"row"} bg={"bg_gray"} className={"h-screen"}>
       <SideNav show={showSideBar} />
 
-      <Box minH={"full"} flexGrow={"1"} ml={0}>
+      <Box minH={"full"} w={"100%"} ml={0}>
         <TopNav toggleSideBar={handleToggle} />
         {children}
       </Box>

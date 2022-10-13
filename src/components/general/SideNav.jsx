@@ -33,9 +33,10 @@ const SideNav = ({ show }) => {
 
   return (
     <Box
-      w={"250px"}
+      w={"200px"}
       bg={"white"}
       className={`h-screen ${!show && "hidden"} ease-in-out `}
+      flexShrink={0}
     >
       {/* Logo */}
       <Center h={"150px"}>

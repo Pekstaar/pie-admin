@@ -3,7 +3,7 @@ import React from "react";
 
 const Breadcrumb = () => {
   return (
-    <Box p={"2"}>
+    <Box p={"1"}>
       <Text fontWeight={"semibold"} className={"text-xl"}>
         Hi Sam,
       </Text>

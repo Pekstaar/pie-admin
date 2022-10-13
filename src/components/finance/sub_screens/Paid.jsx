@@ -9,7 +9,7 @@ const Paid = () => {
   return (
     <>
       {/* search and table actions */}
-      <HStack py={"6"} justifyContent={"space-between"} px={"4"}>
+      <HStack py={"4"} justifyContent={"space-between"} px={"4"}>
         {/* /search input */}
         <CInput icon={<IoSearchOutline className="text-xl" />} />
         {/* pay invoices button */}
@@ -22,14 +22,14 @@ const Paid = () => {
 
             return (
               <tr
-                className={`h-20 capitalize ${
+                className={`h-14 capitalize ${
                   isEven ? "bg-[#F9F9F9]" : "white"
                 }`}
               >
-                <td className=" text-center py-3 px-4">{data?.date}</td>
+                <td className="py-3 px-4">{data?.date}</td>
 
-                <td className="text-center py-3 px-4">{data?.name}</td>
-                <td className="text-center py-3 px-4">KES. {data?.amount}</td>
+                <td className=" py-3 px-4">{data?.name}</td>
+                <td className=" py-3 px-4">KES. {data?.amount}</td>
               </tr>
             );
           })}

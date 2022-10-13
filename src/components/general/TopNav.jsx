@@ -7,7 +7,7 @@ import Avatar from "./Avatar";
 
 const TopNav = ({ toggleSideBar }) => {
   return (
-    <HStack h={"20"} bg={"white"} justifyContent={"space-between"}>
+    <HStack h={"60px"} bg={"white"} justifyContent={"space-between"}>
       <button
         className={"hover:bg-zinc-100 p-1 rounded-md focus:outline-none"}
         onClick={toggleSideBar}
@@ -22,7 +22,7 @@ const TopNav = ({ toggleSideBar }) => {
             "hover:bg-zinc-100 p-2 rounded-full focus:outline-none relative"
           }
         >
-          <BsBell className="text-3xl" />
+          <BsBell className="text-2xl" />
 
           <Badge />
         </button>

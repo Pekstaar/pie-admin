@@ -17,12 +17,12 @@ const Bookings = () => {
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<Transaction />} title={"Bookings"} />
 
-      <Wrapper my={"4"} p={"5 "}>
+      <Wrapper my={"2"} p={"3"}>
         <HStack
           gap={"2"}
           className={"border-b-2 border-zinc-200"}
-          h={"14"}
-          mx={"4"}
+          h={"10"}
+          mx={"2"}
         >
           <SubNavItem isCurrent title={"Ongoing"} handleClick={() => {}} />
           <SubNavItem title={"Scheduled"} handleClick={() => {}} />
@@ -30,7 +30,7 @@ const Bookings = () => {
         </HStack>
 
         {/* search and table actions */}
-        <HStack py={"6"} justifyContent={"space-between"}>
+        <HStack py={"4"} justifyContent={"space-between"}>
           {/* /search input */}
           <CInput icon={<IoSearchOutline className="text-xl" />} />
           {/* actions */}
@@ -58,21 +58,19 @@ const Bookings = () => {
 
               return (
                 <tr
-                  className={`h-20 capitalize ${
+                  className={`h-14 capitalize ${
                     isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
                 >
-                  <td className=" text-center py-3 px-4">{data?.pickup}</td>
-                  <td className=" text-center py-3 px-4">
-                    {data?.destination}
-                  </td>
-                  <td className="text-center py-3 px-4">{data?.sender}</td>
-                  <td className="text-center py-3 px-4">{data?.receiver}</td>
-                  <td className="text-center py-3 px-4">{data?.driver}</td>
-                  <td className={`text-center text-white py-3 px-4 `}>
-                    <Box className="flex  justify-center">
+                  <td className="  py-3 px-4">{data?.pickup}</td>
+                  <td className="  py-3 px-4">{data?.destination}</td>
+                  <td className=" py-3 px-4">{data?.sender}</td>
+                  <td className=" py-3 px-4">{data?.receiver}</td>
+                  <td className=" py-3 px-4">{data?.driver}</td>
+                  <td className={` text-white py-3 px-4 `}>
+                    <Box className="flex  ">
                       <Box
-                        py={"1"}
+                        py={"0.5"}
                         px={"2"}
                         fontSize={"xs"}
                         className={`${bg} rounded-md font-medium  `}
@@ -110,7 +108,7 @@ const SubNavItem = ({ title, isCurrent }) => (
 
   // </Button>
   <Button
-    h={"14"}
+    h={"10"}
     cursor={"pointer"}
     borderRadius={"none"}
     bg={"white "}
@@ -125,7 +123,6 @@ const SubNavItem = ({ title, isCurrent }) => (
     }}
     _focus={{ bg: "white" }}
     fontWeight={isCurrent ? "semibold" : "normal"}
-    px={"6"}
     // py={"3"}
     borderBottomWidth={"2px"}
     borderBottomColor={isCurrent ? "dark_green" : "none"}

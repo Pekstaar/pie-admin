@@ -23,20 +23,20 @@ const Processing = () => {
 
             return (
               <tr
-                className={`h-20 capitalize ${
+                className={`h-14 capitalize ${
                   isEven ? "bg-[#F9F9F9]" : "white"
                 }`}
               >
-                <td className=" text-center py-3 px-4">{data?.date}</td>
+                <td className="  py-3 px-4">{data?.date}</td>
 
-                <td className="text-center py-3 px-4">{data?.name}</td>
-                <td className="text-center py-3 px-4">KES. {data?.amount}</td>
+                <td className=" py-3 px-4">{data?.name}</td>
+                <td className=" py-3 px-4">KES. {data?.amount}</td>
 
                 {/* actions table */}
-                <td className={`text-center py-3 px-4 w-[20%]`}>
-                  <Box className="flex justify-end gap-4">
+                <td className={` py-3 px-4 w-[20%]`}>
+                  <Box className="flex gap-4">
                     <OutlinedButton
-                      icon={<RiDeleteBin6Line className="text-2xl" />}
+                      icon={<RiDeleteBin6Line className="text-xl" />}
                       text={"Cancel"}
                     />
                   </Box>
@@ -57,6 +57,16 @@ const tableData = [
     date: "12/5/2022",
     name: "Brooke Manor",
     amount: "13,000",
+  },
+  {
+    date: "12/5/2022",
+    name: "Brooke Manor",
+    amount: "13,000",
+  },
+  {
+    date: "12/5/2022",
+    name: "Brooke Manor",
+    amount: "10,000",
   },
   {
     date: "12/5/2022",

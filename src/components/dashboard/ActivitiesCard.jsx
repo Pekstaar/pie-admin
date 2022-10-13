@@ -34,40 +34,45 @@ const ActivitiesCard = () => {
   };
 
   return (
-    <Wrapper p={"5"}>
-      <HStack gap={"5"}>
-        {activities?.map((act) => (
-          <ActivityItem
-            icon={act?.icon}
-            name={act?.title}
-            number={act.no}
-            bg={act?.bg}
-          />
-        ))}
+    <Wrapper py={"1"}>
+      <HStack gap={"3"} justifyContent={"space-between"}>
+        <div className="flex flex-wrap 2xl:flex-nowrap ">
+          {activities?.map((act) => (
+            <ActivityItem
+              icon={act?.icon}
+              name={act?.title}
+              number={act.no}
+              bg={act?.bg}
+            />
+          ))}
+        </div>
 
-        <HStack>
+        <div className="lg:flex hidden items-center gap-1">
           {/* <Example /> */}
           {/* <div className="h-100px w-100px"> */}
           <div className="h-[80px] w-[80px] ml-8">
             <Doughnat options={chartOptions} data={chartData} />
           </div>
-          <Text
-            textAlign={"center"}
-            color={"primary_green"}
-            fontWeight={"semibold"}
-            fontSize={"xl"}
-          >
-            75/100
-          </Text>
-          <Text
-            fontSize={"sm"}
-            fontWeight={"light"}
-            className={"text-zinc-400"}
-          >
-            Completed Bookings
-          </Text>
+
+          <div className="text-center">
+            <Text
+              textAlign={"center"}
+              color={"primary_green"}
+              fontWeight={"semibold"}
+              fontSize={"xl"}
+            >
+              75/100
+            </Text>
+            <Text
+              fontSize={"sm"}
+              fontWeight={"light"}
+              className={"text-zinc-400"}
+            >
+              Completed Bookings
+            </Text>
+          </div>
           {/* </div> */}
-        </HStack>
+        </div>
       </HStack>
     </Wrapper>
   );

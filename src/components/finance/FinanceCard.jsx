@@ -7,7 +7,7 @@ const FinanceCard = ({ text, no }) => (
     fontFamily={"Poppins"}
     bg={"white"}
     borderRadius={"xl"}
-    h={"32"}
+    h={"28"}
     w={1 / 4}
     px={"5"}
   >
@@ -15,7 +15,7 @@ const FinanceCard = ({ text, no }) => (
       <Text fontSize={"sm"} className={"text-zinc-400"}>
         {text}
       </Text>
-      <Text mt={"2"} fontWeight={"semibold"} fontSize={"30px"}>
+      <Text mt={"1"} fontWeight={"700"} fontSize={"25px"}>
         KES. {no}
       </Text>
     </Box>

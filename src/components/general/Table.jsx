@@ -19,7 +19,7 @@ const Table = ({
               )}
               {headers.map((h) => (
                 <th
-                  className={`text-center py-3 px-4 uppercase font-semibold ${
+                  className={`text-left py-3 px-4 uppercase font-semibold ${
                     size === "sm" ? "text-[13px]" : "text-sm"
                   } ${headerClass}`}
                 >

@@ -8,26 +8,57 @@ import FinanceCard from "../components/finance/FinanceCard";
 import Withdrawal from "../components/finance/sub_screens/Withdrawal";
 import Processing from "../components/finance/sub_screens/Processing";
 import Paid from "../components/finance/sub_screens/Paid";
+import { Doughnat } from "../components/charts/Doughnat";
 
 const Finance = () => {
   const [currentSubNav, setCurrent] = useState("withdrawal"); //processing,paid
+
+  const bookingsByProduct = React.useMemo(
+    () => ({
+      options: {
+        plugins: {
+          centerText: {
+            display: true,
+            text: "90%",
+          },
+          legend: {
+            display: false,
+            position: "right",
+          },
+        },
+      },
+
+      data: {
+        labels: ["Gifts", "Electronics", "Documents", "Package", "Others"],
+        datasets: [
+          {
+            label: "# of Votes",
+            data: [(Math.random() * 20) / 10, (Math.random() * 30) / 10],
+            backgroundColor: ["#FFBDA7", "#7B61FF"],
+          },
+        ],
+        text: "40",
+      },
+    }),
+    []
+  );
 
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<GoGraph />} title={"Finance"} />
 
-      <HStack p={"3"} pt={"5"} gap={3}>
+      <HStack pt={"3"} gap={2}>
         {cards_data?.map((item) => (
           <FinanceCard no={item?.number} text={item?.text} />
         ))}
       </HStack>
 
-      <Box className="flex gap-2 " letterSpacing={"wide"}>
-        <Wrapper w={2 / 3} my={"4"} p={"5"}>
+      <Box className="flex gap-1 " letterSpacing={"wide"}>
+        <Wrapper w={2 / 3} my={"3"} p={"3"}>
           <HStack
             gap={"2"}
             className={"border-b-2 border-zinc-200"}
-            h={"14"}
+            h={"10"}
             mx={"4"}
           >
             <SubNavItem
@@ -58,19 +89,26 @@ const Finance = () => {
 
         <Box className="flex flex-col gap-5" w={1 / 3} p={"3"}>
           {/* current month breakdown  */}
-          <Wrapper px={"8"}>
+          <Wrapper px={"5"}>
             {/* title */}
             <Text fontWeight={"semibold"} fontSize={"xl"}>
               Month breakdown
             </Text>
             {/* chart */}
-            <Box className="h-[220px]"></Box>
+            <Box className="h-[220px]">
+              <div className=" w-[55%] flex justify-start m-auto">
+                <Doughnat
+                  data={bookingsByProduct.data}
+                  options={bookingsByProduct.options}
+                />
+              </div>
+            </Box>
             <Box display={"inline-block"}>
               <Box>
                 <Text fontSize={"sm"} className={"text-zinc-400"}>
                   Revenue this month
                 </Text>
-                <Text fontWeight={"semibold"} fontSize={"2xl"}>
+                <Text fontWeight={"semibold"} fontSize={"22px"}>
                   KES. 200000
                 </Text>
               </Box>
@@ -117,19 +155,26 @@ const Finance = () => {
           </Wrapper>
 
           {/* previous month breakdown */}
-          <Wrapper px={"8"}>
+          <Wrapper px={"5"}>
             {/* title */}
             <Text fontWeight={"semibold"} fontSize={"xl"}>
               Previous breakdown
             </Text>
             {/* chart */}
-            <Box className="h-[220px]"></Box>
+            <Box className="h-[220px]">
+              <div className=" w-[55%] flex justify-start m-auto">
+                <Doughnat
+                  data={bookingsByProduct.data}
+                  options={bookingsByProduct.options}
+                />
+              </div>
+            </Box>
             <Box display={"inline-block"}>
               <Box>
                 <Text fontSize={"sm"} className={"text-zinc-400"}>
                   Revenue this month
                 </Text>
-                <Text fontWeight={"semibold"} fontSize={"2xl"}>
+                <Text fontWeight={"semibold"} fontSize={"22px"}>
                   KES. 300000
                 </Text>
               </Box>
@@ -150,7 +195,7 @@ const Finance = () => {
                 </Text>
                 <Text
                   fontWeight={"semibold"}
-                  fontSize={"xl"}
+                  fontSize={"lg"}
                   textColor="chart_primary"
                 >
                   KES. 150000
@@ -163,7 +208,7 @@ const Finance = () => {
                 </Text>
                 <Text
                   fontWeight={"semibold"}
-                  fontSize={"xl"}
+                  fontSize={"lg"}
                   textColor="chart_secondary"
                   letterSpacing={"wide"}
                 >
@@ -187,11 +232,11 @@ const SubNavItem = ({ title, isCurrent, handleClick }) => (
 
   // </Button>
   <Button
-    h={"14"}
+    h={"10"}
     cursor={"pointer"}
     borderRadius={"none"}
     bg={"white "}
-    className={`text-primary_yellow text-lg ${
+    className={`text-primary_yellow text-lg text-start ${
       isCurrent ? "text-dark_green " : "text-zinc-400 "
     }`}
     //  onClick={handleLogout}
@@ -202,7 +247,7 @@ const SubNavItem = ({ title, isCurrent, handleClick }) => (
     }}
     _focus={{ bg: "white" }}
     fontWeight={isCurrent ? "semibold" : "normal"}
-    px={"6"}
+    // px={"6"}
     // py={"3"}
     borderBottomWidth={"2px"}
     borderBottomColor={isCurrent ? "dark_green" : "none"}

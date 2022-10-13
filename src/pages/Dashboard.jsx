@@ -32,11 +32,11 @@ const Dashboard = () => {
           {
             label: "# of Votes",
             data: [
-              (Math.random() * 20) / 100,
-              (Math.random() * 30) / 100,
-              (Math.random() * 40) / 100,
-              (Math.random() * 50) / 100,
-              (Math.random() * 60) / 100,
+              (Math.random() * 20) / 10,
+              (Math.random() * 30) / 10,
+              (Math.random() * 40) / 10,
+              (Math.random() * 50) / 10,
+              (Math.random() * 60) / 10,
             ],
             backgroundColor: [
               "#6EF07B",
@@ -83,12 +83,12 @@ const Dashboard = () => {
         datasets: [
           {
             label: "Created booking",
-            data: labels.map(() => Math.random() * 1000),
+            data: labels.map(() => Math.random() * 100),
             backgroundColor: "#EFAF1D",
           },
           {
             label: "Complete booking",
-            data: labels.map(() => Math.random() * 1000),
+            data: labels.map(() => Math.random() * 100),
             backgroundColor: "#00A406",
           },
         ],
@@ -99,16 +99,15 @@ const Dashboard = () => {
   );
 
   return (
-    <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
+    <Box p={"3"} className="max-h-[calc(100%-80px)]" overflowY={"scroll"}>
       <Breadcrumb />
 
       <ActivitiesCard />
 
       {/* body */}
-
       {/* Bookings and customer satisfaction */}
-      <HStack my={"4"} gap={"2"}>
-        <Wrapper className={"w-2/3"} h={"390px"}>
+      <HStack my={"2"} gap={"1"}>
+        <Wrapper className={"w-2/3"} h={"350px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
             <Text fontWeight={"semibold"}>Bookings Overview</Text>
@@ -125,7 +124,7 @@ const Dashboard = () => {
           </div>
         </Wrapper>
 
-        <Wrapper className={"w-1/3 flex flex-col  "} h={"390px"}>
+        <Wrapper className={"w-1/3 flex flex-col  "} h={"350px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
             <Text fontWeight={"semibold"}>Customer Satisfaction</Text>
@@ -143,8 +142,8 @@ const Dashboard = () => {
       </HStack>
 
       {/* ranking and revenue breakdown */}
-      <HStack my={"4"} gap={"2"}>
-        <Wrapper className={"w-1/2 flex flex-col"} h={"390px"}>
+      <HStack my={"2"} gap={"1"}>
+        <Wrapper className={"w-1/2 flex flex-col"} h={"350px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
             <Text fontWeight={"semibold"}>Revenue Breakdown</Text>
@@ -156,9 +155,9 @@ const Dashboard = () => {
           {/* </div> */}
         </Wrapper>
 
-        <Wrapper className={"w-1/2"} h={"390px"}>
+        <Wrapper className={"w-1/2"} h={"350px"}>
           {/* header */}
-          <HStack justifyContent={"space-between"} px={"5"} mb={"2"}>
+          <HStack justifyContent={"space-between"} mb={"2"}>
             <Text fontWeight={"semibold"}>Ranking</Text>
 
             <Box className={"flex items-center text-sm"} gap={"2"}>
@@ -179,10 +178,10 @@ const Dashboard = () => {
                     isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
                 >
-                  <td className=" text-center py-1 px-4">{data?.location}</td>
-                  <td className=" text-center py-1 px-4">{data?.created}</td>
-                  <td className="text-center py-1 px-4">{data?.completed}</td>
-                  <td className="text-center py-1 px-4">{data?.revenue}</td>
+                  <td className="  py-1 px-4">{data?.location}</td>
+                  <td className="  py-1 px-4">{data?.created}</td>
+                  <td className=" py-1 px-4">{data?.completed}</td>
+                  <td className=" py-1 px-4">{data?.revenue}</td>
                 </tr>
               );
             })}
@@ -191,15 +190,15 @@ const Dashboard = () => {
       </HStack>
 
       {/* Bookings by product category and vehicle type*/}
-      <HStack my={"4"} gap={"2"}>
-        <Wrapper className={"w-1/3 flex flex-col "} h={"390px"}>
+      <HStack my={"2"} gap={"1"}>
+        <Wrapper className={"w-1/3 flex flex-col "} h={"350px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
             <Text fontWeight={"semibold"}>Bookings by product category</Text>
           </HStack>
 
           {/* body */}
-          <div className="h-[350px] w-[410px] flex justify-start m-auto">
+          <div className=" xl:w-[85%] lg:w-[95%] w-[100%]  flex justify-start m-auto">
             <Doughnat
               data={bookingsByProduct.data}
               options={bookingsByProduct.options}
@@ -207,7 +206,7 @@ const Dashboard = () => {
           </div>
         </Wrapper>
 
-        <Wrapper className={"w-2/3"} h={"390px"}>
+        <Wrapper className={"w-2/3"} h={"350px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
             <Text fontWeight={"semibold"}>Bookings by vehicle type</Text>
@@ -236,12 +235,7 @@ const sampleRanking = [
     completed: "18",
     revenue: "18000",
   },
-  {
-    location: "Ngong",
-    created: "15",
-    completed: "14",
-    revenue: "14000",
-  },
+
   {
     location: "Kasarani",
     created: "20",

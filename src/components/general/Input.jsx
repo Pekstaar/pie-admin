@@ -8,7 +8,7 @@ const CInput = ({ icon, placeholder = "search", ...rest }) => {
       gap={"3"}
       alignItems={"center"}
       w={"350px"}
-      p={"2"}
+      px={"2"}
       borderWidth={"1px"}
       overflow={"hidden"}
       borderRadius={"xl"}

@@ -23,15 +23,15 @@ const Fleet = () => {
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<RiCarLine />} title={"Fleet management"} />
 
-      <HStack p={"3"} pt={"5"} gap={3}>
+      <HStack pt={"2"} gap={3}>
         {cards_data?.map((item) => (
           <FleetCard no={item?.number} text={item?.text} />
         ))}
       </HStack>
 
-      <Wrapper my={"4"} p={"5 "}>
+      <Wrapper my={"3"} px={"5"}>
         {/* search and table actions */}
-        <HStack py={"6"} justifyContent={"space-between"}>
+        <HStack py={"3"} justifyContent={"space-between"}>
           {/* /search input */}
           <CInput icon={<IoSearchOutline className="text-xl" />} />
           {/* actions */}
@@ -62,20 +62,16 @@ const Fleet = () => {
               //     status: 4,
               return (
                 <tr
-                  className={`h-20 capitalize ${
+                  className={`h-10 capitalize ${
                     isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
                 >
-                  <td className=" text-center py-3 px-4">
-                    {data?.registration}
-                  </td>
-                  <td className=" text-center py-3 px-4">{data?.driver}</td>
-                  <td className="text-center py-3 px-4">
-                    {data?.["license expiry"]}
-                  </td>
+                  <td className="  py-3 px-4">{data?.registration}</td>
+                  <td className="  py-3 px-4">{data?.driver}</td>
+                  <td className=" py-3 px-4">{data?.["license expiry"]}</td>
 
-                  <td className={`text-center text-white py-3 px-4 `}>
-                    <Box className="flex  justify-center">
+                  <td className={` text-white py-3 px-4 `}>
+                    <Box className="flex">
                       <Box
                         py={"1"}
                         px={"2"}
@@ -87,7 +83,7 @@ const Fleet = () => {
                     </Box>
                   </td>
                   {/* actions table */}
-                  <td className={`text-center text-white py-3 px-4`}>
+                  <td className={` text-white py-3 px-4`}>
                     <Box className="flex gap-4">
                       <ActionButton
                         handlePress={() =>
