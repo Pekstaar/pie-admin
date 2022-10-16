@@ -13,7 +13,7 @@ const Pending = ({ handleView }) => {
   return (
     <>
       {/* search and table actions */}
-      <HStack py={"6"} justifyContent={"space-between"}>
+      <HStack py={"3"} justifyContent={"space-between"}>
         {/* /search input */}
         <CInput icon={<IoSearchOutline className="text-xl" />} />
         {/* actions */}
@@ -34,16 +34,16 @@ const Pending = ({ handleView }) => {
 
             return (
               <tr
-                className={`h-20 capitalize ${
+                className={`h-14 capitalize ${
                   isEven ? "bg-[#F9F9F9]" : "white"
                 }`}
               >
-                <td className=" text-center py-3 px-4">{data?.fullname}</td>
-                <td className=" text-center py-3 px-4">{data?.email}</td>
-                <td className="text-center py-3 px-4">{data?.phone}</td>
-                <td className="text-center py-3 px-4">{data?.vehicle_cat}</td>
+                <td className="  py-3 px-4">{data?.fullname}</td>
+                <td className="  py-3 px-4">{data?.email}</td>
+                <td className=" py-3 px-4">{data?.phone}</td>
+                <td className=" py-3 px-4">{data?.vehicle_cat}</td>
                 {/* actions table */}
-                <td className={`text-center text-white py-3 px-4 w-32 `}>
+                <td className={` text-white py-3 px-4 w-32 `}>
                   <Box className="flex gap-4 justify-center">
                     <ActionButton
                       handleClick={() => handleView(data?.fullname)}

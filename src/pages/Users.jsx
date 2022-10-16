@@ -28,39 +28,39 @@ const Users = () => {
   };
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
-      <BreadCrumb icon={<BsPeople />} title={"Fleet management"} />
+      <BreadCrumb icon={<BsPeople />} title={"User management"} />
 
-      <HStack p={"3"} pt={"5"} gap={3}>
+      <HStack py={"2"} pt={"3"} gap={3}>
         {cards_data?.map((item) => (
           <UserCard no={item?.number} text={item?.text} />
         ))}
       </HStack>
 
-      <Wrapper my={"4"} p={"5 "}>
+      <Wrapper my={"2"} p={"3"}>
         {/* search and table actions */}
-        <HStack py={"6"} justifyContent={"space-between"} alignItems={"end"}>
+        <HStack py={"3"} justifyContent={"space-between"} alignItems={"end"}>
           {/* /search input */}
           <Box>
             <CInput icon={<IoSearchOutline className="text-xl" />} />
 
             <HStack gap={"5"} mt={"5"}>
               <PrimaryOutlinedButton
-                className={"h-[35px] px-3 border-[2px] rounded-lg text-sm"}
+                className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
               >
                 All
               </PrimaryOutlinedButton>
               <PrimaryOutlinedButton
-                className={"h-[35px] px-3 border-[2px] rounded-lg text-sm"}
+                className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
               >
                 Admin
               </PrimaryOutlinedButton>
               <PrimaryOutlinedButton
-                className={"h-[35px] px-3 border-[2px] rounded-lg text-sm"}
+                className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
               >
                 Drivers
               </PrimaryOutlinedButton>
               <PrimaryOutlinedButton
-                className={"h-[35px] px-3 border-[2px] rounded-lg text-sm"}
+                className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
               >
                 Users
               </PrimaryOutlinedButton>
@@ -171,18 +171,16 @@ const Users = () => {
               //     status: 4,
               return (
                 <tr
-                  className={`h-20 capitalize ${
+                  className={`h-14 capitalize ${
                     isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
                 >
-                  <td className=" text-center py-3 px-4">{data?.fullname}</td>
-                  <td className=" text-center py-3 px-4">
-                    {data?.["email address"]}
-                  </td>
-                  <td className="text-center py-3 px-4">{data?.phone}</td>{" "}
-                  <td className="text-center py-3 px-4">{data?.category}</td>
-                  <td className={`text-center text-white py-3 px-4 `}>
-                    <Box className="flex  justify-center">
+                  <td className="  py-3 px-4">{data?.fullname}</td>
+                  <td className="  py-3 px-4">{data?.["email address"]}</td>
+                  <td className=" py-3 px-4">{data?.phone}</td>{" "}
+                  <td className=" py-3 px-4">{data?.category}</td>
+                  <td className={` text-white py-3 px-4 `}>
+                    <Box className="flex  justify-start">
                       <Box
                         py={"1"}
                         px={"2"}
@@ -194,8 +192,8 @@ const Users = () => {
                     </Box>
                   </td>
                   {/* actions table */}
-                  <td className={`text-center text-white py-3 px-4`}>
-                    <Box className="flex gap-6 justify-center">
+                  <td className={` text-white py-3 px-4`}>
+                    <Box className="flex gap-6 justify-start">
                       <ActionButton
                         handlePress={() => handleViewUser(data?.fullname)}
                         bg={bg}

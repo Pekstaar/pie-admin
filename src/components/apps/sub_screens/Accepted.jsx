@@ -13,7 +13,7 @@ const Accepted = () => {
   return (
     <>
       {/* search and table actions */}
-      <HStack py={"6"} justifyContent={"space-between"}>
+      <HStack py={"3"} justifyContent={"space-between"}>
         {/* /search input */}
         <CInput icon={<IoSearchOutline className="text-xl" />} />
         {/* actions */}
@@ -34,7 +34,7 @@ const Accepted = () => {
 
             return (
               <tr
-                className={`h-20 capitalize ${
+                className={`h-14 capitalize ${
                   isEven ? "bg-[#F9F9F9]" : "white"
                 }`}
               >

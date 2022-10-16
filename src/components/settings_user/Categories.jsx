@@ -19,7 +19,7 @@ const Categories = ({ handleView }) => {
   return (
     <>
       {/* search and table actions */}
-      <HStack py={"6"} justifyContent={"space-between"}>
+      <HStack py={"5"} justifyContent={"space-between"}>
         {/* /search input */}
         <CInput icon={<IoSearchOutline className="text-xl" />} />
         {/* actions */}
@@ -66,7 +66,7 @@ const Categories = ({ handleView }) => {
 
             return (
               <tr
-                className={`h-20 capitalize ${
+                className={`h-14 capitalize ${
                   isEven ? "bg-[#F9F9F9]" : "white"
                 }`}
               >
@@ -75,7 +75,7 @@ const Categories = ({ handleView }) => {
                 </td>
                 {/* actions table */}
                 <td className={` text-white py-3 px-4 w-32 `}>
-                  <Box className="flex gap-5 justify-center">
+                  <Box className="flex gap-5 ">
                     <ActionButton
                       handleClick={() => handleView(data?.fullname)}
                     >

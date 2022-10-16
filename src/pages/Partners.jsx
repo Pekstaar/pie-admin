@@ -30,9 +30,9 @@ const Partners = () => {
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<FaPeopleArrows />} title={"Partners"} />
 
-      <Wrapper my={"4"} p={"5 "}>
+      <Wrapper my={"2"} p={"5 "}>
         {/* search and table actions */}
-        <HStack py={"6"} justifyContent={"space-between"} alignItems={"end"}>
+        <HStack py={"4"} justifyContent={"space-between"} alignItems={"end"}>
           {/* /search input */}
           <Box>
             <CInput icon={<IoSearchOutline className="text-xl" />} />
@@ -124,21 +124,19 @@ const Partners = () => {
               //     status: 4,
               return (
                 <tr
-                  className={`h-20 capitalize ${
+                  className={`h-14 capitalize ${
                     isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
                 >
-                  <td className=" text-center py-3 px-4">
-                    {data?.["partner name"]}
-                  </td>
+                  <td className="  py-3 px-4">{data?.["partner name"]}</td>
 
-                  <td className="text-center py-3 px-4">{data?.category}</td>
-                  <td className="text-center py-3 px-4">{data?.location}</td>
-                  <td className="text-center py-3 px-4">{data?.phone}</td>
+                  <td className=" py-3 px-4">{data?.category}</td>
+                  <td className=" py-3 px-4">{data?.location}</td>
+                  <td className=" py-3 px-4">{data?.phone}</td>
 
                   {/* actions table */}
-                  <td className={`text-center text-white py-3 px-4`}>
-                    <Box className="flex gap-6 justify-center">
+                  <td className={` text-white py-3 px-4`}>
+                    <Box className="flex gap-6 justify-start">
                       <ActionButton
                         handlePress={() =>
                           handleViewUser(data?.["partner name"])

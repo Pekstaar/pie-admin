@@ -24,11 +24,11 @@ const SettingsUser = () => {
         c={"capitalize"}
       />
 
-      <Wrapper my={"4"} p={"5 "}>
+      <Wrapper my={"2"} p={"5"}>
         <HStack
           gap={"2"}
           className={"border-b-2 border-zinc-200"}
-          h={"14"}
+          h={"12"}
           mx={"4"}
         >
           <SubNavItem
@@ -53,7 +53,7 @@ const SubNavItem = ({ title, isCurrent, handleClick }) => (
 
   // </Button>
   <Button
-    h={"14"}
+    h={"12"}
     cursor={"pointer"}
     borderRadius={"none"}
     bg={"white "}

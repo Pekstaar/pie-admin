@@ -18,14 +18,14 @@ const Apps = () => {
   };
 
   return (
-    <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
+    <Box p={"4"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<Transaction />} title={"Applications"} />
 
       <Wrapper my={"4"} p={"3  "}>
         <HStack
           gap={"2"}
           className={"border-b-2 border-zinc-200"}
-          h={"14"}
+          h={"12"}
           mx={"4"}
         >
           <SubNavItem
@@ -64,7 +64,7 @@ const SubNavItem = ({ title, isCurrent, handleClick }) => (
 
   // </Button>
   <Button
-    h={"14"}
+    h={"12"}
     cursor={"pointer"}
     borderRadius={"none"}
     bg={"white "}
