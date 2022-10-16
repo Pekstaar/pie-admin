@@ -138,9 +138,8 @@ const Dashboard = () => {
           </HStack>
 
           {/* body */}
-          <div className="h-[250px]  mx-auto ">
+          <div className="h-[280px] w-full mx-auto">
             <RadialChart />
-
             <Box className="flex-wrap flex absolute bottom-1 right-0 left-5">
               {radialKeys?.map((r) => (
                 <HStack className="w-[45%] p-2">

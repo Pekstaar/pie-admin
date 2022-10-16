@@ -1,59 +1,74 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import {
   RadialBarChart,
   RadialBar,
-  Legend,
   ResponsiveContainer,
+  PolarAngleAxis,
 } from "recharts";
 
+// { text: "", color: "#16AC52" },
+// { text: "", color: "#EAC625" },
+// { text: "", color: "#D9D9D9" },
+// { text: "", color: "#BB1600" },
 const data = [
   {
-    name: "18-24",
-    uv: 5,
+    name: "very dissatisfied",
+    uv: 25,
     pv: 2400,
     fill: "#CD3234",
   },
   {
-    name: "25-29",
+    name: "dissatisfied",
     uv: 20,
     pv: 4567,
     fill: "#D9D9D9",
   },
   {
-    name: "30-34",
+    name: "satisified",
     uv: 25,
     pv: 1398,
     fill: "#EAC625",
   },
   {
-    name: "30-34",
-    uv: 50,
+    name: "very satisified",
+    uv: 45,
     pv: 20,
     fill: "#16AC52",
   },
 ];
 
-export default class RadialChart extends PureComponent {
-  render() {
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <RadialBarChart
-          cx="50%"
-          cy="50%"
-          innerRadius="10%"
-          outerRadius="80%"
-          barSize={20}
-          data={data}
-        >
-          <RadialBar
-            minAngle={20}
-            label={{ position: "insideStart", fill: "#fff" }}
-            background
-            clockWise
-            dataKey="uv"
-          />
-        </RadialBarChart>
-      </ResponsiveContainer>
-    );
-  }
+export default function RadialChart() {
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <RadialBarChart
+        cx="50%"
+        cy="50%"
+        innerRadius="10%"
+        outerRadius="85%"
+        barSize={20}
+        data={data}
+        startAngle={90}
+        endAngle={450}
+      >
+        {/* <Legend content={renderLegend} layout={"horizontal"} align="center" po /> */}
+
+        <PolarAngleAxis
+          type="number"
+          domain={[0, 100]}
+          angleAxisId={0}
+          tick={false}
+          label={false}
+        />
+
+        <RadialBar
+          minAngle={20}
+          label={false}
+          background
+          clockWise
+          dataKey="uv"
+          dominantBaseline={"pv"}
+        />
+      </RadialBarChart>
+    </ResponsiveContainer>
+  );
 }
