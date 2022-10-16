@@ -210,7 +210,7 @@ const Dashboard = () => {
           </HStack>
 
           {/* body */}
-          <div className=" xl:w-[85%] lg:w-[95%] w-[100%]  flex justify-start m-auto">
+          <div className=" h-[350px] flex justify-start mx-auto">
             <Doughnat
               data={bookingsByProduct.data}
               options={bookingsByProduct.options}
