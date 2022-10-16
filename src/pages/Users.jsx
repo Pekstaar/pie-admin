@@ -43,7 +43,7 @@ const Users = () => {
           <Box>
             <CInput icon={<IoSearchOutline className="text-xl" />} />
 
-            <HStack gap={"5"} mt={"5"}>
+            <HStack gap={"2"} mt={"5"}>
               <PrimaryOutlinedButton
                 className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
               >
