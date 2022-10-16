@@ -21,7 +21,7 @@ const Bookings = () => {
         <HStack
           gap={"2"}
           className={"border-b-2 border-zinc-200"}
-          h={"10"}
+          h={"12"}
           mx={"2"}
         >
           <SubNavItem isCurrent title={"Ongoing"} handleClick={() => {}} />
@@ -108,7 +108,7 @@ const SubNavItem = ({ title, isCurrent }) => (
 
   // </Button>
   <Button
-    h={"10"}
+    h={"12"}
     cursor={"pointer"}
     borderRadius={"none"}
     bg={"white "}
