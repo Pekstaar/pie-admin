@@ -9,36 +9,29 @@ import {
 const data = [
   {
     name: "18-24",
-    uv: 12.47,
+    uv: 5,
     pv: 2400,
     fill: "#CD3234",
   },
   {
     name: "25-29",
-    uv: 8.69,
+    uv: 20,
     pv: 4567,
     fill: "#D9D9D9",
   },
   {
     name: "30-34",
-    uv: 3.69,
+    uv: 25,
     pv: 1398,
     fill: "#EAC625",
   },
   {
     name: "30-34",
-    uv: 8.69,
+    uv: 50,
     pv: 20,
     fill: "#16AC52",
   },
 ];
-
-const style = {
-  bottom: "0",
-  right: 0,
-  //   transform: "translate(0, -50%)",
-  lineHeight: "24px",
-};
 
 export default class RadialChart extends PureComponent {
   render() {
@@ -58,12 +51,6 @@ export default class RadialChart extends PureComponent {
             background
             clockWise
             dataKey="uv"
-          />
-          <Legend
-            iconSize={10}
-            layout="horizontal"
-            verticalAlign="middle"
-            wrapperStyle={style}
           />
         </RadialBarChart>
       </ResponsiveContainer>

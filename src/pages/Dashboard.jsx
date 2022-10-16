@@ -98,6 +98,13 @@ const Dashboard = () => {
     []
   );
 
+  const radialKeys = [
+    { text: "very satisified", color: "#16AC52" },
+    { text: "satisified", color: "#EAC625" },
+    { text: "dissatisfied", color: "#D9D9D9" },
+    { text: "very dissatisfied", color: "#BB1600" },
+  ];
+
   return (
     <Box p={"3"} className="max-h-[calc(100%-80px)]" overflowY={"scroll"}>
       <Breadcrumb />
@@ -124,19 +131,25 @@ const Dashboard = () => {
           </div>
         </Wrapper>
 
-        <Wrapper className={"w-1/3 flex flex-col  "} h={"350px"}>
+        <Wrapper className={"w-1/3 flex flex-col relative "} h={"350px"}>
           {/* header */}
           <HStack justifyContent={"space-between"} px={"5"}>
             <Text fontWeight={"semibold"}>Customer Satisfaction</Text>
           </HStack>
 
           {/* body */}
-          <div className="h-[300px] w-[300px] m-auto">
-            {/* <Doughnat
-              data={customerSatisfaction.data}
-              options={customerSatisfaction.options}
-            /> */}
+          <div className="h-[250px]  mx-auto ">
             <RadialChart />
+
+            <Box className="flex-wrap flex absolute bottom-1 right-0 left-5">
+              {radialKeys?.map((r) => (
+                <HStack className="w-[45%] p-2">
+                  <Box bg={r?.color} className={`h-4 w-4 rounded-full `} />
+
+                  <Text className="text-zinc-400">{r?.text}</Text>
+                </HStack>
+              ))}
+            </Box>
           </div>
         </Wrapper>
       </HStack>
