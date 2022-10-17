@@ -18,18 +18,22 @@ const CustomModal = ({
   button,
   title = "Modal Title",
   children,
+  bg = "white",
+  px,
 }) => {
   return (
     <>
       {button}
       <Modal size={"xl"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent className="w-1/2">
-          <ModalHeader>{title}</ModalHeader>
+        <ModalContent height={"90vh"} bg={bg} className="w-1/2">
+          <ModalHeader py={"3"}>{title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>{children}</ModalBody>
+          <ModalBody overflowY={"scroll"} h={"90%"} py={0} px={px}>
+            {children}
+          </ModalBody>
 
-          <ModalFooter className="flex gap-3">
+          <ModalFooter className="flex gap-3 bg-white">
             <PrimaryOutlinedButton
               handleClick={onClose}
               className={"text-sm items-end px-10"}

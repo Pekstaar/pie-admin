@@ -19,7 +19,7 @@ const CInput = ({ icon, placeholder = "search", ...rest }) => {
 
       <input
         placeholder={placeholder}
-        className="border-0 outline-none focus:outline-none  h-10 flex-grow"
+        className="border-0 outline-none focus:outline-none  h-12 flex-grow"
       />
     </Box>
   );

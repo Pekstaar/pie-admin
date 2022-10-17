@@ -34,7 +34,7 @@ const ActivitiesCard = () => {
   };
 
   return (
-    <Wrapper py={"1"}>
+    <Wrapper py={"2"}>
       <HStack gap={"3"} justifyContent={"space-between"}>
         <div className="flex flex-wrap 2xl:flex-nowrap ">
           {activities?.map((act) => (
