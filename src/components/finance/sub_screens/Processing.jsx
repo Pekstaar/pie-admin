@@ -33,7 +33,7 @@ const Processing = () => {
                 <td className=" py-3 px-4">KES. {data?.amount}</td>
 
                 {/* actions table */}
-                <td className={` py-3 px-4 w-[20%]`}>
+                <td className={` py-3 px-4 w-32`}>
                   <Box className="flex gap-4">
                     <OutlinedButton
                       icon={<RiDeleteBin6Line className="text-xl" />}

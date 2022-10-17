@@ -28,6 +28,7 @@ const ViewModal = ({ openModal, handleCloseModal }) => {
       bg={"gray.100"}
       px={0}
       showHeader={false}
+      ofy={"scroll"}
     >
       <Wrapper className={"flex gap-8 items-center"} px={6} borderRadius={"0"}>
         <Text fontSize={"sm"}>Status</Text>

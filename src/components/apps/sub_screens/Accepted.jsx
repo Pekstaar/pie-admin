@@ -38,15 +38,13 @@ const Accepted = () => {
                   isEven ? "bg-[#F9F9F9]" : "white"
                 }`}
               >
-                <td className=" text-center py-3 px-4">{data?.fullname}</td>
-                <td className=" text-center py-3 px-4">{data?.email}</td>
-                <td className="text-center py-3 px-4">{data?.phone}</td>
-                <td className="text-center py-3 px-4">{data?.vehicle_cat}</td>
-                <td className="text-center py-3 px-4">
-                  {data?.["accepted date"]}
-                </td>
+                <td className="  py-3 px-4">{data?.fullname}</td>
+                <td className="  py-3 px-4">{data?.email}</td>
+                <td className=" py-3 px-4">{data?.phone}</td>
+                <td className=" py-3 px-4">{data?.vehicle_cat}</td>
+                <td className=" py-3 px-4">{data?.["accepted date"]}</td>
                 {/* actions table */}
-                <td className={`text-center text-white py-3 px-4 w-32 `}>
+                <td className={`text-center text-white py-3 px-4 w-24 `}>
                   <Box className="flex gap-4 justify-center">
                     <ActionButton>
                       <FiEye />

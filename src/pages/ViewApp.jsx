@@ -143,7 +143,7 @@ const ViewApp = () => {
             </Box>
           </Box>
 
-          <Box className="w-2/3">
+          <Box className="w-2/3  my-3">
             <Wrapper w={"full"}>
               <Box>
                 {/* title */}
@@ -162,20 +162,20 @@ const ViewApp = () => {
                 </Text>
 
                 <Box p={"2"}>
-                  <Image src={Insurance} alt={"license"} h={"600px"} />
+                  <Image src={Insurance} alt={"license"} h={"540px"} />
                 </Box>
               </Box>
 
               <Box className="flex gap-4 justify-end">
-                <button className="bg-primary_yellow rounded-md items-center flex gap-2 px-16 py-3">
-                  <Text fontWeight={"semibold"}>Approve</Text>
-                </button>
-
                 <button
                   onClick={handleOpenModal}
                   className="text-primary_yellow border-[1.5px] border-primary_yellow rounded-md items-center flex gap-2 px-16 py-3"
                 >
                   <Text fontWeight={"semibold"}>Reject</Text>
+                </button>
+
+                <button className="bg-primary_yellow rounded-md items-center flex gap-2 px-16 py-3">
+                  <Text fontWeight={"semibold"}>Approve</Text>
                 </button>
               </Box>
             </Wrapper>

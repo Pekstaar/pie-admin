@@ -43,7 +43,7 @@ const Pending = ({ handleView }) => {
                 <td className=" py-3 px-4">{data?.phone}</td>
                 <td className=" py-3 px-4">{data?.vehicle_cat}</td>
                 {/* actions table */}
-                <td className={` text-white py-3 px-4 w-32 `}>
+                <td className={` text-white py-3 px-4 w-24 `}>
                   <Box className="flex gap-4 justify-center">
                     <ActionButton
                       handleClick={() => handleView(data?.fullname)}

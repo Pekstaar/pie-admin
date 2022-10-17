@@ -126,7 +126,7 @@ const Dashboard = () => {
           </HStack>
 
           {/* body */}
-          <div className="h-[96%] mt-2">
+          <div className="h-[310px]">
             <BarChart data={barChart?.data} options={barChart?.options} />
           </div>
         </Wrapper>
@@ -231,7 +231,9 @@ const Dashboard = () => {
 
           {/* body */}
 
-          <BarChart data={barChart?.data} options={barChart?.options} />
+          <div className="h-[310px]">
+            <BarChart data={barChart?.data} options={barChart?.options} />
+          </div>
         </Wrapper>
       </HStack>
     </Box>

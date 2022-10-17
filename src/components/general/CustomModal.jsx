@@ -21,7 +21,7 @@ const CustomModal = ({
   bg = "white",
   px,
   hfs,
-  ofy = "scroll", //overflowY
+  ofy = "hidden", //overflowY
   showConfirm = false,
 }) => {
   return (

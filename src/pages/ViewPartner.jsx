@@ -164,7 +164,7 @@ const ViewPartner = () => {
           </Text>
 
           {/* search and table actions */}
-          <HStack py={"6"} justifyContent={"space-between"}>
+          <HStack py={"7"} justifyContent={"space-between"}>
             {/* /search input */}
             <CInput icon={<IoSearchOutline className="text-xl" />} />
             {/* actions */}
@@ -210,12 +210,11 @@ const ViewPartner = () => {
                     <td className="  py-3 px-3 bg-white">
                       <input type="checkbox" className="h-[20px] w-[20px]" />
                     </td>
-                    <td className="  py-3 px-4">{data?.pickup}</td>
                     <td className="  py-3 px-4">{data?.destination}</td>
                     <td className=" py-3 px-4">{data?.sender}</td>
                     <td className=" py-3 px-4">{data?.receiver}</td>
                     <td className={` text-white py-3 px-4 `}>
-                      <Box className="flex  justify-center">
+                      <Box className="flex ">
                         <Box
                           py={"1"}
                           px={"2"}
@@ -252,56 +251,48 @@ export default ViewPartner;
 
 const tableData = [
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "ken Driver",
     receiver: "Ben Doe",
     status: 4,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "ken Driver",
     receiver: "Ben Doe",
     status: 5,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "ken Driver",
     receiver: "Ben Doe",
     status: 0,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "ken Driver",
     receiver: "Ben Doe",
     status: 1,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "ken Driver",
     receiver: "Ben Doe",
     status: 2,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "ken Driver",
     receiver: "Ben Doe",
     status: 3,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "ken Driver",
     receiver: "Ben Doe",
     status: 4,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "ken Driver",
     receiver: "Ben Doe",

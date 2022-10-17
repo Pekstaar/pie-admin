@@ -45,7 +45,7 @@ const Withdrawal = () => {
                 <td className=" py-3 px-4">KES. {data?.amount}</td>
 
                 {/* actions table */}
-                <td className={` py-3 px-4 w-[20%]`}>
+                <td className={` py-3 px-4 w-40`}>
                   <Box className="flex justify-end gap-4">
                     <PayButton
                       icon={<AiFillCreditCard className="text-lg" />}

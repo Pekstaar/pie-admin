@@ -111,7 +111,7 @@ const FleetView = () => {
           </Box>
         </Box>
 
-        <Wrapper my={"4"} p={"5 "} className={"w-2/3"}>
+        <Wrapper mt={"4"} mb={"2"} p={"5 "} className={"w-2/3"}>
           <Text fontWeight={"semibold"} fontSize={"lg"}>
             Bookings
           </Text>
@@ -153,7 +153,6 @@ const FleetView = () => {
                       isEven ? "bg-[#F9F9F9]" : "white"
                     }`}
                   >
-                    <td className="  py-3 px-4">{data?.pickup}</td>
                     <td className="  py-3 px-4">{data?.destination}</td>
                     <td className=" py-3 px-4">{data?.sender}</td>
                     <td className=" py-3 px-4">{data?.receiver}</td>
@@ -171,7 +170,7 @@ const FleetView = () => {
                       </Box>
                     </td>
                     {/* actions table */}
-                    <td className={` text-white py-3 px-4`}>
+                    <td className={` text-white py-3 px-4 w-32`}>
                       <Box className="flex gap-4">
                         <ActionButton bg={bg}>
                           <FiEye />
@@ -197,7 +196,6 @@ export default FleetView;
 
 const tableData = [
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "Collins joe",
     receiver: "Ben Doe",
@@ -205,7 +203,6 @@ const tableData = [
     status: 4,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "Collins joe",
     receiver: "Ben Doe",
@@ -213,7 +210,6 @@ const tableData = [
     status: 5,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "Collins joe",
     receiver: "Ben Doe",
@@ -221,7 +217,6 @@ const tableData = [
     status: 0,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "Collins joe",
     receiver: "Ben Doe",
@@ -229,7 +224,6 @@ const tableData = [
     status: 1,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "Collins joe",
     receiver: "Ben Doe",
@@ -237,7 +231,6 @@ const tableData = [
     status: 2,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "Collins joe",
     receiver: "Ben Doe",
@@ -245,7 +238,6 @@ const tableData = [
     status: 3,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "Collins joe",
     receiver: "Ben Doe",
@@ -253,7 +245,6 @@ const tableData = [
     status: 4,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     sender: "Collins joe",
     receiver: "Ben Doe",

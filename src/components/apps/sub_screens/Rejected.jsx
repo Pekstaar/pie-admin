@@ -44,7 +44,7 @@ const Rejected = () => {
                 <td className=" py-3 px-4">{data?.vehicle_cat}</td>
                 <td className=" py-3 px-4">{data?.reason}</td>
                 {/* actions table */}
-                <td className={` text-white py-3 px-4 w-32 `}>
+                <td className={` text-white py-3 px-4 w-24`}>
                   <Box className="flex gap-4 justify-center">
                     <ActionButton>
                       <FiEye />

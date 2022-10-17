@@ -135,7 +135,7 @@ const Partners = () => {
                   <td className=" py-3 px-4">{data?.phone}</td>
 
                   {/* actions table */}
-                  <td className={` text-white py-3 px-4`}>
+                  <td className={` text-white py-3 px-4 w-32`}>
                     <Box className="flex gap-6 justify-start">
                       <ActionButton
                         handlePress={() =>

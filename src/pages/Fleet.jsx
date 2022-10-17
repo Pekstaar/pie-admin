@@ -83,7 +83,7 @@ const Fleet = () => {
                     </Box>
                   </td>
                   {/* actions table */}
-                  <td className={` text-white py-3 px-4`}>
+                  <td className={` text-white py-3 px-4 w-32`}>
                     <Box className="flex gap-4">
                       <ActionButton
                         handlePress={() =>

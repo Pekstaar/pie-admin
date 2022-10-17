@@ -95,7 +95,7 @@ const Bookings = () => {
                       </Box>
                     </td>
                     {/* actions table */}
-                    <td className={`text-center text-white py-3 px-4`}>
+                    <td className={`text-center text-white py-3 px-4 w-32`}>
                       <Box className="flex gap-4">
                         <Box onClick={handleOpenModal}>
                           <ActionButton>

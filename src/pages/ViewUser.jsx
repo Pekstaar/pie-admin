@@ -170,7 +170,7 @@ const ViewUser = () => {
         </Box>
 
         {/* table */}
-        <Wrapper my={"4"} p={"5 "} className={"w-3/5"}>
+        <Wrapper mb={"2"} mt={3} p={"5 "} className={"w-3/5"}>
           <Text fontWeight={"semibold"} fontSize={"lg"}>
             Bookings
           </Text>
@@ -212,7 +212,6 @@ const ViewUser = () => {
                       isEven ? "bg-[#F9F9F9]" : "white"
                     }`}
                   >
-                    <td className=" py-3 px-4">{data?.pickup}</td>
                     <td className=" py-3 px-4">{data?.destination}</td>
                     <td className="py-3 px-4">{data?.receiver}</td>
                     <td className="py-3 px-4">{data?.driver}</td>
@@ -229,8 +228,8 @@ const ViewUser = () => {
                       </Box>
                     </td>
                     {/* actions table */}
-                    <td className={` text-white py-3 px-4`}>
-                      <Box className="flex gap-4 ">
+                    <td className={` text-white py-3 px-4 w-24`}>
+                      <Box className="flex gap-4 justify-center">
                         <ActionButton
                           bg={bg}
                           handleClick={() => handleViewUser(data?.driver)}
@@ -254,56 +253,48 @@ export default ViewUser;
 
 const tableData = [
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     receiver: "Ben Doe",
     driver: "ken Driver",
     status: 4,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     receiver: "Ben Doe",
     driver: "ken Driver",
     status: 5,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     receiver: "Ben Doe",
     driver: "ken Driver",
     status: 0,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     receiver: "Ben Doe",
     driver: "ken Driver",
     status: 1,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     receiver: "Ben Doe",
     driver: "ken Driver",
     status: 2,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     receiver: "Ben Doe",
     driver: "ken Driver",
     status: 3,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     receiver: "Ben Doe",
     driver: "ken Driver",
     status: 4,
   },
   {
-    pickup: "Saljona apartment",
     destination: "Brooke Manor",
     receiver: "Ben Doe",
     driver: "ken Driver",
