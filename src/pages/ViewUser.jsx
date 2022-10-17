@@ -28,7 +28,7 @@ const ViewUser = () => {
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb
         icon={<Transaction />}
-        title={`Fleet management /`}
+        title={`User management /`}
         subtitle={location[location?.length - 1]}
       />
       <Box className="flex gap-3 ">
@@ -151,17 +151,15 @@ const ViewUser = () => {
 
                     return (
                       <tr
-                        className={`h-20 capitalize ${
+                        className={`h-14 capitalize ${
                           isEven ? "bg-[#F9F9F9]" : "white"
                         }`}
                       >
-                        <td className=" text-center py-3 px-4">{data?.date}</td>
-                        <td className=" text-center py-3 px-4">
+                        <td className=" py-3 px-4">{data?.date}</td>
+                        <td className=" py-3 px-4">
                           {data?.["method of payment"]}
                         </td>
-                        <td className="text-center py-3 px-4">
-                          {data?.amount}
-                        </td>
+                        <td className="py-3 px-4">{data?.amount}</td>
                       </tr>
                     );
                   })}
@@ -210,18 +208,16 @@ const ViewUser = () => {
 
                 return (
                   <tr
-                    className={`h-20 capitalize ${
+                    className={`h-14 capitalize ${
                       isEven ? "bg-[#F9F9F9]" : "white"
                     }`}
                   >
-                    <td className=" text-center py-3 px-4">{data?.pickup}</td>
-                    <td className=" text-center py-3 px-4">
-                      {data?.destination}
-                    </td>
-                    <td className="text-center py-3 px-4">{data?.receiver}</td>
-                    <td className="text-center py-3 px-4">{data?.driver}</td>
-                    <td className={`text-center text-white py-3 px-4 `}>
-                      <Box className="flex  justify-center">
+                    <td className=" py-3 px-4">{data?.pickup}</td>
+                    <td className=" py-3 px-4">{data?.destination}</td>
+                    <td className="py-3 px-4">{data?.receiver}</td>
+                    <td className="py-3 px-4">{data?.driver}</td>
+                    <td className={`text-white py-3 px-4 `}>
+                      <Box className="flex">
                         <Box
                           py={"1"}
                           px={"2"}
@@ -233,8 +229,8 @@ const ViewUser = () => {
                       </Box>
                     </td>
                     {/* actions table */}
-                    <td className={`text-center text-white py-3 px-4`}>
-                      <Box className="flex gap-4 justify-center">
+                    <td className={` text-white py-3 px-4`}>
+                      <Box className="flex gap-4 ">
                         <ActionButton
                           bg={bg}
                           handleClick={() => handleViewUser(data?.driver)}

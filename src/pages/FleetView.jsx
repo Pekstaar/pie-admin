@@ -30,7 +30,7 @@ const FleetView = () => {
         <Box className={"w-1/3"} flex={"1"}>
           <Wrapper
             my={"4"}
-            p={"10"}
+            p={"5"}
             borderRadius={"none"}
             className={"flex flex-col justify-center items-center"}
           >
@@ -62,36 +62,26 @@ const FleetView = () => {
             </Box>
             <Wrapper
               my={"2"}
-              p={"10"}
+              p={"5"}
               borderRadius={"none"}
-              className={"flex justify-center items-center gap-3"}
+              className={"flex justify-center items-center gap-3 text-sm"}
             >
               <Box className="text-right flex flex-col gap-2">
-                <Text fontSize={"lg"} fontWeight={"medium"}>
-                  Reg no
-                </Text>
-                <Text fontSize={"lg"} fontWeight={"medium"}>
-                  Color
-                </Text>
-                <Text fontSize={"lg"} fontWeight={"medium"}>
-                  Type
-                </Text>
-                <Text fontSize={"lg"} fontWeight={"medium"}>
-                  Model
-                </Text>
-                <Text fontSize={"lg"} fontWeight={"medium"}>
-                  License Expiry
-                </Text>
+                <Text fontWeight={"medium"}>Reg no</Text>
+                <Text fontWeight={"medium"}>Color</Text>
+                <Text fontWeight={"medium"}>Type</Text>
+                <Text fontWeight={"medium"}>Model</Text>
+                <Text fontWeight={"medium"}>License Expiry</Text>
               </Box>
 
-              <div className={"bg-zinc-200 h-40 w-0.5 rounded-full"} />
+              <div className={"bg-zinc-200 h-32 w-0.5 rounded-full"} />
 
               <Box className="text-left flex flex-col gap-2">
-                <Text fontSize={"lg"}>KCB 121G</Text>
-                <Text fontSize={"lg"}>Gray</Text>
-                <Text fontSize={"lg"}>Cab</Text>
-                <Text fontSize={"lg"}>Toyota Allion</Text>
-                <Text fontSize={"lg"}>3/9/2022</Text>
+                <Text>KCB 121G</Text>
+                <Text>Gray</Text>
+                <Text>Cab</Text>
+                <Text>Toyota Allion</Text>
+                <Text>3/9/2022</Text>
               </Box>
             </Wrapper>
           </Box>
@@ -103,7 +93,7 @@ const FleetView = () => {
                 Documents
               </Text>
             </Box>
-            <Wrapper my={"2"} p={"10"} borderRadius={"none"} className={""}>
+            <Wrapper my={"2"} p={"5"} borderRadius={"none"} className={""}>
               <Box className="">
                 <Text fontSize={"lg"} mb={"2"} fontWeight={"medium"}>
                   Insurance
@@ -159,21 +149,19 @@ const FleetView = () => {
 
                 return (
                   <tr
-                    className={`h-20 capitalize ${
+                    className={`h-14 capitalize ${
                       isEven ? "bg-[#F9F9F9]" : "white"
                     }`}
                   >
-                    <td className=" text-center py-3 px-4">{data?.pickup}</td>
-                    <td className=" text-center py-3 px-4">
-                      {data?.destination}
-                    </td>
-                    <td className="text-center py-3 px-4">{data?.sender}</td>
-                    <td className="text-center py-3 px-4">{data?.receiver}</td>
-                    <td className="text-center py-3 px-4">{data?.driver}</td>
-                    <td className={`text-center text-white py-3 px-4 `}>
+                    <td className="  py-3 px-4">{data?.pickup}</td>
+                    <td className="  py-3 px-4">{data?.destination}</td>
+                    <td className=" py-3 px-4">{data?.sender}</td>
+                    <td className=" py-3 px-4">{data?.receiver}</td>
+                    <td className=" py-3 px-4">{data?.driver}</td>
+                    <td className={` text-white py-3 px-4 `}>
                       <Box className="flex  justify-center">
                         <Box
-                          py={"1"}
+                          py={"0.5"}
                           px={"2"}
                           fontSize={"xs"}
                           className={`${bg} rounded-md font-medium  `}
@@ -183,7 +171,7 @@ const FleetView = () => {
                       </Box>
                     </td>
                     {/* actions table */}
-                    <td className={`text-center text-white py-3 px-4`}>
+                    <td className={` text-white py-3 px-4`}>
                       <Box className="flex gap-4">
                         <ActionButton bg={bg}>
                           <FiEye />

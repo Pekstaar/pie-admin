@@ -137,7 +137,7 @@ const ViewPartner = () => {
 
                     return (
                       <tr
-                        className={`h-20 capitalize ${
+                        className={`h-14 capitalize ${
                           isEven ? "bg-[#F9F9F9]" : "white"
                         }`}
                       >
@@ -203,20 +203,18 @@ const ViewPartner = () => {
 
                 return (
                   <tr
-                    className={`h-20 capitalize ${
+                    className={`h-14 capitalize ${
                       isEven ? "bg-[#F9F9F9]" : "white"
                     }`}
                   >
-                    <td className=" text-center py-3 px-3 bg-white">
+                    <td className="  py-3 px-3 bg-white">
                       <input type="checkbox" className="h-[20px] w-[20px]" />
                     </td>
-                    <td className=" text-center py-3 px-4">{data?.pickup}</td>
-                    <td className=" text-center py-3 px-4">
-                      {data?.destination}
-                    </td>
-                    <td className="text-center py-3 px-4">{data?.sender}</td>
-                    <td className="text-center py-3 px-4">{data?.receiver}</td>
-                    <td className={`text-center text-white py-3 px-4 `}>
+                    <td className="  py-3 px-4">{data?.pickup}</td>
+                    <td className="  py-3 px-4">{data?.destination}</td>
+                    <td className=" py-3 px-4">{data?.sender}</td>
+                    <td className=" py-3 px-4">{data?.receiver}</td>
+                    <td className={` text-white py-3 px-4 `}>
                       <Box className="flex  justify-center">
                         <Box
                           py={"1"}
@@ -229,8 +227,8 @@ const ViewPartner = () => {
                       </Box>
                     </td>
                     {/* actions table */}
-                    <td className={`text-center text-white py-3 px-4`}>
-                      <Box className="flex gap-4 justify-center">
+                    <td className={` text-white py-3 px-4`}>
+                      <Box className="flex gap-4 ">
                         <ActionButton
                           bg={bg}
                           handleClick={() => handleViewUser(data?.driver)}
