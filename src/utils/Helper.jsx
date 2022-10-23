@@ -6,3 +6,8 @@ export const STATUS_LIST = {
   0: "cancelled",
   5: "completed",
 };
+
+export const toastProps = {
+  duration: 2000,
+  isClosable: true,
+};

@@ -10,6 +10,7 @@ import Apps from "./Apps";
 import ViewApp from "./ViewApp";
 import ViewUser from "./ViewUser";
 import ViewPartner from "./ViewPartner";
+import Login from "./Login";
 
 export {
   Dashboard,
@@ -24,4 +25,5 @@ export {
   ViewApp,
   ViewUser,
   ViewPartner,
+  Login,
 };
