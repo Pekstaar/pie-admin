@@ -5,15 +5,17 @@ import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 
-import { FiEye } from "react-icons/fi";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { IoSearchOutline } from "react-icons/io5";
-import { VscFilter } from "react-icons/vsc";
-import CInput from "../components/general/Input";
 import { BiSort } from "react-icons/bi";
+import { FiEye } from "react-icons/fi";
+import { IoSearchOutline } from "react-icons/io5";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { VscFilter } from "react-icons/vsc";
 import ViewModal from "../components/Booking/ViewModal";
+import CInput from "../components/general/Input";
 import { STATUS_LIST } from "../utils/Helper";
+
 const Bookings = () => {
+  // const toast = useToast();
   const [openModal, setOpenModal] = React.useState(false);
 
   const handleOpenModal = React.useCallback(() => {
@@ -24,10 +26,36 @@ const Bookings = () => {
     setOpenModal(false);
   }, []);
 
+  // const handleSuccess = (data) => {
+  //   console.log({ data });
+  // };
+
+  // const handleError = (error) => {
+  //   console.log({ error });
+  // };
+
+  // const { isLoading, data, isError, error } = useBookingsData(
+  //   handleSuccess,
+  //   handleError
+  // );
+
+  // useEffect(() => {
+  //   toast({
+  //     ...toastProps,
+  //     title: "Error!",
+  //     description: error?.message,
+  //     status: "error",
+  //   });
+  // }, [isError, error, toast]);
+
+  // if (true) {
+  // }
+
   return (
     <>
-      <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
+      <Box p={"3"} maxH={"91%"} overflowY={"scroll"} position={"relative"}>
         <BreadCrumb icon={<Transaction />} title={"Bookings"} />
+        {/* <Loader /> */}
 
         <Wrapper my={"2"} p={"3"}>
           <HStack
@@ -115,7 +143,6 @@ const Bookings = () => {
           </Box>
         </Wrapper>
       </Box>
-
       <ViewModal openModal={openModal} handleCloseModal={handleCloseModal} />
     </>
   );

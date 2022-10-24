@@ -1,13 +1,17 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Center } from "@chakra-ui/react";
 import React from "react";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 const CInput = ({
   icon,
   placeholder = "search",
   type = "text",
+
   value,
   handleChange,
   name,
+  rIcon,
+  handleEyeClick,
   ...rest
 }) => {
   return (
@@ -33,6 +37,26 @@ const CInput = ({
         onChange={handleChange}
         name={name}
       />
+      {name === "password" && (
+        <Center
+          className="cursor-pointer"
+          w={"10"}
+          h={"full"}
+          onClick={() => {
+            if (type === "password") {
+              handleEyeClick("text");
+            } else {
+              handleEyeClick("password");
+            }
+          }}
+        >
+          {type === "password" ? (
+            <AiFillEye className="text-2xl" />
+          ) : (
+            <AiFillEyeInvisible className="text-2xl" />
+          )}
+        </Center>
+      )}
     </Box>
   );
 };

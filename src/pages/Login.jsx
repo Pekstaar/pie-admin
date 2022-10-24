@@ -6,9 +6,11 @@ import LoadingButton from "../components/general/LoadingButton";
 import PrimaryButton from "../components/general/PrimaryButton";
 import { toastProps } from "../utils/Helper";
 import AuthServices from "../utils/services/AuthServices";
+import useUserStore from "../utils/zustand/Store";
 
 const Login = () => {
   const toast = useToast();
+  const setToken = useUserStore((state) => state.setToken);
 
   const [state, setState] = useState({
     emailPhone: "",
@@ -16,6 +18,7 @@ const Login = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [pwdType, setPwdType] = useState("password");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,7 +50,9 @@ const Login = () => {
     return true;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     const isValid = handleValidation();
 
     if (!isValid) return;
@@ -59,7 +64,8 @@ const Login = () => {
         password: state?.password,
       });
 
-      console.log("LOGIN RESPONSE IS: ", response);
+      setToken(response?.key);
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -75,7 +81,10 @@ const Login = () => {
   };
   return (
     <Center className="h-screen bg-slate-100 ">
-      <Box className="rounded-xl p-6 bg-white w-4/12 flex flex-col gap-6 items-center px-8">
+      <form
+        onSubmit={handleSubmit}
+        className="rounded-xl p-6 bg-white w-4/12 flex flex-col gap-6 items-center px-8"
+      >
         <Text textAlign={"center"} fontSize={"3xl"} fontWeight={"semibold"}>
           LOGIN
         </Text>
@@ -100,19 +109,20 @@ const Login = () => {
           <CInput
             h={"12"}
             w={"full"}
-            type={"password"}
+            type={pwdType}
             placeholder="password"
             icon={<AiFillLock className="text-xl" />}
             borderRadius={"md"}
             name={"password"}
             handleChange={handleChange}
+            handleEyeClick={(type) => setPwdType(type)}
           />
         </Box>
 
         <Box className="py-5 w-full flex justify-center">
           {!loading ? (
             <PrimaryButton
-              handleClick={handleSubmit}
+              type={"submit"}
               className="text-[20px] font-medium w-3/4 flex justify-center rounded-full h-12"
             >
               LOGIN
@@ -126,7 +136,7 @@ const Login = () => {
             />
           )}
         </Box>
-      </Box>
+      </form>
     </Center>
   );
 };

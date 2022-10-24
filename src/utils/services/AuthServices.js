@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from "./AxiosService";
 
 // login
 async function login(data) {
-  const res = await axios.post("https://apidev.okapy.world/auth/login/", data);
+  const res = await axios.post("/auth/login/", data);
 
   return res.data;
 }
@@ -21,6 +21,6 @@ async function getUser() {
   return res.data;
 }
 
-const AuthServices = { login, logout, getUser };
+const auth = { login, logout, getUser };
 
-export default AuthServices;
+export default auth;

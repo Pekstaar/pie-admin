@@ -3,13 +3,16 @@ import { devtools, persist } from "zustand/middleware";
 
 const useUserStore = create(
   devtools(
-    persist((set) => ({
-      user: {
-        token: null,
-      },
-      setToken: () =>
-        set((state) => ({ user: { ...state.user, token: state.user.token } })),
-    }))
+    persist(
+      (set) => ({
+        user: {
+          token: null,
+        },
+        setToken: (tkn) =>
+          set((state) => ({ user: { ...state.user, token: tkn } })),
+      }),
+      { name: "okapy_user" }
+    )
   )
 );
 

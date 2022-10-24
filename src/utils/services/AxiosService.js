@@ -13,8 +13,9 @@ const AxiosUtility = axios.create({
 });
 
 export const setAuthToken = async (instance) => {
-  //   const { token } = await JSON.parse(localStorageService.fetch("user"));
-  const token = {};
+  const { state } = await JSON.parse(localStorage?.getItem("okapy_user"));
+  const token = state?.user?.token;
+
   if (token) {
     instance.defaults.headers.common["Authorization"] = `Token ${token}`;
   } else {
