@@ -1,9 +1,9 @@
 import { Box, Button, Center, HStack, Text, VStack } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
-
+import UserServices from "../utils/services/UserServices";
 import { FiEye } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { IoSearchOutline } from "react-icons/io5";
@@ -20,8 +20,16 @@ import { AiOutlineMail } from "react-icons/ai";
 
 const Users = () => {
   const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
 
   const [openModal, setOpenModal] = useState(false);
+
+  useEffect(() => {
+    UserServices.fetchUsers()
+    .then((response) => {
+      setUsers(response)
+    })
+  },[]);
 
   const handleViewUser = (user) => {
     navigate(`${user}`, user);
@@ -156,13 +164,13 @@ const Users = () => {
         {/* body */}
         <Box>
           <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            {tableData?.map((data, key) => {
+            {users?.map((data, key) => {
               const isEven = key % 2;
-              const status = STATUS_LIST[data?.status];
+              const status = STATUS_LIST[data?.is_active];
               const bg =
-                data?.status === 0
+                !data?.is_active
                   ? "bg-primary_red"
-                  : data?.status === 1
+                  : data?.is_active
                   ? "bg-primary_green"
                   : "";
               // registration: "kcb 4457k",
@@ -175,10 +183,10 @@ const Users = () => {
                     isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
                 >
-                  <td className="  py-3 px-4">{data?.fullname}</td>
-                  <td className="  py-3 px-4">{data?.["email address"]}</td>
-                  <td className=" py-3 px-4">{data?.phone}</td>{" "}
-                  <td className=" py-3 px-4">{data?.category}</td>
+                  <td className="  py-3 px-4">{data?.first_name} {data?.last_name}</td>
+                  <td className="  py-3 px-4">{data?.email}</td>
+                  <td className=" py-3 px-4">{data?.phonenumber}</td>{" "}
+                  <td className=" py-3 px-4">{data?.is_admin ? "admin" : data?.is_driver? "driver" : "user"}</td>
                   <td className={` text-white py-3 px-4 `}>
                     <Box className="flex  justify-start">
                       <Box
@@ -195,7 +203,7 @@ const Users = () => {
                   <td className={` text-white py-3 px-4  w-32`}>
                     <Box className="flex gap-6 justify-start">
                       <ActionButton
-                        handlePress={() => handleViewUser(data?.fullname)}
+                        handlePress={() => handleViewUser(data?.first_name)}
                         bg={bg}
                       >
                         <FiEye />
@@ -278,8 +286,8 @@ const tableData = [
   },
 ];
 const STATUS_LIST = {
-  0: "active",
-  1: "deactivated",
+  true: "active",
+  false: "deactivated",
 };
 const ActionButton = ({ bg, children, handlePress }) => (
   <Button

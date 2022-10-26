@@ -1,9 +1,9 @@
-import axios, { setAuthToken } from "./AxiosService";
+import AxiosUtility, { setAuthToken } from "./AxiosService";
 
 // login
-async function fetchBookings(data) {
-  setAuthToken(axios);
-  const res = await axios.get("/bookings/api/all", data);
+async function fetchBookings() {
+  setAuthToken(AxiosUtility);
+  const res = await AxiosUtility.get("/bookings/api/all/");
 
   return res.data;
 }

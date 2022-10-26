@@ -1,9 +1,9 @@
 import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
-
+import PartnerServices from "../utils/services/PartnerServices";
 import { FiEye } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { IoSearchOutline } from "react-icons/io5";
@@ -20,6 +20,16 @@ import { FaPeopleArrows } from "react-icons/fa";
 
 const Partners = () => {
   const navigate = useNavigate();
+  const [partners, setPartners] = useState([]);
+
+  useEffect(() => {
+    PartnerServices.fetchPartners()
+    .then((response) => {
+      setPartners(response)
+    })
+  }, []);
+
+  console.log(partners)
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -115,7 +125,7 @@ const Partners = () => {
         {/* body */}
         <Box>
           <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            {tableData?.map((data, key) => {
+            {partners?.map((data, key) => {
               const isEven = key % 2;
 
               // registration: "kcb 4457k",
@@ -128,7 +138,7 @@ const Partners = () => {
                     isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
                 >
-                  <td className="  py-3 px-4">{data?.["partner name"]}</td>
+                  <td className="  py-3 px-4">{data?.name}</td>
 
                   <td className=" py-3 px-4">{data?.category}</td>
                   <td className=" py-3 px-4">{data?.location}</td>

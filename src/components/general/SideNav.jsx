@@ -1,7 +1,7 @@
-import { Box, Center, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Center, HStack, Text, VStack, useToast } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Logo } from "../../assets/svg";
-
+import AuthServices from "../../utils/services/AuthServices";
 import { MdOutlineDashboard } from "react-icons/md";
 import { TiClipboard } from "react-icons/ti";
 import { RiCarLine } from "react-icons/ri";
@@ -12,9 +12,11 @@ import { FaPeopleArrows } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
 import LogoutBtn from "../sidenav/LogoutBtn";
 import { useNavigate } from "react-router-dom";
+import { toastProps } from "../../utils/Helper";
 
 const SideNav = ({ show }) => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [current, setCurrent] = useState("dashboard");
   const [currentSub, setCurrentSub] = useState("users");
 
@@ -28,7 +30,21 @@ const SideNav = ({ show }) => {
   };
 
   const handleLogout = () => {
-    console.log("LOGOUT");
+    AuthServices.logout()
+      .then((response) => {
+        console.log(response)
+        localStorage.removeItem("okapy_user");
+        toast({
+          ...toastProps,
+          title: "Success",
+          description: response.detail,
+          status: "success",
+        });
+        setTimeout(() => {
+          // eslint-disable-next-line no-restricted-globals
+          location.reload();
+        }, 2000);
+      })
   };
 
   return (
@@ -98,7 +114,7 @@ const MenuItem = ({
           w={"5"}
           textColor={isCurrent ? "text-dark_green" : "text-zinc-400"}
           fontSize={"lg"}
-          // className={}
+        // className={}
         >
           {icon}
         </Center>
@@ -144,7 +160,7 @@ const SubMenu = ({ isCurrent, handleClick, icon, title }) => (
         w={"5"}
         textColor={isCurrent ? "text-dark_green" : "text-zinc-400"}
         fontSize={"lg"}
-        // className={}
+      // className={}
       >
         {icon}
       </Center>

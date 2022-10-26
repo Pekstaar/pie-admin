@@ -1,10 +1,10 @@
 import { Box, Button, Center, HStack, Image, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Lorry, Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
-
+import UserServices from "../utils/services/UserServices";
 import { FiEye } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { VscFilter } from "react-icons/vsc";
@@ -17,8 +17,20 @@ import { GoGraph } from "react-icons/go";
 
 const ViewUser = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState([]);
 
   const location = useLocation()?.pathname.split("/");
+
+  let userFirstName = location[location?.length - 1]
+
+  useEffect(() => {
+    UserServices.fetchUsers()
+      .then((response) => {
+        setUser(response.find((user) => user.first_name === userFirstName))
+      })
+  }, [userFirstName]);
+
+  console.log(user)
 
   const handleViewUser = (user) => {
     navigate(`/users/${user}`, user);
@@ -29,7 +41,7 @@ const ViewUser = () => {
       <BreadCrumb
         icon={<Transaction />}
         title={`User management /`}
-        subtitle={location[location?.length - 1]}
+        subtitle={user?.first_name}
       />
       <Box className="flex gap-3 ">
         <Box className="w-2/5">
@@ -50,7 +62,7 @@ const ViewUser = () => {
               <Image
                 h={"full"}
                 objectFit={"cover"}
-                src="https://media.istockphoto.com/photos/attractive-young-african-woman-picture-id174810353?k=20&m=174810353&s=612x612&w=0&h=7lhfbyHQhlMnVGG6zUcbbrB_INOtNKuzD_9EfU027Gc="
+                src={user?.image}
               />
             </Box>
             <Text
@@ -58,7 +70,7 @@ const ViewUser = () => {
               textTransform={"uppercase"}
               fontWeight={"semibold"}
             >
-              {location[location?.length - 1]}
+              {user?.first_name}
             </Text>
 
             <Text fontSize={"sm"} fontWeight={"light"}>
@@ -106,12 +118,12 @@ const ViewUser = () => {
               <div className={"bg-zinc-200 h-60 w-0.5 rounded-full"} />
 
               <Box className="text-left flex flex-col gap-4">
-                <Text>Pekmah Cruiz</Text>
-                <Text>Driver</Text>
+                <Text>{user?.first_name} {user?.last_name}</Text>
+                <Text>{user?.is_admin ? "Admin" : user?.is_driver ? "Driver" : "User"}</Text>
                 <Text>Nairobi CBD, Nairobi</Text>
-                <Text>pekmah@mail.com</Text>
-                <Text>+254 781223344</Text>
-                <Text>3/9/2022</Text>
+                <Text>{user?.email}</Text>
+                <Text>{user?.phonenumber}</Text>
+                <Text>{user?.date_joined}</Text>
                 <Text>3/10/2022</Text>
               </Box>
             </Wrapper>
@@ -151,9 +163,8 @@ const ViewUser = () => {
 
                     return (
                       <tr
-                        className={`h-14 capitalize ${
-                          isEven ? "bg-[#F9F9F9]" : "white"
-                        }`}
+                        className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
+                          }`}
                       >
                         <td className=" py-3 px-4">{data?.date}</td>
                         <td className=" py-3 px-4">
@@ -203,14 +214,13 @@ const ViewUser = () => {
                   data?.status === 0
                     ? "bg-primary_red"
                     : data?.status === 5
-                    ? "bg-primary_green"
-                    : "bg-primary_yellow_light";
+                      ? "bg-primary_green"
+                      : "bg-primary_yellow_light";
 
                 return (
                   <tr
-                    className={`h-14 capitalize ${
-                      isEven ? "bg-[#F9F9F9]" : "white"
-                    }`}
+                    className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
+                      }`}
                   >
                     <td className=" py-3 px-4">{data?.destination}</td>
                     <td className="py-3 px-4">{data?.receiver}</td>

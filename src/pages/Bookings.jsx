@@ -1,10 +1,10 @@
 import { Box, Button, HStack } from "@chakra-ui/react";
-import React from "react";
+import React, {useEffect} from "react";
 import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
-
+import BookingService from "../utils/services/BookingServices";
 import { BiSort } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
@@ -17,6 +17,7 @@ import { STATUS_LIST } from "../utils/Helper";
 const Bookings = () => {
   // const toast = useToast();
   const [openModal, setOpenModal] = React.useState(false);
+  const [bookings, setBookings] = React.useState([]);
 
   const handleOpenModal = React.useCallback(() => {
     setOpenModal(true);
@@ -50,6 +51,14 @@ const Bookings = () => {
 
   // if (true) {
   // }
+
+  useEffect(() => {
+    BookingService.fetchBookings()
+    .then((response) => {
+      console.log(response)
+      setBookings(response)
+    })
+  }, []);
 
   return (
     <>
@@ -89,7 +98,7 @@ const Bookings = () => {
           {/* body */}
           <Box>
             <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {tableData?.map((data, key) => {
+              {bookings?.map((data, key) => {
                 const isEven = key % 2;
                 const status = STATUS_LIST[data?.status];
                 const bg =
