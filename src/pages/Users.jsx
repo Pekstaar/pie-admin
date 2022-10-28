@@ -1,35 +1,104 @@
 import { Box, Button, Center, HStack, Text, VStack } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import _ from "lodash";
+import React, { useEffect, useState } from "react";
+import { AiOutlineMail } from "react-icons/ai";
+import { BiSort } from "react-icons/bi";
+import { BsPeople, BsPerson, BsTelephone } from "react-icons/bs";
+import { FiEye } from "react-icons/fi";
+import { GrAdd, GrLocation } from "react-icons/gr";
+import { IoSearchOutline } from "react-icons/io5";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { VscFilter } from "react-icons/vsc";
+import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/general/BreadCrumb";
+import CustomModal from "../components/general/CustomModal";
+import CInput from "../components/general/Input";
+import PrimaryButton from "../components/general/PrimaryButton";
+import PrimaryOutlinedButton from "../components/general/PrimaryOutlinedButton";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 import UserServices from "../utils/services/UserServices";
-import { FiEye } from "react-icons/fi";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { IoSearchOutline } from "react-icons/io5";
-import { VscFilter } from "react-icons/vsc";
-import CInput from "../components/general/Input";
-import { BiSort } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
-import { BsPeople, BsPerson, BsTelephone } from "react-icons/bs";
-import PrimaryButton from "../components/general/PrimaryButton";
-import { GrAdd, GrLocation } from "react-icons/gr";
-import PrimaryOutlinedButton from "../components/general/PrimaryOutlinedButton";
-import CustomModal from "../components/general/CustomModal";
-import { AiOutlineMail } from "react-icons/ai";
 
 const Users = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [filteredUser, setFilteredUsers] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("");
+  const [search, setSearch] = useState("");
 
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-    UserServices.fetchUsers()
-    .then((response) => {
-      setUsers(response)
-    })
-  },[]);
+    UserServices.fetchUsers().then((response) => {
+      setUsers(response);
+      setFilteredUsers(response);
+    });
+  }, []);
+
+  const handleFilter = React.useCallback(
+    (filter) => {
+      // const result = intersectionBy(users, conditionArr, "user");
+
+      let newList = [];
+
+      if (filter === "is_user") {
+        newList = users?.filter(
+          (item) =>
+            item?.is_admin === false &&
+            item?.is_superuser === false &&
+            item?.is_driver === false
+        );
+
+        return newList;
+      }
+      newList = users?.filter((item) => item?.[filter] === true);
+
+      return newList;
+    },
+    [users]
+  );
+
+  const groupings = React.useMemo(() => {
+    const admins = _.filter(users, { is_admin: true });
+    const drivers = _.filter(users, { is_driver: true });
+    const senders = _.filter(users, {
+      is_driver: false,
+      is_admin: false,
+      is_superuser: false,
+    });
+
+    return {
+      admins: admins.length,
+      drivers: drivers.length,
+      senders: senders.length,
+      receivers: 0,
+    };
+  }, [users]);
+
+  const handleSearch = (arr, cond) => {
+    const newArr = _.filter(arr, (obj) => {
+      const name = `${obj?.first_name?.toLowerCase()} ${obj?.last_name?.toLowerCase()}`;
+      return (
+        name.includes(cond?.toLowerCase()) ||
+        obj?.email?.includes(cond?.toLowerCase()) ||
+        obj?.phonenumber?.includes(cond?.toLowerCase())
+      );
+    });
+
+    return newArr;
+  };
+
+  React.useEffect(() => {
+    setFilteredUsers(handleSearch(users, search));
+  }, [search, users]);
+
+  React.useEffect(() => {
+    if (selectedFilter === "") {
+      setFilteredUsers(users);
+      return;
+    }
+    setFilteredUsers(handleFilter(selectedFilter));
+  }, [handleFilter, selectedFilter, users]);
 
   const handleViewUser = (user) => {
     navigate(`${user}`, user);
@@ -40,7 +109,10 @@ const Users = () => {
 
       <HStack py={"2"} pt={"3"} gap={3}>
         {cards_data?.map((item) => (
-          <UserCard no={item?.number} text={item?.text} />
+          <UserCard
+            no={groupings[item?.text?.toLowerCase()]}
+            text={item?.text}
+          />
         ))}
       </HStack>
 
@@ -49,26 +121,35 @@ const Users = () => {
         <HStack py={"3"} justifyContent={"space-between"} alignItems={"end"}>
           {/* /search input */}
           <Box>
-            <CInput icon={<IoSearchOutline className="text-xl" />} />
+            <CInput
+              icon={<IoSearchOutline className="text-xl" />}
+              handleChange={(e) => {
+                setSearch(e?.target?.value);
+              }}
+            />
 
             <HStack gap={"2"} mt={"5"}>
               <PrimaryOutlinedButton
                 className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
+                handleClick={() => setSelectedFilter("")}
               >
                 All
               </PrimaryOutlinedButton>
               <PrimaryOutlinedButton
                 className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
+                handleClick={() => setSelectedFilter("is_admin")}
               >
                 Admin
               </PrimaryOutlinedButton>
               <PrimaryOutlinedButton
                 className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
+                handleClick={() => setSelectedFilter("is_driver")}
               >
                 Drivers
               </PrimaryOutlinedButton>
               <PrimaryOutlinedButton
                 className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
+                handleClick={() => setSelectedFilter("is_user")}
               >
                 Users
               </PrimaryOutlinedButton>
@@ -164,15 +245,14 @@ const Users = () => {
         {/* body */}
         <Box>
           <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            {users?.map((data, key) => {
+            {filteredUser?.map((data, key) => {
               const isEven = key % 2;
               const status = STATUS_LIST[data?.is_active];
-              const bg =
-                !data?.is_active
-                  ? "bg-primary_red"
-                  : data?.is_active
-                  ? "bg-primary_green"
-                  : "";
+              const bg = !data?.is_active
+                ? "bg-primary_red"
+                : data?.is_active
+                ? "bg-primary_green"
+                : "";
               // registration: "kcb 4457k",
               // driver: "Brooke Manor",
               // "license expiry": "Collins joe",
@@ -183,10 +263,18 @@ const Users = () => {
                     isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
                 >
-                  <td className="  py-3 px-4">{data?.first_name} {data?.last_name}</td>
+                  <td className="  py-3 px-4">
+                    {data?.first_name} {data?.last_name}
+                  </td>
                   <td className="  py-3 px-4">{data?.email}</td>
                   <td className=" py-3 px-4">{data?.phonenumber}</td>{" "}
-                  <td className=" py-3 px-4">{data?.is_admin ? "admin" : data?.is_driver? "driver" : "user"}</td>
+                  <td className=" py-3 px-4">
+                    {data?.is_admin
+                      ? "admin"
+                      : data?.is_driver
+                      ? "driver"
+                      : "user"}
+                  </td>
                   <td className={` text-white py-3 px-4 `}>
                     <Box className="flex  justify-start">
                       <Box

@@ -1,18 +1,18 @@
-import { Box, Center, HStack, Text, VStack, useToast } from "@chakra-ui/react";
+import { Box, Center, HStack, Text, useToast, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Logo } from "../../assets/svg";
-import AuthServices from "../../utils/services/AuthServices";
-import { MdOutlineDashboard } from "react-icons/md";
-import { TiClipboard } from "react-icons/ti";
-import { RiCarLine } from "react-icons/ri";
 import { BiIdCard } from "react-icons/bi";
 import { BsPeople } from "react-icons/bs";
-import { GoGraph } from "react-icons/go";
 import { FaPeopleArrows } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
-import LogoutBtn from "../sidenav/LogoutBtn";
+import { GoGraph } from "react-icons/go";
+import { MdOutlineDashboard } from "react-icons/md";
+import { RiCarLine } from "react-icons/ri";
+import { TiClipboard } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
+import { Logo } from "../../assets/svg";
 import { toastProps } from "../../utils/Helper";
+import useUserStore from "../../utils/zustand/Store";
+import LogoutBtn from "../sidenav/LogoutBtn";
 
 const SideNav = ({ show }) => {
   const navigate = useNavigate();
@@ -29,22 +29,22 @@ const SideNav = ({ show }) => {
     navigate(to);
   };
 
-  const handleLogout = () => {
-    AuthServices.logout()
-      .then((response) => {
-        console.log(response)
-        localStorage.removeItem("okapy_user");
-        toast({
-          ...toastProps,
-          title: "Success",
-          description: response.detail,
-          status: "success",
-        });
-        setTimeout(() => {
-          // eslint-disable-next-line no-restricted-globals
-          location.reload();
-        }, 2000);
-      })
+  const setToken = useUserStore((state) => state.setToken);
+  const handleLogout = async () => {
+    setToken("");
+
+    // AuthServices.logout().then((response) => {
+    toast({
+      ...toastProps,
+      title: "Success",
+      description: "Logged out admin!",
+      status: "success",
+    });
+    //   setTimeout(() => {
+    //     // eslint-disable-next-line no-restricted-globals
+    //     location.reload();
+    //   }, 2000);
+    // });
   };
 
   return (
@@ -114,7 +114,7 @@ const MenuItem = ({
           w={"5"}
           textColor={isCurrent ? "text-dark_green" : "text-zinc-400"}
           fontSize={"lg"}
-        // className={}
+          // className={}
         >
           {icon}
         </Center>
@@ -160,7 +160,7 @@ const SubMenu = ({ isCurrent, handleClick, icon, title }) => (
         w={"5"}
         textColor={isCurrent ? "text-dark_green" : "text-zinc-400"}
         fontSize={"lg"}
-      // className={}
+        // className={}
       >
         {icon}
       </Center>
