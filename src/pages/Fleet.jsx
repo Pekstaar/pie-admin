@@ -1,24 +1,52 @@
 import { Box, Button, Center, HStack, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 
-import { FiEye } from "react-icons/fi";
-import { RiCarLine, RiDeleteBin5Line } from "react-icons/ri";
-import { IoSearchOutline } from "react-icons/io5";
-import { VscFilter } from "react-icons/vsc";
-import CInput from "../components/general/Input";
+import _ from "lodash";
 import { BiSort } from "react-icons/bi";
-import { Lorry } from "../assets/svg";
+import { FiEye } from "react-icons/fi";
+import { IoSearchOutline } from "react-icons/io5";
+import { RiCarLine, RiDeleteBin5Line } from "react-icons/ri";
+import { VscFilter } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
+import { Lorry } from "../assets/svg";
+import CInput from "../components/general/Input";
+import FleetServices from "../utils/services/FleetServices";
 
 const Fleet = () => {
   const navigate = useNavigate();
+  const [vehicles, setVehicles] = useState([]);
+  const [filteredVehicles, setFilteredVehicles] = useState([]);
+  const [search, setSearch] = useState("");
 
   const handleViewFleet = (plate) => {
     navigate(`${plate}`, plate);
   };
+
+  const handleSearch = (arr, cond) => {
+    const newArr = _.filter(arr, (obj) => {
+      const name = `${obj?.owner?.first_name?.toLowerCase()} ${obj?.owner?.last_name?.toLowerCase()}`;
+      return (
+        name.includes(cond?.toLowerCase()) ||
+        obj?.reg_number?.toLowerCase()?.includes(cond?.toLowerCase())
+      );
+    });
+
+    return newArr;
+  };
+
+  React.useEffect(() => {
+    setFilteredVehicles(handleSearch(vehicles, search));
+  }, [search, vehicles]);
+
+  useEffect(() => {
+    FleetServices.fetchVehicles().then((response) => {
+      setVehicles(response);
+      setFilteredVehicles(response);
+    });
+  }, []);
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<RiCarLine />} title={"Fleet management"} />
@@ -33,7 +61,12 @@ const Fleet = () => {
         {/* search and table actions */}
         <HStack py={"3"} justifyContent={"space-between"}>
           {/* /search input */}
-          <CInput icon={<IoSearchOutline className="text-xl" />} />
+          <CInput
+            icon={<IoSearchOutline className="text-xl" />}
+            handleChange={(e) => {
+              setSearch(e?.target?.value);
+            }}
+          />
           {/* actions */}
           <HStack gap={"2"}>
             <TableAction
@@ -47,13 +80,15 @@ const Fleet = () => {
         {/* body */}
         <Box>
           <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            {tableData?.map((data, key) => {
+            {filteredVehicles?.map((data, key) => {
               const isEven = key % 2;
-              const status = STATUS_LIST[data?.status];
+              const st = 2;
+              // const status = STATUS_LIST[data?.status];
+              const status = STATUS_LIST[2];
               const bg =
-                data?.status === 0
+                st === 0
                   ? "bg-primary_red"
-                  : data?.status === 2
+                  : st === 2
                   ? "bg-primary_green"
                   : "bg-primary_yellow_light";
               // registration: "kcb 4457k",
@@ -66,9 +101,11 @@ const Fleet = () => {
                     isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
                 >
-                  <td className="  py-3 px-4">{data?.registration}</td>
-                  <td className="  py-3 px-4">{data?.driver}</td>
-                  <td className=" py-3 px-4">{data?.["license expiry"]}</td>
+                  <td className="  py-3 px-4">{data?.reg_number}</td>
+                  <td className="  py-3 px-4">
+                    {data?.owner?.first_name + " " + data?.owner?.last_name}
+                  </td>
+                  <td className=" py-3 px-4">{data?.insurance_expiry}</td>
 
                   <td className={` text-white py-3 px-4 `}>
                     <Box className="flex">
@@ -115,50 +152,7 @@ const tableData = [
   {
     registration: "kcb 4457k",
     driver: "Brooke Manor",
-    "license expiry": "Collins joe",
-    status: 1,
-  },
-  {
-    registration: "kde 4457k",
-    driver: "Brooke Manor",
-    "license expiry": "Collins joe",
-    status: 2,
-  },
-  {
-    registration: "kba 4457k",
-    driver: "Brooke Manor",
-    "license expiry": "9/9/2022",
-    status: 0,
-  },
-  {
-    registration: "kca 4457k",
-    driver: "Brooke Manor",
-    "license expiry": "8/2/2023",
-    status: 0,
-  },
-  {
-    registration: "kcb 4457k",
-    driver: "Brooke Manor",
-    "license expiry": "9/5/2023",
-    status: 2,
-  },
-  {
-    registration: "kde 4457k",
-    driver: "Brooke Manor",
-    "license expiry": "9/9/2022",
-    status: 1,
-  },
-  {
-    registration: "kba 4457k",
-    driver: "Brooke Manor",
-    "license expiry": "9/9/2022",
-
-    status: 2,
-  },
-  {
-    registration: "kca 4457k",
-    driver: "Brooke Manor",
-    "license expiry": "9/9/2022",
+    "insurance expiry": "Collins joe",
     status: 1,
   },
 ];
