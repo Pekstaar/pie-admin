@@ -145,7 +145,7 @@ const Users = () => {
       toast({
         ...toastProps,
         title: "Error!",
-        description: "User creation Error!",
+        description: error?.message,
         status: "error",
       });
       console.log("USER CREATE ERROR:", error);
@@ -165,6 +165,11 @@ const Users = () => {
   }, [handleFilter, selectedFilter, users]);
 
   const handleViewUser = (user) => {
+    // console.log(user);
+    if (user?.is_driver) {
+      navigate(`driver/${user?.id}`, user);
+      return;
+    }
     navigate(`${user}`, user);
   };
   return (
@@ -394,7 +399,7 @@ const Users = () => {
                   <td className={` text-white py-3 px-4  w-32`}>
                     <Box className="flex gap-6 justify-start">
                       <ActionButton
-                        handlePress={() => handleViewUser(data?.first_name)}
+                        handlePress={() => handleViewUser(data)}
                         bg={bg}
                       >
                         <FiEye />

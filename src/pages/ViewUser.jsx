@@ -1,20 +1,20 @@
-import { Box, Button, Center, HStack, Image, Text } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
-import { Lorry, Transaction } from "../assets/svg";
-import BreadCrumb from "../components/general/BreadCrumb";
-import Table from "../components/general/Table";
-import Wrapper from "../components/general/Wrapper";
-import UserServices from "../utils/services/UserServices";
-import BookingServices from "../utils/services/BookingServices";
+import { Box, Button, HStack, Image, Text, VStack } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { BiSort } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
+import { GrEdit } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
 import { VscFilter } from "react-icons/vsc";
-import { GrEdit } from "react-icons/gr";
-import CInput from "../components/general/Input";
-import { BiSort } from "react-icons/bi";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Transaction } from "../assets/svg";
+import BreadCrumb from "../components/general/BreadCrumb";
+import CustomModal from "../components/general/CustomModal";
 import DeactivateButton from "../components/general/DeactivateButton";
-import { GoGraph } from "react-icons/go";
+import CInput from "../components/general/Input";
+import Table from "../components/general/Table";
+import Wrapper from "../components/general/Wrapper";
+import BookingServices from "../utils/services/BookingServices";
+import UserServices from "../utils/services/UserServices";
 
 const ViewUser = () => {
   const navigate = useNavigate();
@@ -96,6 +96,120 @@ const ViewUser = () => {
                 Personal information
               </Text>
 
+              <CustomModal
+                // loading={loading}
+                // handleSave={handleCreate}
+                title={"Add User"}
+                // isOpen={openModal}
+                // onClose={() => setOpenModal(false)}
+                // button={
+                //   // <PrimaryButton
+                //   //   className={"text-sm items-end"}
+                //   //   handleClick={() => setOpenModal(true)}
+                //   // >
+                //   //   <GrAdd className="text-lg" />
+                //   //   <Text fontWeight={"medium"}>Add User</Text>
+                //   // </PrimaryButton>
+                // }
+              >
+                <VStack gap={"2"} w={"full"}>
+                  {/* <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Full name</Text>
+
+                  <CInput
+                    handleChange={handleChange}
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    name={"name"}
+                    value={user?.name}
+                    icon={<BsPerson className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box> */}
+
+                  <Box className="flex w-full flex-col gap-1">
+                    <Text fontSize={"sm"}>Category</Text>
+
+                    {/* <CInput
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    borderRadius={"md"}
+                  /> */}
+
+                    {/* <CSelect
+                    handleChange={(selected) =>
+                      setUser((prev) => ({
+                        ...prev,
+                        category: selected,
+                      }))
+                    }
+                    h={"10"}
+                    w={3 / 4}
+                  /> */}
+                  </Box>
+
+                  {/* <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Location</Text>
+
+                  <CInput
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    icon={<GrLocation className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box> */}
+
+                  {/* <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Email</Text>
+
+                  <CInput
+                    handleChange={handleChange}
+                    value={user?.email}
+                    name={"email"}
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    icon={<AiOutlineMail className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box>
+
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Phone</Text>
+
+                  <CInput
+                    handleChange={handleChange}
+                    value={user?.phone}
+                    name={"phone"}
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    icon={<BsTelephone className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box>
+
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Password</Text>
+
+                  <CInput
+                    handleChange={handleChange}
+                    value={user?.password}
+                    handleEyeClick={() => setShowPassword(!showPassword)}
+                    name={"password"}
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder="password"
+                    type={showPassword ? "name" : "password"}
+                    icon={<AiFillLock className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box> */}
+                </VStack>
+              </CustomModal>
               <ActionButton>
                 <GrEdit />
               </ActionButton>
@@ -139,7 +253,7 @@ const ViewUser = () => {
           </Box>
 
           {/* vehicle information */}
-          <Box>
+          {/* <Box>
             <Box className="flex justify-between py-2 px-5">
               <Text fontSize={"lg"} fontWeight={"medium"}>
                 Payment Details
@@ -151,7 +265,7 @@ const ViewUser = () => {
             </Box>
             <Wrapper my={"2"} borderRadius={"none"} className={"gap-3"}>
               {/* mini cards */}
-              <HStack w={"full"} fontFamily={"Poppins"}>
+          {/* <HStack w={"full"} fontFamily={"Poppins"}>
                 <MiniCard no={"24"} text={"Total Bookings"} icon={<Lorry />} />
                 <MiniCard
                   no={"3"}
@@ -187,7 +301,7 @@ const ViewUser = () => {
                 </Table>
               </Box>
             </Wrapper>
-          </Box>
+          </Box>  */}
         </Box>
 
         {/* table */}
@@ -350,43 +464,43 @@ const TableAction = ({ icon, text }) => (
   </button>
 );
 
-const MiniCard = ({ text, no, icon }) => (
-  <Box borderRadius={"xl"} h={"20"} p={"2"} flexGrow={"1"}>
-    <Text fontSize={"sm"} className={"text-zinc-400"}>
-      {text}
-    </Text>
-    <Box className="flex justify-between items-center">
-      <Text fontWeight={"bold"} fontSize={"lg"}>
-        {no}
-      </Text>
+// const MiniCard = ({ text, no, icon }) => (
+//   <Box borderRadius={"xl"} h={"20"} p={"2"} flexGrow={"1"}>
+//     <Text fontSize={"sm"} className={"text-zinc-400"}>
+//       {text}
+//     </Text>
+//     <Box className="flex justify-between items-center">
+//       <Text fontWeight={"bold"} fontSize={"lg"}>
+//         {no}
+//       </Text>
 
-      <Center
-        h={"40px"}
-        w={"40px"}
-        p={"1.5"}
-        bg={"current_bg"}
-        borderRadius={"md"}
-      >
-        {icon}
-      </Center>
-    </Box>
-  </Box>
-);
+//       <Center
+//         h={"40px"}
+//         w={"40px"}
+//         p={"1.5"}
+//         bg={"current_bg"}
+//         borderRadius={"md"}
+//       >
+//         {icon}
+//       </Center>
+//     </Box>
+//   </Box>
+// );
 
-const sample_payment_data = [
-  {
-    date: "5/3/2019",
-    "method of payment": "Mpesa",
-    amount: "350",
-  },
-  {
-    date: "5/3/2019",
-    "method of payment": "Mpesa",
-    amount: "350",
-  },
-  {
-    date: "5/3/2019",
-    "method of payment": "Mpesa",
-    amount: "350",
-  },
-];
+// const sample_payment_data = [
+//   {
+//     date: "5/3/2019",
+//     "method of payment": "Mpesa",
+//     amount: "350",
+//   },
+//   {
+//     date: "5/3/2019",
+//     "method of payment": "Mpesa",
+//     amount: "350",
+//   },
+//   {
+//     date: "5/3/2019",
+//     "method of payment": "Mpesa",
+//     amount: "350",
+//   },
+// ];
