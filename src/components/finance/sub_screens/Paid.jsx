@@ -11,8 +11,8 @@ const Paid = () => {
   const [searchValue, setSearchValue] = useState("");
 
   React.useEffect(() => {
-    EarningServices.fetchPaidEarnings().then((response) => {
-      setEarnings(response);
+    EarningServices.fetchEarnings().then((response) => {
+      setEarnings(response.filter((data) => data.status === 1));
     });
   }, []);
 
@@ -34,10 +34,9 @@ const Paid = () => {
           {earnings?.filter((data) => {
             return (
               data === "" ? data :
-              data?.date.toLowerCase().includes(searchValue.toLowerCase()) ||
-              data?.owner__first_name.toLowerCase().includes(searchValue.toLowerCase()) ||
-              data?.owner__last_name.toLowerCase().includes(searchValue.toLowerCase()) ||
-              data?.owner__last_name.toLowerCase().includes(searchValue.toLowerCase()) ||
+              data?.created_at.toLowerCase().includes(searchValue.toLowerCase()) ||
+              data?.owner?.first_name.toLowerCase().includes(searchValue.toLowerCase()) ||
+              data?.owner?.last_name.toLowerCase().includes(searchValue.toLowerCase()) ||
               data?.amount.toLowerCase().includes(searchValue.toLowerCase())
             )
           }).map((data, key) => {
@@ -48,10 +47,10 @@ const Paid = () => {
                 className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
               >
-                <td className="py-3 px-4">{data?.date}</td>
+                <td className="py-3 px-4">{data?.created_at}</td>
 
                 <td className=" py-3 px-4">
-                  {data?.owner__first_name} {data?.owner__last_name}
+                  {data?.owner?.first_name} {data?.owner?.last_name}
                 </td>
                 <td className=" py-3 px-4">
                   KES. {(data?.amount)}
