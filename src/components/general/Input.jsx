@@ -1,4 +1,4 @@
-import { Box, Center } from "@chakra-ui/react";
+import { Box, Center, Select } from "@chakra-ui/react";
 import React from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
@@ -60,5 +60,43 @@ const CInput = ({
     </Box>
   );
 };
+
+export const CSelect = (
+  icon,
+  placeholder = "search",
+  type = "text",
+
+  value,
+  handleChange,
+  name,
+  rIcon,
+  handleEyeClick,
+  ...rest
+) => (
+  <Box
+    display={"flex"}
+    gap={"3"}
+    alignItems={"center"}
+    w={3 / 4}
+    // px={"2"}
+    borderWidth={"1px"}
+    overflow={"hidden"}
+    borderRadius={"md"}
+    borderColor={"primary_yellow"}
+    {...rest}
+  >
+    <Select
+      variant="outline"
+      placeholder="--select user category--"
+      borderWidth={0}
+      w={"full"}
+      m={"0"}
+      onChange={handleChange}
+    >
+      <option value="user">User</option>
+      <option value="driver">Driver</option>
+    </Select>
+  </Box>
+);
 
 export default CInput;

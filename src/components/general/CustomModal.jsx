@@ -23,6 +23,7 @@ const CustomModal = ({
   hfs,
   ofy = "hidden", //overflowY
   showConfirm = false,
+  handleSave,
 }) => {
   return (
     <>
@@ -50,7 +51,10 @@ const CustomModal = ({
                   </Text>
                 </PrimaryOutlinedButton>
 
-                <PrimaryButton className={"text-sm items-end px-10"}>
+                <PrimaryButton
+                  handleClick={handleSave}
+                  className={"text-sm items-end px-10"}
+                >
                   <Text fontWeight={"medium"}>Save</Text>
                 </PrimaryButton>
               </>

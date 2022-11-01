@@ -23,21 +23,19 @@ const ViewUser = () => {
 
   const location = useLocation()?.pathname.split("/");
 
-  let userFirstName = location[location?.length - 1]
+  let userFirstName = location[location?.length - 1];
 
   useEffect(() => {
-    UserServices.fetchUsers()
-      .then((response) => {
-        setUser(response.find((user) => user.first_name === userFirstName))
-      })
+    UserServices.fetchUsers().then((response) => {
+      setUser(response.find((user) => user.first_name === userFirstName));
+    });
 
     BookingServices.ownersBookings(userFirstName).then((response) => {
       setUserBookings(response);
-    })
-    
+    });
   }, [userFirstName]);
 
-  console.log(user)
+  // const
 
   const handleViewUser = (user) => {
     navigate(`/users/${user}`, user);
@@ -66,11 +64,7 @@ const ViewUser = () => {
               bg={"gray.300"}
               mb={"3"}
             >
-              <Image
-                h={"full"}
-                objectFit={"cover"}
-                src={user?.image}
-              />
+              <Image h={"full"} objectFit={"cover"} src={user?.image} />
             </Box>
             <Text
               fontSize={"xl"}
@@ -125,8 +119,16 @@ const ViewUser = () => {
               <div className={"bg-zinc-200 h-60 w-0.5 rounded-full"} />
 
               <Box className="text-left flex flex-col gap-4">
-                <Text>{user?.first_name} {user?.last_name}</Text>
-                <Text>{user?.is_admin ? "Admin" : user?.is_driver ? "Driver" : "User"}</Text>
+                <Text>
+                  {user?.first_name} {user?.last_name}
+                </Text>
+                <Text>
+                  {user?.is_admin
+                    ? "Admin"
+                    : user?.is_driver
+                    ? "Driver"
+                    : "User"}
+                </Text>
                 <Text>Nairobi CBD, Nairobi</Text>
                 <Text>{user?.email}</Text>
                 <Text>{user?.phonenumber}</Text>
@@ -170,8 +172,9 @@ const ViewUser = () => {
 
                     return (
                       <tr
-                        className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
-                          }`}
+                        className={`h-14 capitalize ${
+                          isEven ? "bg-[#F9F9F9]" : "white"
+                        }`}
                       >
                         <td className=" py-3 px-4">{data?.date}</td>
                         <td className=" py-3 px-4">
@@ -221,17 +224,20 @@ const ViewUser = () => {
                   data?.status === 0
                     ? "bg-primary_red"
                     : data?.status === 5
-                      ? "bg-primary_green"
-                      : "bg-primary_yellow_light";
+                    ? "bg-primary_green"
+                    : "bg-primary_yellow_light";
 
                 return (
                   <tr
-                    className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
-                      }`}
+                    className={`h-14 capitalize ${
+                      isEven ? "bg-[#F9F9F9]" : "white"
+                    }`}
                   >
                     <td className=" py-3 px-4">--</td>
                     <td className="py-3 px-4">--</td>
-                    <td className="py-3 px-4">{data?.driver?.first_name} {data?.driver?.last_name}</td>
+                    <td className="py-3 px-4">
+                      {data?.driver?.first_name} {data?.driver?.last_name}
+                    </td>
                     <td className={`text-white py-3 px-4 `}>
                       <Box className="flex">
                         <Box
