@@ -5,6 +5,7 @@ import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 import UserServices from "../utils/services/UserServices";
+import BookingServices from "../utils/services/BookingServices";
 import { FiEye } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { VscFilter } from "react-icons/vsc";
@@ -18,6 +19,7 @@ import { GoGraph } from "react-icons/go";
 const ViewUser = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState([]);
+  const [userBookings, setUserBookings] = useState([]);
 
   const location = useLocation()?.pathname.split("/");
 
@@ -28,6 +30,11 @@ const ViewUser = () => {
       .then((response) => {
         setUser(response.find((user) => user.first_name === userFirstName))
       })
+
+    BookingServices.ownersBookings(userFirstName).then((response) => {
+      setUserBookings(response);
+    })
+    
   }, [userFirstName]);
 
   console.log(user)
@@ -207,7 +214,7 @@ const ViewUser = () => {
 
           <Box>
             <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {tableData?.map((data, key) => {
+              {userBookings?.map((data, key) => {
                 const isEven = key % 2;
                 const status = STATUS_LIST[data?.status];
                 const bg =
@@ -222,9 +229,9 @@ const ViewUser = () => {
                     className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
                       }`}
                   >
-                    <td className=" py-3 px-4">{data?.destination}</td>
-                    <td className="py-3 px-4">{data?.receiver}</td>
-                    <td className="py-3 px-4">{data?.driver}</td>
+                    <td className=" py-3 px-4">--</td>
+                    <td className="py-3 px-4">--</td>
+                    <td className="py-3 px-4">{data?.driver?.first_name} {data?.driver?.last_name}</td>
                     <td className={`text-white py-3 px-4 `}>
                       <Box className="flex">
                         <Box

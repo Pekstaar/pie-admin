@@ -129,9 +129,9 @@ const Bookings = () => {
                       }`}
                   >
                     <td className="  py-3 px-4">{data?.booking?.formated_address}</td>
-                    <td className="  py-3 px-4">{data?.destination}</td>
+                    <td className="  py-3 px-4">--</td>
                     <td className=" py-3 px-4">{data?.owner?.first_name} {data?.owner?.last_name}</td>
-                    <td className=" py-3 px-4">{data?.receiver}</td>
+                    <td className=" py-3 px-4">--</td>
                     <td className=" py-3 px-4">{data?.driver?.first_name} {data?.driver?.last_name}</td>
                     <td className={` text-white py-3 px-4 `}>
                       <Box className="flex  ">
