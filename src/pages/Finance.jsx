@@ -65,9 +65,14 @@ const Finance = () => {
               handleClick={() => setCurrent("paid")}
               title={"Paid invoices"}
             />
+            <SubNavItem
+              isCurrent={currentSubNav.toLowerCase() === "unpaid"}
+              handleClick={() => setCurrent("unpaid")}
+              title={"unpaid invoices"}
+            />
           </HStack>
 
-          {currentSubNav === "paid" ? <Paid /> : <Failed />}
+          {currentSubNav === "paid" ? <Paid /> : currentSubNav === "unpaid" && <Failed />}
         </Wrapper>
 
         <Box className="flex flex-col gap-5" w={1 / 3} p={"3"}>
