@@ -1,23 +1,35 @@
 import { Box, Button, HStack, Image, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
+import car from "../assets/images/car.png";
 import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
-import car from "../assets/images/car.png";
 
-import { FiEye } from "react-icons/fi";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { IoSearchOutline } from "react-icons/io5";
-import { HiDownload } from "react-icons/hi";
-import { VscFilter } from "react-icons/vsc";
-import { GrEdit } from "react-icons/gr";
-import CInput from "../components/general/Input";
 import { BiSort } from "react-icons/bi";
+import { FiEye } from "react-icons/fi";
+import { GrEdit } from "react-icons/gr";
+import { IoSearchOutline } from "react-icons/io5";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { VscFilter } from "react-icons/vsc";
 import { useLocation } from "react-router-dom";
+import CInput from "../components/general/Input";
+import FleetServices from "../utils/services/FleetServices";
 
 const FleetView = () => {
   const location = useLocation()?.pathname.split("/");
+
+  const [vehicle, setVehicle] = useState({});
+
+  React.useEffect(() => {
+    FleetServices.fetchVehicle(location[location?.length - 1]).then(
+      (response) => {
+        setVehicle(response);
+      }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // const
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
@@ -41,11 +53,12 @@ const FleetView = () => {
               textTransform={"uppercase"}
               fontWeight={"semibold"}
             >
-              {location[location?.length - 1]}
+              {vehicle?.reg_number || "_"}
             </Text>
 
             <Text fontSize={"sm"} fontWeight={"light"}>
-              Driver: Steve Driver
+              Driver:{" "}
+              {`${vehicle?.owner?.first_name?.toLowerCase()} ${vehicle?.owner?.last_name?.toLowerCase()}`}
             </Text>
           </Wrapper>
 
@@ -77,11 +90,11 @@ const FleetView = () => {
               <div className={"bg-zinc-200 h-32 w-0.5 rounded-full"} />
 
               <Box className="text-left flex flex-col gap-2">
-                <Text>KCB 121G</Text>
-                <Text>Gray</Text>
-                <Text>Cab</Text>
-                <Text>Toyota Allion</Text>
-                <Text>3/9/2022</Text>
+                <Text> {vehicle?.reg_number}</Text>
+                <Text>{vehicle?.color}</Text>
+                <Text>{vehicle_types[vehicle?.model] || "_"}</Text>
+                <Text>{vehicle?.model}</Text>
+                <Text>{vehicle?.insurance_expiry}</Text>
               </Box>
             </Wrapper>
           </Box>
@@ -99,7 +112,7 @@ const FleetView = () => {
                   Insurance
                 </Text>
 
-                <DocItem text={"My_insurance docs.pdf"} />
+                {/* <DocItem text={"My_insurance docs.pdf"} /> */}
               </Box>
 
               <Box className="flex justify-end py-5">
@@ -137,7 +150,7 @@ const FleetView = () => {
 
           <Box>
             <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {tableData?.map((data, key) => {
+              {[]?.map((data, key) => {
                 const isEven = key % 2;
                 const status = STATUS_LIST[data?.status];
                 const bg =
@@ -194,6 +207,7 @@ const FleetView = () => {
 
 export default FleetView;
 
+const vehicle_types = ["Motorbike", "Vehicle", "Van", "Truck"];
 const tableData = [
   {
     destination: "Brooke Manor",
@@ -277,10 +291,10 @@ const TableAction = ({ icon, text }) => (
   </button>
 );
 
-const DocItem = ({ text }) => (
-  <Box className="flex p-5 border border-zinc-300 rounded-xl bg-white justify-between items-center">
-    <Text>{text}</Text>
+// const DocItem = ({ text }) => (
+//   <Box className="flex p-5 border border-zinc-300 rounded-xl bg-white justify-between items-center">
+//     <Text>{text}</Text>
 
-    <TableAction icon={<HiDownload className="text-lg" />} text={"Download"} />
-  </Box>
-);
+//     <TableAction icon={<HiDownload className="text-lg" />} text={"Download"} />
+//   </Box>
+// );

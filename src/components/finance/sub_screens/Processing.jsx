@@ -7,7 +7,7 @@ import { Box, HStack } from "@chakra-ui/react";
 import OutlinedButton from "../../general/OutlinedButton";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
-const Processing = () => {
+const Failed = () => {
   return (
     <>
       {/* search and table actions */}
@@ -50,7 +50,7 @@ const Processing = () => {
   );
 };
 
-export default Processing;
+export default Failed;
 
 const tableData = [
   {

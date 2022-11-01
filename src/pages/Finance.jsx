@@ -4,11 +4,10 @@ import BreadCrumb from "../components/general/BreadCrumb";
 import Wrapper from "../components/general/Wrapper";
 
 import { GoGraph } from "react-icons/go";
-import FinanceCard from "../components/finance/FinanceCard";
-import Withdrawal from "../components/finance/sub_screens/Withdrawal";
-import Processing from "../components/finance/sub_screens/Processing";
-import Paid from "../components/finance/sub_screens/Paid";
 import { Doughnat } from "../components/charts/Doughnat";
+import FinanceCard from "../components/finance/FinanceCard";
+import Paid from "../components/finance/sub_screens/Paid";
+import Failed from "../components/finance/sub_screens/Processing";
 
 const Finance = () => {
   const [currentSubNav, setCurrent] = useState("withdrawal"); //processing,paid
@@ -62,29 +61,13 @@ const Finance = () => {
             mx={"4"}
           >
             <SubNavItem
-              isCurrent={currentSubNav.toLowerCase() === "withdrawal"}
-              title={"Withdrawal requests"}
-              handleClick={() => setCurrent("withdrawal")}
-            />
-            <SubNavItem
-              isCurrent={currentSubNav.toLowerCase() === "processing"}
-              handleClick={() => setCurrent("processing")}
-              title={"Processing invoices"}
-            />
-            <SubNavItem
               isCurrent={currentSubNav.toLowerCase() === "paid"}
               handleClick={() => setCurrent("paid")}
               title={"Paid invoices"}
             />
           </HStack>
 
-          {currentSubNav === "withdrawal" ? (
-            <Withdrawal />
-          ) : currentSubNav === "processing" ? (
-            <Processing />
-          ) : (
-            <Paid />
-          )}
+          {currentSubNav === "paid" ? <Paid /> : <Failed />}
         </Wrapper>
 
         <Box className="flex flex-col gap-5" w={1 / 3} p={"3"}>
@@ -109,7 +92,7 @@ const Finance = () => {
                   Revenue this month
                 </Text>
                 <Text fontWeight={"semibold"} fontSize={"22px"}>
-                  KES. 200000
+                  KES. {0}
                 </Text>
               </Box>
 
@@ -132,7 +115,7 @@ const Finance = () => {
                   fontSize={"xl"}
                   textColor="chart_primary"
                 >
-                  KES. 120000
+                  KES. {0}
                 </Text>
               </Box>
 
@@ -260,16 +243,16 @@ const SubNavItem = ({ title, isCurrent, handleClick }) => (
 const cards_data = [
   {
     text: "Revenue",
-    number: 200000,
+    number: 0,
   },
   {
     text: "Payables",
-    number: 12000,
+    number: 0,
   },
-  {
-    text: "Withdrawal Requests",
-    number: 75000,
-  },
+  // {
+  //   text: "Withdrawal Requests",
+  //   number: 75000,
+  // },
   {
     text: "Failed Transactions",
     number: 6,

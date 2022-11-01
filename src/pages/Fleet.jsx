@@ -123,9 +123,7 @@ const Fleet = () => {
                   <td className={` text-white py-3 px-4 w-32`}>
                     <Box className="flex gap-4">
                       <ActionButton
-                        handlePress={() =>
-                          handleViewFleet(data?.registration.toLowerCase())
-                        }
+                        handlePress={() => handleViewFleet(data?.id)}
                         bg={bg}
                       >
                         <FiEye />

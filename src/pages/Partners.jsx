@@ -23,13 +23,10 @@ const Partners = () => {
   const [partners, setPartners] = useState([]);
 
   useEffect(() => {
-    PartnerServices.fetchPartners()
-    .then((response) => {
-      setPartners(response)
-    })
+    PartnerServices.fetchPartners().then((response) => {
+      setPartners(response);
+    });
   }, []);
-
-  console.log(partners)
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -140,17 +137,17 @@ const Partners = () => {
                 >
                   <td className="  py-3 px-4">{data?.name}</td>
 
-                  <td className=" py-3 px-4">{data?.category}</td>
-                  <td className=" py-3 px-4">{data?.location}</td>
-                  <td className=" py-3 px-4">{data?.phone}</td>
+                  <td className=" py-3 px-4">
+                    {partnerCategories[data?.sector]}
+                  </td>
+                  <td className=" py-3 px-4">{data?.location || "_"}</td>
+                  <td className=" py-3 px-4">{data?.owner?.phonenumber}</td>
 
                   {/* actions table */}
                   <td className={` text-white py-3 px-4 w-32`}>
                     <Box className="flex gap-6 justify-start">
                       <ActionButton
-                        handlePress={() =>
-                          handleViewUser(data?.["partner name"])
-                        }
+                        handlePress={() => handleViewUser(data?.id)}
                       >
                         <FiEye />
                       </ActionButton>
@@ -171,6 +168,15 @@ const Partners = () => {
 };
 
 export default Partners;
+
+export const partnerCategories = [
+  "fashion",
+  "Bakery",
+  "Pharmacy",
+  "Supermarket",
+  "Manufacturing",
+  "Restaurants",
+];
 
 const tableData = [
   {

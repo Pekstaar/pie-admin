@@ -8,6 +8,20 @@ async function fetchVehicles() {
   return res.data;
 }
 
-const FleetServices = { fetchVehicles };
+async function fetchVehicleByParams(params) {
+  setAuthToken(AxiosUtility);
+  const res = await AxiosUtility.get("/vehicles/api/?" + params);
+
+  return res.data;
+}
+
+async function fetchVehicle(id) {
+  setAuthToken(AxiosUtility);
+  const res = await AxiosUtility.get("/vehicles/api/" + id + "/");
+
+  return res.data;
+}
+
+const FleetServices = { fetchVehicles, fetchVehicleByParams, fetchVehicle };
 
 export default FleetServices;

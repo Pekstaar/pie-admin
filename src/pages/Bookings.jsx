@@ -1,5 +1,5 @@
 import { Box, Button, HStack } from "@chakra-ui/react";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
@@ -53,11 +53,9 @@ const Bookings = () => {
   // }
 
   useEffect(() => {
-    BookingService.fetchBookings()
-    .then((response) => {
-      console.log(response)
-      setBookings(response)
-    })
+    BookingService.fetchBookings().then((response) => {
+      setBookings(response);
+    });
   }, []);
 
   return (
@@ -74,8 +72,8 @@ const Bookings = () => {
             mx={"2"}
           >
             <SubNavItem isCurrent title={"Ongoing"} handleClick={() => {}} />
-            <SubNavItem title={"Scheduled"} handleClick={() => {}} />
-            <SubNavItem title={"Completed"} handleClick={() => {}} />
+            {/* <SubNavItem title={"Scheduled"} handleClick={() => {}} />
+            <SubNavItem title={"Completed"} handleClick={() => {}} /> */}
           </HStack>
 
           {/* search and table actions */}

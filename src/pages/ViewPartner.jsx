@@ -1,5 +1,5 @@
 import { Box, Button, Center, HStack, Image, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { Lorry, Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
@@ -15,14 +15,24 @@ import { useNavigate, useParams } from "react-router-dom";
 import { GoGraph } from "react-icons/go";
 import BusinessImage from "../assets/images/business_image.png";
 import PrimaryButton from "../components/general/PrimaryButton";
+import PartnerServices from "../utils/services/PartnerServices";
+import { partnerCategories } from "./Partners";
 
 const ViewPartner = () => {
   const navigate = useNavigate();
   const params = useParams();
 
+  const [partner, setPartner] = useState({});
+
   const handleViewUser = (user) => {
     navigate(`/users/${user}`, user);
   };
+
+  React.useEffect(() => {
+    PartnerServices.fetchSinglePartner(params?.id).then((response) => {
+      setPartner(response);
+    });
+  }, [params?.id]);
   // const
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
@@ -57,7 +67,7 @@ const ViewPartner = () => {
             </Text>
 
             <Text fontSize={"sm"} fontWeight={"normal"}>
-              Liquor store
+              {partnerCategories[partner?.sector]}
             </Text>
           </Wrapper>
 
@@ -86,19 +96,26 @@ const ViewPartner = () => {
                 <Text fontWeight={"medium"}>Email</Text>
                 <Text fontWeight={"medium"}>Phone number</Text>
                 <Text fontWeight={"medium"}>Onboarding date</Text>
-                <Text fontWeight={"medium"}>Last edit date</Text>
+                {/* <Text fontWeight={"medium"}>Last edit date</Text> */}
               </Box>
 
               <div className={"bg-zinc-200 h-60 w-0.5 rounded-full"} />
 
               <Box className="text-left flex flex-col gap-4">
-                <Text>Pekmah Cruiz</Text>
-                <Text>Driver</Text>
+                <Text>
+                  {partner?.owner?.first_name + " " + partner?.owner?.last_name}
+                </Text>
+                <Text>
+                  {partner?.owner?.is_driver
+                    ? "Driver"
+                    : partner?.owner?.is_admin
+                    ? "Admin"
+                    : "user"}
+                </Text>
                 <Text>Nairobi CBD, Nairobi</Text>
-                <Text>pekmah@mail.com</Text>
-                <Text>+254 781223344</Text>
-                <Text>3/9/2022</Text>
-                <Text>3/10/2022</Text>
+                <Text> {partner?.owner?.email}</Text>
+                <Text> {partner?.owner?.phonenumber}</Text>
+                <Text> {partner?.owner?.date_joined}</Text>
               </Box>
             </Wrapper>
           </Box>
@@ -191,7 +208,7 @@ const ViewPartner = () => {
               headers={[...Object.keys(tableData[0]), "Actions"]}
               hasCheckbox
             >
-              {tableData?.map((data, key) => {
+              {[]?.map((data, key) => {
                 const isEven = key % 2;
                 const status = STATUS_LIST[data?.status];
                 const bg =

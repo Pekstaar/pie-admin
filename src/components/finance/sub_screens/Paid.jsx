@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "../../../components/general/Table";
 
+import { Box, HStack } from "@chakra-ui/react";
 import { IoSearchOutline } from "react-icons/io5";
 import CInput from "../../../components/general/Input";
-import { Box, HStack } from "@chakra-ui/react";
+import EarningServices from "../../../utils/services/EarningServices";
 
 const Paid = () => {
+  const [earnings, setEarnings] = useState([]);
+
+  React.useEffect(() => {
+    EarningServices.fetchPaidEarnings().then((response) => {
+      setEarnings(response);
+    });
+  }, []);
+
   return (
     <>
       {/* search and table actions */}
@@ -17,7 +26,7 @@ const Paid = () => {
       {/* body */}
       <Box className="">
         <Table headers={[...Object.keys(tableData[0])]}>
-          {tableData?.map((data, key) => {
+          {earnings?.map((data, key) => {
             const isEven = key % 2;
 
             return (
@@ -28,8 +37,12 @@ const Paid = () => {
               >
                 <td className="py-3 px-4">{data?.date}</td>
 
-                <td className=" py-3 px-4">{data?.name}</td>
-                <td className=" py-3 px-4">KES. {data?.amount}</td>
+                <td className=" py-3 px-4">
+                  {data?.owner__first_name} {data?.owner__last_name}
+                </td>
+                <td className=" py-3 px-4">
+                  KES. {new Date(data?.created_at).toLocaleDateString()}
+                </td>
               </tr>
             );
           })}
