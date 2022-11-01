@@ -1,4 +1,12 @@
-import { Box, Button, Center, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  HStack,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { AiFillLock, AiOutlineMail } from "react-icons/ai";
@@ -17,6 +25,7 @@ import PrimaryButton from "../components/general/PrimaryButton";
 import PrimaryOutlinedButton from "../components/general/PrimaryOutlinedButton";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
+import { toastProps } from "../utils/Helper";
 import UserServices from "../utils/services/UserServices";
 
 const Users = () => {
@@ -26,6 +35,7 @@ const Users = () => {
   const [selectedFilter, setSelectedFilter] = useState("");
   const [search, setSearch] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [openModal, setOpenModal] = useState(false);
   const [user, setUser] = useState({
@@ -35,6 +45,7 @@ const Users = () => {
     phone: "",
     password: "",
   });
+  const toast = useToast();
 
   useEffect(() => {
     UserServices.fetchUsers().then((response) => {
@@ -101,11 +112,43 @@ const Users = () => {
     return newArr;
   };
 
-  const handleCreate = () => {
-    if (user?.category === "user") {
-      UserServices.createUser(user);
-    } else {
-      UserServices.createDriver(user);
+  const handleCreate = async () => {
+    setLoading(true);
+    try {
+      if (user?.category === "user") {
+        await UserServices.createUser({
+          ...user,
+          password1: user?.password,
+          password2: user?.password,
+        });
+      } else {
+        await UserServices.createDriver({
+          ...user,
+          password1: user?.password,
+          password2: user?.password,
+        });
+      }
+
+      setLoading(false);
+
+      toast({
+        ...toastProps,
+        title: "Success!",
+        description: "User created successfully",
+        status: "success",
+      });
+      UserServices.fetchUsers().then((response) => {
+        setUsers(response);
+        setFilteredUsers(response);
+      });
+    } catch (error) {
+      toast({
+        ...toastProps,
+        title: "Error!",
+        description: "User creation Error!",
+        status: "error",
+      });
+      console.log("USER CREATE ERROR:", error);
     }
   };
 
@@ -186,6 +229,7 @@ const Users = () => {
             <TableAction icon={<BiSort className="text-lg" />} text={"Sort"} />
 
             <CustomModal
+              loading={loading}
               handleSave={handleCreate}
               title={"Add User"}
               isOpen={openModal}
