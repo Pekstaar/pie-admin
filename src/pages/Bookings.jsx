@@ -17,10 +17,13 @@ import { STATUS_LIST } from "../utils/Helper";
 const Bookings = () => {
   // const toast = useToast();
   const [openModal, setOpenModal] = React.useState(false);
+  const [bookingId, setBookingId] = React.useState();
   const [bookings, setBookings] = React.useState([]);
+  const [searchValue, setSearchValue] = React.useState("");
 
-  const handleOpenModal = React.useCallback(() => {
+  const handleOpenModal = React.useCallback((id) => {
     setOpenModal(true);
+    setBookingId(id)
   }, []);
 
   const handleCloseModal = React.useCallback(() => {
@@ -58,6 +61,7 @@ const Bookings = () => {
     });
   }, []);
 
+  console.log(bookings)
   return (
     <>
       <Box p={"3"} maxH={"91%"} overflowY={"scroll"} position={"relative"}>
@@ -71,7 +75,7 @@ const Bookings = () => {
             h={"12"}
             mx={"2"}
           >
-            <SubNavItem isCurrent title={"Ongoing"} handleClick={() => {}} />
+            <SubNavItem isCurrent title={"Ongoing"} handleClick={() => { }} />
             {/* <SubNavItem title={"Scheduled"} handleClick={() => {}} />
             <SubNavItem title={"Completed"} handleClick={() => {}} /> */}
           </HStack>
@@ -79,7 +83,11 @@ const Bookings = () => {
           {/* search and table actions */}
           <HStack py={"4"} justifyContent={"space-between"}>
             {/* /search input */}
-            <CInput icon={<IoSearchOutline className="text-xl" />} />
+            <CInput icon={<IoSearchOutline className="text-xl" />}
+              handleChange={(e) => {
+                setSearchValue(e?.target?.value);
+              }}
+            />
             {/* actions */}
             <HStack gap={"2"}>
               <TableAction
@@ -96,27 +104,35 @@ const Bookings = () => {
           {/* body */}
           <Box>
             <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {bookings?.map((data, key) => {
+              {bookings?.filter((data) => {
+                return (
+                  data === "" ? data :
+                    // data?.booking?.formated_address.toLowerCase().includes(searchValue.toLowerCase()) ||
+                    data?.owner?.first_name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                    data?.owner?.last_name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                    data?.driver?.last_name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                    data?.driver?.last_name.toLowerCase().includes(searchValue.toLowerCase())
+                )
+              }).map((data, key) => {
                 const isEven = key % 2;
                 const status = STATUS_LIST[data?.status];
                 const bg =
                   data?.status === 0
                     ? "bg-primary_red"
                     : data?.status === 5
-                    ? "bg-primary_green"
-                    : "bg-primary_yellow_light";
+                      ? "bg-primary_green"
+                      : "bg-primary_yellow_light";
 
                 return (
                   <tr
-                    className={`h-14 capitalize ${
-                      isEven ? "bg-[#F9F9F9]" : "white"
-                    }`}
+                    className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
+                      }`}
                   >
-                    <td className="  py-3 px-4">{data?.pickup}</td>
+                    <td className="  py-3 px-4">{data?.booking?.formated_address}</td>
                     <td className="  py-3 px-4">{data?.destination}</td>
-                    <td className=" py-3 px-4">{data?.sender}</td>
+                    <td className=" py-3 px-4">{data?.owner?.first_name} {data?.owner?.last_name}</td>
                     <td className=" py-3 px-4">{data?.receiver}</td>
-                    <td className=" py-3 px-4">{data?.driver}</td>
+                    <td className=" py-3 px-4">{data?.driver?.first_name} {data?.driver?.last_name}</td>
                     <td className={` text-white py-3 px-4 `}>
                       <Box className="flex  ">
                         <Box
@@ -132,7 +148,7 @@ const Bookings = () => {
                     {/* actions table */}
                     <td className={`text-center text-white py-3 px-4 w-32`}>
                       <Box className="flex gap-4">
-                        <Box onClick={handleOpenModal}>
+                        <Box onClick={() => handleOpenModal(data?.id)}>
                           <ActionButton>
                             <FiEye />
                           </ActionButton>
@@ -150,7 +166,7 @@ const Bookings = () => {
           </Box>
         </Wrapper>
       </Box>
-      <ViewModal openModal={openModal} handleCloseModal={handleCloseModal} />
+      <ViewModal bookingId={bookingId} openModal={openModal} handleCloseModal={handleCloseModal} />
     </>
   );
 };
@@ -166,9 +182,8 @@ const SubNavItem = ({ title, isCurrent }) => (
     cursor={"pointer"}
     borderRadius={"none"}
     bg={"white "}
-    className={`text-primary_yellow text-xl ${
-      isCurrent ? "text-dark_green " : "text-zinc-400 "
-    }`}
+    className={`text-primary_yellow text-xl ${isCurrent ? "text-dark_green " : "text-zinc-400 "
+      }`}
     //  onClick={handleLogout}
     _hover={{
       bg: "white",

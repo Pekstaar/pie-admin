@@ -1,5 +1,5 @@
 import { Box, Button, Text, VStack } from "@chakra-ui/react";
-import React from "react";
+import React, { useState, useEffect} from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsPerson, BsTelephone } from "react-icons/bs";
 import { FiMapPin } from "react-icons/fi";
@@ -7,16 +7,43 @@ import { STATUS_LIST } from "../../utils/Helper";
 import CustomModal from "../general/CustomModal";
 import CInput from "../general/Input";
 import StatusTag from "../general/StatusTag";
-
+import BookingService from "../../utils/services/BookingServices";
 import Wrapper from "../general/Wrapper";
 
-const ViewModal = ({ openModal, handleCloseModal }) => {
+const ViewModal = ({ bookingId, openModal, handleCloseModal }) => {
+
+  const [booking, setBooking] = useState(undefined);
+  const [usersValues, setUserValues] = useState({
+    sender:{
+      name : "",
+      phoneNumber: "",
+      location: "",
+    },
+    receiver: {
+      name : "",
+      phoneNumber: "",
+      location: "",
+    },
+    driver: {
+      name : "",
+      phoneNumber: "",
+    }
+  })
+
+  useEffect(() => {
+    BookingService.fetchBookings().then((response) => {
+      setBooking(response.find((data) => data.id === bookingId));
+      setUserValues()
+    });
+  }, [bookingId]);
+
   const status = 1;
 
+
   const statusBG =
-    status === 0
+    booking?.status === 0
       ? "bg-primary_red"
-      : status === 5
+      : booking?.status === 5
       ? "bg-primary_green"
       : "bg-primary_yellow_light";
 
@@ -69,6 +96,7 @@ const ViewModal = ({ openModal, handleCloseModal }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
+                value={usersValues?.sender?.name}
                 icon={<BsPerson className="text-xl" />}
                 borderRadius={"md"}
               />
@@ -81,6 +109,7 @@ const ViewModal = ({ openModal, handleCloseModal }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
+                value={usersValues?.sender?.phone}
                 icon={<BsTelephone className="text-xl" />}
                 borderRadius={"md"}
               />
@@ -93,6 +122,7 @@ const ViewModal = ({ openModal, handleCloseModal }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
+                value={usersValues?.sender?.location}
                 icon={<FiMapPin className="text-xl" />}
                 borderRadius={"md"}
               />
@@ -116,6 +146,7 @@ const ViewModal = ({ openModal, handleCloseModal }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
+                value={usersValues?.receiver?.name}
                 icon={<BsPerson className="text-xl" />}
                 borderRadius={"md"}
               />
@@ -128,6 +159,7 @@ const ViewModal = ({ openModal, handleCloseModal }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
+                value={usersValues?.receiver?.phone}
                 icon={<BsTelephone className="text-xl" />}
                 borderRadius={"md"}
               />
@@ -140,6 +172,7 @@ const ViewModal = ({ openModal, handleCloseModal }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
+                value={usersValues?.receiver?.location}
                 icon={<FiMapPin className="text-xl" />}
                 borderRadius={"md"}
               />
@@ -163,6 +196,7 @@ const ViewModal = ({ openModal, handleCloseModal }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
+                value={usersValues?.driver?.name}
                 icon={<BsPerson className="text-xl" />}
                 borderRadius={"md"}
               />
@@ -175,6 +209,7 @@ const ViewModal = ({ openModal, handleCloseModal }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
+                value={usersValues?.driver?.name}
                 icon={<BsTelephone className="text-xl" />}
                 borderRadius={"md"}
               />
