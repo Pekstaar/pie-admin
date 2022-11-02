@@ -29,7 +29,7 @@ const Accepted = () => {
       {/* body */}
       <Box>
         <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-          {tableData?.map((data, key) => {
+          {[]?.map((data, key) => {
             const isEven = key % 2;
 
             return (
