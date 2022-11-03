@@ -57,9 +57,7 @@ const Accepted = ({ handleView }) => {
                 {/* actions table */}
                 <td className={`text-center text-white py-3 px-4 w-24 `}>
                   <Box className="flex gap-4 justify-center">
-                    <ActionButton
-                      handleClick={() => handleView(data?.user?.id)}
-                    >
+                    <ActionButton handleClick={() => handleView(data?.id)}>
                       <FiEye />
                     </ActionButton>
                   </Box>

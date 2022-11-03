@@ -1,19 +1,18 @@
-import { Box, Button, Center, HStack, Image, Text } from "@chakra-ui/react";
+import { Box, Button, HStack, Image, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Lorry, Transaction } from "../assets/svg";
+import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 
+import { BiSort } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
+import { GrEdit } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
 import { VscFilter } from "react-icons/vsc";
-import { GrEdit } from "react-icons/gr";
-import CInput from "../components/general/Input";
-import { BiSort } from "react-icons/bi";
 import { useNavigate, useParams } from "react-router-dom";
-import { GoGraph } from "react-icons/go";
 import BusinessImage from "../assets/images/business_image.png";
+import CInput from "../components/general/Input";
 import PrimaryButton from "../components/general/PrimaryButton";
 import PartnerServices from "../utils/services/PartnerServices";
 import { partnerCategories } from "./Partners";
@@ -121,7 +120,7 @@ const ViewPartner = () => {
           </Box>
 
           {/* vehicle information */}
-          <Box>
+          {/* <Box>
             <Box className="flex justify-between py-2 px-5">
               <Text fontSize={"lg"} fontWeight={"medium"}>
                 Payment Details
@@ -131,9 +130,9 @@ const ViewPartner = () => {
                 <GrEdit />
               </ActionButton>
             </Box>
-            <Wrapper my={"2"} borderRadius={"none"} className={"gap-3"}>
-              {/* mini cards */}
-              <HStack w={"full"} fontFamily={"Poppins"}>
+            <Wrapper my={"2"} borderRadius={"none"} className={"gap-3"}> */}
+          {/* mini cards */}
+          {/* <HStack w={"full"} fontFamily={"Poppins"}>
                 <MiniCard no={"24"} text={"Total Bookings"} icon={<Lorry />} />
                 <MiniCard
                   no={"3"}
@@ -169,9 +168,9 @@ const ViewPartner = () => {
                     );
                   })}
                 </Table>
-              </Box>
-            </Wrapper>
-          </Box>
+              // </Box>
+            </Wrapper> */}
+          {/* </Box> */}
         </Box>
 
         {/* table */}
@@ -342,43 +341,43 @@ const TableAction = ({ icon, text }) => (
   </button>
 );
 
-const MiniCard = ({ text, no, icon }) => (
-  <Box borderRadius={"xl"} h={"20"} p={"2"} flexGrow={"1"}>
-    <Text fontSize={"sm"} className={"text-zinc-400"}>
-      {text}
-    </Text>
-    <Box className="flex justify-between items-center">
-      <Text fontWeight={"bold"} fontSize={"lg"}>
-        {no}
-      </Text>
+// const MiniCard = ({ text, no, icon }) => (
+//   <Box borderRadius={"xl"} h={"20"} p={"2"} flexGrow={"1"}>
+//     <Text fontSize={"sm"} className={"text-zinc-400"}>
+//       {text}
+//     </Text>
+//     <Box className="flex justify-between items-center">
+//       <Text fontWeight={"bold"} fontSize={"lg"}>
+//         {no}
+//       </Text>
 
-      <Center
-        h={"40px"}
-        w={"40px"}
-        p={"1.5"}
-        bg={"current_bg"}
-        borderRadius={"md"}
-      >
-        {icon}
-      </Center>
-    </Box>
-  </Box>
-);
+//       <Center
+//         h={"40px"}
+//         w={"40px"}
+//         p={"1.5"}
+//         bg={"current_bg"}
+//         borderRadius={"md"}
+//       >
+//         {icon}
+//       </Center>
+//     </Box>
+//   </Box>
+// );
 
-const sample_payment_data = [
-  {
-    date: "5/3/2019",
-    "method of payment": "Mpesa",
-    amount: "350",
-  },
-  {
-    date: "5/3/2019",
-    "method of payment": "Mpesa",
-    amount: "350",
-  },
-  {
-    date: "5/3/2019",
-    "method of payment": "Mpesa",
-    amount: "350",
-  },
-];
+// const sample_payment_data = [
+//   {
+//     date: "5/3/2019",
+//     "method of payment": "Mpesa",
+//     amount: "350",
+//   },
+//   {
+//     date: "5/3/2019",
+//     "method of payment": "Mpesa",
+//     amount: "350",
+//   },
+//   {
+//     date: "5/3/2019",
+//     "method of payment": "Mpesa",
+//     amount: "350",
+//   },
+// ];

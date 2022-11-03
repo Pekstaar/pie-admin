@@ -58,6 +58,14 @@ const Bookings = () => {
   useEffect(() => {
     BookingService.fetchBookings().then((response) => {
       setBookings(response);
+
+      let receivers = {};
+
+      for (var obj of response) {
+        receivers[obj?.id] = obj;
+      }
+
+      console.log(receivers);
     });
   }, []);
 

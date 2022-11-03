@@ -207,7 +207,7 @@ const Partners = () => {
                   <td className=" py-3 px-4">
                     {partnerCategories[data?.sector]}
                   </td>
-                  <td className=" py-3 px-4">{data?.location || "_"}</td>
+                  {/* <td className=" py-3 px-4">{data?.location || "_"}</td> */}
                   <td className=" py-3 px-4">{data?.owner?.phonenumber}</td>
 
                   {/* actions table */}
@@ -249,7 +249,7 @@ const tableData = [
   {
     "partner name": "New User",
     category: "admin",
-    location: "Nairobi CBD, Nairobi",
+    // location: "Nairobi CBD, Nairobi",
     phone: "0711334455",
   },
   {

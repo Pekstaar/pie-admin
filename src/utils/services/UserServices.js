@@ -26,7 +26,7 @@ async function ApproveDriver(id) {
   setAuthToken(AxiosUtility);
   const res = await AxiosUtility.patch("admins/api/update/profile/", {
     is_approved: true,
-    user: id,
+    id,
   });
 
   return res.data;

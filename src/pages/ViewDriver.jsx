@@ -16,13 +16,13 @@ import { ActionButton } from "./Apps";
 const ViewDriver = () => {
   const location = useLocation()?.pathname.split("/");
   const [openRejectModal, setOpenModal] = React.useState(false);
-  const [user, setUser] = useState({});
+  const [user] = useState({});
   const [vehicle, setVehicle] = useState({});
   const [driverProfile, setDriverProfile] = useState({});
   const toast = useToast();
   const [loading, setLoading] = useState(false);
 
-  let userId = location[location?.length - 1];
+  let profileId = location[location?.length - 1];
 
   const handleOpenModal = React.useCallback(() => {
     setOpenModal(true);
@@ -33,23 +33,24 @@ const ViewDriver = () => {
   }, []);
 
   useEffect(() => {
-    UserServices.fetchUsers().then((response) => {
-      setUser(response.find((user) => user.id === parseInt(userId)));
+    // UserServices.fetchUsers().then((response) => {
+    //   setUser(response.find((user) => user.id === parseInt(profileId)));
+    // });
+    auth.getProfiles().then((response) => {
+      setDriverProfile(
+        response.find((user) => user.id === parseInt(profileId))
+      );
     });
 
-    FleetServices.fetchDriversVehicles(userId).then((response) => {
+    FleetServices.fetchDriversVehicles(profileId).then((response) => {
       setVehicle(response[0] || {});
     });
-
-    auth.getProfiles().then((response) => {
-      setDriverProfile(response.find((user) => user.id === parseInt(userId)));
-    });
-  }, [userId]);
+  }, [profileId]);
 
   const handleApprove = () => {
     if (window.confirm("Are you sure you want to approve driver?")) {
       setLoading(true);
-      UserServices.ApproveDriver(userId).then(() => {
+      UserServices.ApproveDriver(parseInt(driverProfile?.id)).then(() => {
         toast({
           ...toastProps,
           title: "Success!",
@@ -61,12 +62,14 @@ const ViewDriver = () => {
 
         auth.getProfiles().then((response) => {
           setDriverProfile(
-            response.find((user) => user.id === parseInt(userId))
+            response.find((user) => user.id === parseInt(profileId))
           );
         });
       });
     }
   };
+
+  console.log(driverProfile);
 
   return (
     <>
@@ -106,12 +109,19 @@ const ViewDriver = () => {
                 textTransform={"uppercase"}
                 fontWeight={"semibold"}
               >
-                {userId}
+                {profileId}
               </Text>
 
               <Text fontSize={"sm"} fontWeight={"light"}>
-                {user?.is_driver ? "Driver" : user?.is_admin ? "Admin" : "User"}
-                : {user?.first_name + " " + user?.last_name}
+                {driverProfile?.user?.is_driver
+                  ? "Driver"
+                  : driverProfile?.user?.is_admin
+                  ? "Admin"
+                  : "User"}
+                :{" "}
+                {driverProfile?.user?.first_name +
+                  " " +
+                  driverProfile?.user?.last_name}
               </Text>
             </Wrapper>
 
@@ -145,20 +155,27 @@ const ViewDriver = () => {
                 <div className={"bg-zinc-200 h-48 w-0.5 rounded-full"} />
 
                 <Box className="text-left text-sm flex flex-col gap-4">
-                  <Text>{user?.first_name + " " + user?.last_name}</Text>
+                  <Text>
+                    {driverProfile?.user?.first_name +
+                      " " +
+                      driverProfile?.user?.last_name}
+                  </Text>
                   <Text>
                     {" "}
-                    {user?.is_driver
+                    {driverProfile?.user?.is_driver
                       ? "Driver"
-                      : user?.is_admin
+                      : driverProfile?.user?.is_admin
                       ? "Admin"
                       : "User"}
-                    : {user?.first_name + " " + user?.last_name}
+                    :{" "}
+                    {driverProfile?.user?.first_name +
+                      " " +
+                      driverProfile?.user?.last_name}
                   </Text>
                   {/* <Text>Nairobi CBD, Nairobi</Text> */}
-                  <Text>{user?.email}</Text>
-                  <Text>{user?.phonenumber}</Text>
-                  <Text>{user?.date_joined}</Text>
+                  <Text>{driverProfile?.user?.email}</Text>
+                  <Text>{driverProfile?.user?.phonenumber}</Text>
+                  <Text>{driverProfile?.user?.date_joined}</Text>
                   {/* <Text>3/10/2022</Text> */}
                 </Box>
               </Wrapper>

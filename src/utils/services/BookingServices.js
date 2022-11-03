@@ -10,11 +10,20 @@ async function fetchBookings() {
 
 async function ownersBookings(first_name) {
   setAuthToken(AxiosUtility);
-  const res = await AxiosUtility.get(`/admins/api/orders/?owner__first_name=${first_name}`);
+  const res = await AxiosUtility.get(
+    `/admins/api/orders/?owner__first_name=${first_name}`
+  );
 
   return res.data;
 }
 
-const BookingServices = { fetchBookings, ownersBookings };
+async function getBookingsReceiver(id) {
+  setAuthToken(AxiosUtility);
+  const res = await AxiosUtility.get(`/bookings/api/receiver/${id}`);
+
+  return res.data;
+}
+
+const BookingServices = { fetchBookings, ownersBookings, getBookingsReceiver };
 
 export default BookingServices;
