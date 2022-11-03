@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "../../general/Table";
 
 import { IoSearchOutline } from "react-icons/io5";
@@ -8,8 +8,16 @@ import { Box, Button, HStack } from "@chakra-ui/react";
 import { FiEye } from "react-icons/fi";
 import { VscFilter } from "react-icons/vsc";
 import { BiSort } from "react-icons/bi";
+import UserServices from "../../../utils/services/UserServices";
 
 const Pending = ({ handleView }) => {
+  const [applications, setApplications] = useState();
+
+  React.useEffect(() => {
+    UserServices.fetchDrivers(false).then((response) => {
+      setApplications(response);
+    });
+  }, []);
   return (
     <>
       {/* search and table actions */}
@@ -29,7 +37,7 @@ const Pending = ({ handleView }) => {
       {/* body */}
       <Box>
         <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-          {[]?.map((data, key) => {
+          {applications?.map((data, key) => {
             const isEven = key % 2;
 
             return (
@@ -38,16 +46,17 @@ const Pending = ({ handleView }) => {
                   isEven ? "bg-[#F9F9F9]" : "white"
                 }`}
               >
-                <td className="  py-3 px-4">{data?.fullname}</td>
-                <td className="  py-3 px-4">{data?.email}</td>
-                <td className=" py-3 px-4">{data?.phone}</td>
-                <td className=" py-3 px-4">{data?.vehicle_cat}</td>
+                <td className="  py-3 px-4">
+                  {data?.user?.first_name + " " + data?.user?.last_name}
+                </td>
+                <td className=" py-3 px-4">{data?.user?.phonenumber}</td>
+                <td className="  py-3 px-4">{data?.user?.email}</td>
+                {/* <td className=" py-3 px-4">__</td> */}
+                <td className=" py-3 px-4">{data?.user?.date_joined}</td>
                 {/* actions table */}
-                <td className={` text-white py-3 px-4 w-24 `}>
+                <td className={`text-center text-white py-3 px-4 w-24 `}>
                   <Box className="flex gap-4 justify-center">
-                    <ActionButton
-                      handleClick={() => handleView(data?.fullname)}
-                    >
+                    <ActionButton handleClick={() => handleView(data?.id)}>
                       <FiEye />
                     </ActionButton>
                   </Box>

@@ -4,10 +4,9 @@ import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Wrapper from "../components/general/Wrapper";
 
-import Pending from "../components/apps/sub_screens/Pending";
-import Rejected from "../components/apps/sub_screens/Rejected";
-import Accepted from "../components/apps/sub_screens/Accepted";
 import { useNavigate } from "react-router-dom";
+import Accepted from "../components/apps/sub_screens/Accepted";
+import Pending from "../components/apps/sub_screens/Pending";
 
 const Apps = () => {
   const navigate = useNavigate();
@@ -38,17 +37,10 @@ const Apps = () => {
             title={"Pending"}
             handleClick={() => setCurrent("pending")}
           />
-          <SubNavItem
-            isCurrent={currentSubNav.toLowerCase() === "rejected"}
-            handleClick={() => setCurrent("rejected")}
-            title={"Rejected"}
-          />
         </HStack>
 
         {currentSubNav === "pending" ? (
           <Pending handleView={handleViewApplication} />
-        ) : currentSubNav === "rejected" ? (
-          <Rejected />
         ) : (
           <Accepted handleView={handleViewApplication} />
         )}

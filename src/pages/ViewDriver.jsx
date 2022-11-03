@@ -77,7 +77,11 @@ const ViewDriver = () => {
         <BreadCrumb
           icon={<BiIdCard />}
           title={`Applications /`}
-          subtitle={user?.first_name + " " + user?.last_name}
+          subtitle={
+            driverProfile?.user?.first_name +
+            " " +
+            driverProfile?.user?.last_name
+          }
           c={"capitalize"}
         />
         <Box className="flex gap-3">

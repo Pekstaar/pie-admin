@@ -8,9 +8,11 @@ async function fetchUsers() {
   return res.data;
 }
 
-async function fetchDrivers() {
+async function fetchDrivers(cond) {
   setAuthToken(AxiosUtility);
-  const res = await AxiosUtility.get("/admins/api/profiles/?is_approved=true");
+  const res = await AxiosUtility.get(
+    "/admins/api/profiles/?is_approved=" + cond
+  );
 
   return res.data;
 }

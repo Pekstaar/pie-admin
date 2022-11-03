@@ -15,7 +15,7 @@ const Accepted = ({ handleView }) => {
   const [applications, setApplications] = useState();
 
   React.useEffect(() => {
-    UserServices.fetchDrivers().then((response) => {
+    UserServices.fetchDrivers(true).then((response) => {
       setApplications(response);
     });
   }, []);
