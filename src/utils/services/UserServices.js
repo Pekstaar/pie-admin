@@ -8,6 +8,13 @@ async function fetchUsers() {
   return res.data;
 }
 
+async function fetchDrivers() {
+  setAuthToken(AxiosUtility);
+  const res = await AxiosUtility.get("/admins/api/users/?is_driver=true");
+
+  return res.data;
+}
+
 async function createUser(data) {
   setAuthToken(AxiosUtility);
   const res = await AxiosUtility.post("/auth/registration/", data);
@@ -25,6 +32,6 @@ async function createDriver(data) {
   return res.data;
 }
 
-const UserServices = { fetchUsers, createUser, createDriver };
+const UserServices = { fetchUsers, createUser, createDriver, fetchDrivers };
 
 export default UserServices;

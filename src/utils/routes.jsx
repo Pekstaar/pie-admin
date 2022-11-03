@@ -8,7 +8,6 @@ import {
   SettingsPartner,
   SettingsUser,
   Users,
-  ViewApp,
   ViewPartner,
   ViewUser,
 } from "../pages";
@@ -34,7 +33,7 @@ export const routes = [
   },
   {
     path: "/applications/:name",
-    element: <ViewApp />,
+    element: <ViewDriver />,
   },
   {
     path: "/fleet",

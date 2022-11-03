@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const Apps = () => {
   const navigate = useNavigate();
-  const [currentSubNav, setCurrent] = useState("pending"); //processing,paid
+  const [currentSubNav, setCurrent] = useState("accepted"); //processing,paid
 
   const handleViewApplication = (name) => {
     navigate(`${name}`, name);
@@ -29,6 +29,11 @@ const Apps = () => {
           mx={"4"}
         >
           <SubNavItem
+            isCurrent={currentSubNav.toLowerCase() === "accepted"}
+            handleClick={() => setCurrent("accepted")}
+            title={"Accepted"}
+          />
+          <SubNavItem
             isCurrent={currentSubNav.toLowerCase() === "pending"}
             title={"Pending"}
             handleClick={() => setCurrent("pending")}
@@ -38,11 +43,6 @@ const Apps = () => {
             handleClick={() => setCurrent("rejected")}
             title={"Rejected"}
           />
-          <SubNavItem
-            isCurrent={currentSubNav.toLowerCase() === "accepted"}
-            handleClick={() => setCurrent("accepted")}
-            title={"Accepted"}
-          />
         </HStack>
 
         {currentSubNav === "pending" ? (
@@ -50,7 +50,7 @@ const Apps = () => {
         ) : currentSubNav === "rejected" ? (
           <Rejected />
         ) : (
-          <Accepted />
+          <Accepted handleView={handleViewApplication} />
         )}
       </Wrapper>
     </Box>
