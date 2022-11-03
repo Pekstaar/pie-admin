@@ -20,6 +20,10 @@ const Bookings = () => {
   const [bookingId, setBookingId] = React.useState();
   const [bookings, setBookings] = React.useState([]);
   const [searchValue, setSearchValue] = React.useState("");
+  const [recievers, setRecievers] = React.useState({});
+  const [current, setCurrent] = React.useState({});
+
+  
 
   const handleOpenModal = React.useCallback((id) => {
     setOpenModal(true);
@@ -30,42 +34,18 @@ const Bookings = () => {
     setOpenModal(false);
   }, []);
 
-  // const handleSuccess = (data) => {
-  //   console.log({ data });
-  // };
-
-  // const handleError = (error) => {
-  //   console.log({ error });
-  // };
-
-  // const { isLoading, data, isError, error } = useBookingsData(
-  //   handleSuccess,
-  //   handleError
-  // );
-
-  // useEffect(() => {
-  //   toast({
-  //     ...toastProps,
-  //     title: "Error!",
-  //     description: error?.message,
-  //     status: "error",
-  //   });
-  // }, [isError, error, toast]);
-
-  // if (true) {
-  // }
-
   useEffect(() => {
-    BookingService.fetchBookings().then((response) => {
+    BookingService.fetchBookings().then(async (response) => {
       setBookings(response);
 
       let receivers = {};
 
       for (var obj of response) {
-        receivers[obj?.id] = obj;
+        const rec = await BookingService.getBookingReceiver(obj?.booking?.id);
+        receivers[obj?.booking?.id] = rec;
       }
 
-      console.log(receivers);
+      setRecievers(receivers);
     });
   }, []);
 
@@ -139,6 +119,9 @@ const Bookings = () => {
                       : data?.status === 5
                       ? "bg-primary_green"
                       : "bg-primary_yellow_light";
+                  const booking_receiver = recievers[data?.booking?.id];
+
+                  console.log(data);
 
                   return (
                     <tr
@@ -149,11 +132,13 @@ const Bookings = () => {
                       <td className="  py-3 px-4">
                         {data?.booking?.formated_address}
                       </td>
-                      <td className="  py-3 px-4">--</td>
+                      <td className="  py-3 px-4">
+                        {booking_receiver?.formated_address}
+                      </td>
                       <td className=" py-3 px-4">
                         {data?.owner?.first_name} {data?.owner?.last_name}
                       </td>
-                      <td className=" py-3 px-4">--</td>
+                      <td className=" py-3 px-4">{booking_receiver?.name}</td>
                       <td className=" py-3 px-4">
                         {data?.driver?.first_name} {data?.driver?.last_name}
                       </td>
@@ -172,7 +157,15 @@ const Bookings = () => {
                       {/* actions table */}
                       <td className={`text-center text-white py-3 px-4 w-32`}>
                         <Box className="flex gap-4">
-                          <Box onClick={() => handleOpenModal(data?.id)}>
+                          <Box
+                            onClick={() => {
+                              setCurrent({
+                                receiver: booking_receiver,
+                                sender: data,
+                              });
+                              handleOpenModal(data?.id);
+                            }}
+                          >
                             <ActionButton>
                               <FiEye />
                             </ActionButton>
@@ -194,6 +187,7 @@ const Bookings = () => {
         bookingId={bookingId}
         openModal={openModal}
         handleCloseModal={handleCloseModal}
+        current={current}
       />
     </>
   );
