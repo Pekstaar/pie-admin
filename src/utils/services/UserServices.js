@@ -10,7 +10,7 @@ async function fetchUsers() {
 
 async function fetchDrivers() {
   setAuthToken(AxiosUtility);
-  const res = await AxiosUtility.get("/admins/api/users/?is_driver=true");
+  const res = await AxiosUtility.get("/admins/api/profiles/?is_approved=true");
 
   return res.data;
 }
@@ -18,6 +18,16 @@ async function fetchDrivers() {
 async function createUser(data) {
   setAuthToken(AxiosUtility);
   const res = await AxiosUtility.post("/auth/registration/", data);
+
+  return res.data;
+}
+
+async function ApproveDriver(id) {
+  setAuthToken(AxiosUtility);
+  const res = await AxiosUtility.patch("admins/api/update/profile/", {
+    is_approved: true,
+    user: id,
+  });
 
   return res.data;
 }
@@ -32,6 +42,12 @@ async function createDriver(data) {
   return res.data;
 }
 
-const UserServices = { fetchUsers, createUser, createDriver, fetchDrivers };
+const UserServices = {
+  ApproveDriver,
+  fetchUsers,
+  createUser,
+  createDriver,
+  fetchDrivers,
+};
 
 export default UserServices;

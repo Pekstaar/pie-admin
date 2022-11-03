@@ -1,11 +1,13 @@
-import { Box, Image, Text } from "@chakra-ui/react";
+import { Box, Image, Text, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { BiIdCard } from "react-icons/bi";
 import { GrEdit } from "react-icons/gr";
 import { useLocation } from "react-router-dom";
 import RejectModal from "../components/apps/RejectModal";
 import BreadCrumb from "../components/general/BreadCrumb";
+import LoadingButton from "../components/general/LoadingButton";
 import Wrapper from "../components/general/Wrapper";
+import { toastProps } from "../utils/Helper";
 import auth from "../utils/services/AuthServices";
 import FleetServices from "../utils/services/FleetServices";
 import UserServices from "../utils/services/UserServices";
@@ -17,6 +19,8 @@ const ViewDriver = () => {
   const [user, setUser] = useState({});
   const [vehicle, setVehicle] = useState({});
   const [driverProfile, setDriverProfile] = useState({});
+  const toast = useToast();
+  const [loading, setLoading] = useState(false);
 
   let userId = location[location?.length - 1];
 
@@ -41,6 +45,28 @@ const ViewDriver = () => {
       setDriverProfile(response.find((user) => user.id === parseInt(userId)));
     });
   }, [userId]);
+
+  const handleApprove = () => {
+    if (window.confirm("Are you sure you want to approve driver?")) {
+      setLoading(true);
+      UserServices.ApproveDriver(userId).then(() => {
+        toast({
+          ...toastProps,
+          title: "Success!",
+          description:
+            user?.first_name + " " + user?.last_name + " Approved successfuly",
+          status: "success",
+        });
+        setLoading(false);
+
+        auth.getProfiles().then((response) => {
+          setDriverProfile(
+            response.find((user) => user.id === parseInt(userId))
+          );
+        });
+      });
+    }
+  };
 
   return (
     <>
@@ -206,7 +232,7 @@ const ViewDriver = () => {
               </Box>
 
               <Box className="flex gap-4 justify-end">
-                {!user?.is_active && (
+                {!driverProfile?.is_approved && (
                   <>
                     <button
                       onClick={handleOpenModal}
@@ -215,9 +241,21 @@ const ViewDriver = () => {
                       <Text fontWeight={"semibold"}>Reject</Text>
                     </button>
 
-                    <button className="bg-primary_yellow rounded-md items-center flex gap-2 px-16 py-3">
-                      <Text fontWeight={"semibold"}>Approve</Text>
-                    </button>
+                    {!loading ? (
+                      <button
+                        onClick={handleApprove}
+                        className="bg-primary_yellow rounded-md items-center flex gap-2 px-16 py-3"
+                      >
+                        <Text fontWeight={"semibold"}>Approve</Text>
+                      </button>
+                    ) : (
+                      <LoadingButton
+                        borderRadius={"md"}
+                        fontSize={"14px"}
+                        px={16}
+                        h={"50px"}
+                      />
+                    )}
                   </>
                 )}
               </Box>

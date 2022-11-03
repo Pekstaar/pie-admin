@@ -48,16 +48,18 @@ const Accepted = ({ handleView }) => {
                 }`}
               >
                 <td className="  py-3 px-4">
-                  {data?.first_name + " " + data?.last_name}
+                  {data?.user?.first_name + " " + data?.user?.last_name}
                 </td>
-                <td className=" py-3 px-4">{data?.phonenumber}</td>
-                <td className="  py-3 px-4">{data?.email}</td>
-                <td className=" py-3 px-4">__</td>
-                <td className=" py-3 px-4">{data?.date_joined}</td>
+                <td className=" py-3 px-4">{data?.user?.phonenumber}</td>
+                <td className="  py-3 px-4">{data?.user?.email}</td>
+                {/* <td className=" py-3 px-4">__</td> */}
+                <td className=" py-3 px-4">{data?.user?.date_joined}</td>
                 {/* actions table */}
                 <td className={`text-center text-white py-3 px-4 w-24 `}>
                   <Box className="flex gap-4 justify-center">
-                    <ActionButton handleClick={() => handleView(data?.id)}>
+                    <ActionButton
+                      handleClick={() => handleView(data?.user?.id)}
+                    >
                       <FiEye />
                     </ActionButton>
                   </Box>
@@ -78,7 +80,7 @@ const tableData = [
     fullname: "New User",
     phone: "0711223344",
     email: "brook@okapy.com",
-    vehicle_cat: "Cab",
+    // vehicle_cat: "Cab",
     "accepted date": new Date().toLocaleString(),
   },
   {
