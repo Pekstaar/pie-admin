@@ -284,7 +284,10 @@ const Users = () => {
                     }
                     h={"10"}
                     w={3 / 4}
-                  />
+                  >
+                    <option value="user">User</option>
+                    <option value="driver">Driver</option>
+                  </CSelect>
                 </Box>
 
                 {/* <Box className="flex w-full flex-col gap-1">

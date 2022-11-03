@@ -15,6 +15,16 @@ async function fetchSinglePartner(id) {
   return res.data;
 }
 
-const PartnerServices = { fetchPartners, fetchSinglePartner };
+async function createPartner(partner) {
+  setAuthToken(AxiosUtility);
+
+  const res = await AxiosUtility.post("/partners/api/owner/", partner);
+  return res?.data;
+
+  // console.log(partner);
+  // return "";
+}
+
+const PartnerServices = { fetchPartners, fetchSinglePartner, createPartner };
 
 export default PartnerServices;

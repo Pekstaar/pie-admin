@@ -61,7 +61,7 @@ const CInput = ({
   );
 };
 
-export const CSelect = (
+export const CSelect = ({
   icon,
   placeholder = "search",
   type = "text",
@@ -71,8 +71,9 @@ export const CSelect = (
   name,
   rIcon,
   handleEyeClick,
+  children,
   ...rest
-) => (
+}) => (
   <Box
     display={"flex"}
     gap={"3"}
@@ -93,8 +94,7 @@ export const CSelect = (
       m={"0"}
       onChange={handleChange}
     >
-      <option value="user">User</option>
-      <option value="driver">Driver</option>
+      {children}
     </Select>
   </Box>
 );

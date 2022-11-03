@@ -1,38 +1,86 @@
-import { Box, Button, HStack, Text, VStack } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import { Box, Button, HStack, Text, useToast, VStack } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { BiSort } from "react-icons/bi";
+import { BsPerson } from "react-icons/bs";
+import { FaPeopleArrows } from "react-icons/fa";
+import { FiEye } from "react-icons/fi";
+import { GrAdd, GrLocation } from "react-icons/gr";
+import { IoSearchOutline } from "react-icons/io5";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { VscFilter } from "react-icons/vsc";
+import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/general/BreadCrumb";
+import CustomModal from "../components/general/CustomModal";
+import CInput, { CSelect } from "../components/general/Input";
+import PrimaryButton from "../components/general/PrimaryButton";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
+import { toastProps } from "../utils/Helper";
 import PartnerServices from "../utils/services/PartnerServices";
-import { FiEye } from "react-icons/fi";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { IoSearchOutline } from "react-icons/io5";
-import { VscFilter } from "react-icons/vsc";
-import CInput from "../components/general/Input";
-import { BiSort } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
-import { BsPerson, BsTelephone } from "react-icons/bs";
-import PrimaryButton from "../components/general/PrimaryButton";
-import { GrAdd, GrLocation } from "react-icons/gr";
-import CustomModal from "../components/general/CustomModal";
-import { FaPeopleArrows } from "react-icons/fa";
 // import { AiOutlineMail } from "react-icons/ai";
 
 const Partners = () => {
+  const toast = useToast();
   const navigate = useNavigate();
   const [partners, setPartners] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [partner, setPartner] = useState({
+    name: "",
+    latitude: "",
+    longitude: "",
+    category: "",
+    owner: 0,
+  });
 
   useEffect(() => {
+    setLoading(false);
     PartnerServices.fetchPartners().then((response) => {
       setPartners(response);
     });
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e?.target;
+    setPartner((prev) => ({ ...prev, [name]: value }));
+  };
 
   const [openModal, setOpenModal] = useState(false);
 
   const handleViewUser = (partner) => {
     navigate(`${partner}`, partner);
   };
+
+  const handleCreate = async () => {
+    setLoading(true);
+    try {
+      await PartnerServices.createPartner({
+        ...partner,
+        owner: 50,
+      });
+
+      setLoading(false);
+
+      toast({
+        ...toastProps,
+        title: "Success!",
+        description: "User created successfully",
+        status: "success",
+      });
+      PartnerServices.fetchPartners().then((response) => {
+        setPartners(response);
+      });
+    } catch (error) {
+      setLoading(false);
+      toast({
+        ...toastProps,
+        title: "Error!",
+        description: error?.message,
+        status: "error",
+      });
+      console.log("USER CREATE ERROR:", error);
+    }
+  };
+
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<FaPeopleArrows />} title={"Partners"} />
@@ -54,6 +102,8 @@ const Partners = () => {
             <TableAction icon={<BiSort className="text-lg" />} text={"Sort"} />
 
             <CustomModal
+              loading={loading}
+              handleSave={handleCreate}
               title={"Add Partner"}
               isOpen={openModal}
               onClose={() => setOpenModal(false)}
@@ -77,22 +127,14 @@ const Partners = () => {
                     placeholder=""
                     icon={<BsPerson className="text-xl" />}
                     borderRadius={"md"}
+                    name={"name"}
+                    value={partner?.name}
+                    handleChange={handleChange}
                   />
                 </Box>
 
                 <Box className="flex w-full flex-col gap-1">
-                  <Text fontSize={"sm"}>Category</Text>
-
-                  <CInput
-                    h={"10"}
-                    w={3 / 4}
-                    placeholder=""
-                    borderRadius={"md"}
-                  />
-                </Box>
-
-                <Box className="flex w-full flex-col gap-1">
-                  <Text fontSize={"sm"}>Location</Text>
+                  <Text fontSize={"sm"}>Longitude</Text>
 
                   <CInput
                     h={"10"}
@@ -100,19 +142,44 @@ const Partners = () => {
                     placeholder=""
                     icon={<GrLocation className="text-xl" />}
                     borderRadius={"md"}
+                    name={"longitude"}
+                    value={partner?.longitude}
+                    handleChange={handleChange}
                   />
                 </Box>
 
                 <Box className="flex w-full flex-col gap-1">
-                  <Text fontSize={"sm"}>Phone</Text>
+                  <Text fontSize={"sm"}>Latitude</Text>
 
                   <CInput
                     h={"10"}
                     w={3 / 4}
                     placeholder=""
-                    icon={<BsTelephone className="text-xl" />}
+                    icon={<GrLocation className="text-xl" />}
                     borderRadius={"md"}
+                    name={"latitude"}
+                    value={partner?.latitude}
+                    handleChange={handleChange}
                   />
+                </Box>
+
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Category</Text>
+
+                  <CSelect
+                    handleChange={(e) =>
+                      setPartner((prev) => ({
+                        ...prev,
+                        category: e?.target?.value,
+                      }))
+                    }
+                    h={"10"}
+                    w={3 / 4}
+                  >
+                    {partnerCategories?.map((cat, index) => (
+                      <option value={index}>{cat}</option>
+                    ))}
+                  </CSelect>
                 </Box>
               </VStack>
             </CustomModal>
