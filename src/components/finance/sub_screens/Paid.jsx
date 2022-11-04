@@ -5,14 +5,17 @@ import { Box, HStack } from "@chakra-ui/react";
 import { IoSearchOutline } from "react-icons/io5";
 import CInput from "../../../components/general/Input";
 import EarningServices from "../../../utils/services/EarningServices";
+import Loader from "../../Loader";
 
 const Paid = () => {
   const [earnings, setEarnings] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     EarningServices.fetchEarnings().then((response) => {
       setEarnings(response.filter((data) => data.status === 1));
+      setLoading(false);
     });
   }, []);
 
@@ -31,7 +34,7 @@ const Paid = () => {
       {/* body */}
       <Box className="">
         <Table headers={[...Object.keys(tableData[0])]}>
-          {earnings?.filter((data) => {
+          {loading? <Loader/> : earnings?.filter((data) => {
             return (
               data === "" ? data :
               data?.created_at.toLowerCase().includes(searchValue.toLowerCase()) ||

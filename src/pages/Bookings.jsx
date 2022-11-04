@@ -13,6 +13,7 @@ import { VscFilter } from "react-icons/vsc";
 import ViewModal from "../components/Booking/ViewModal";
 import CInput from "../components/general/Input";
 import { STATUS_LIST } from "../utils/Helper";
+import Loader from "../components/Loader";
 
 const Bookings = () => {
   // const toast = useToast();
@@ -20,6 +21,7 @@ const Bookings = () => {
   const [bookingId, setBookingId] = React.useState();
   const [bookings, setBookings] = React.useState([]);
   const [searchValue, setSearchValue] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
 
   const handleOpenModal = React.useCallback((id) => {
     setOpenModal(true);
@@ -58,6 +60,7 @@ const Bookings = () => {
   useEffect(() => {
     BookingService.fetchBookings().then((response) => {
       setBookings(response);
+      setLoading(false);
     });
   }, []);
 
@@ -104,7 +107,7 @@ const Bookings = () => {
           {/* body */}
           <Box>
             <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {bookings?.filter((data) => {
+              {loading? <Loader/> : bookings?.filter((data) => {
                 return (
                   data === "" ? data :
                     // data?.booking?.formated_address.toLowerCase().includes(searchValue.toLowerCase()) ||

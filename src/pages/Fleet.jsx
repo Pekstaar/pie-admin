@@ -14,12 +14,14 @@ import { useNavigate } from "react-router-dom";
 import { Lorry } from "../assets/svg";
 import CInput from "../components/general/Input";
 import FleetServices from "../utils/services/FleetServices";
+import Loader from "../components/Loader";
 
 const Fleet = () => {
   const navigate = useNavigate();
   const [vehicles, setVehicles] = useState([]);
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const handleViewFleet = (plate) => {
     navigate(`${plate}`, plate);
@@ -45,6 +47,7 @@ const Fleet = () => {
     FleetServices.fetchVehicles().then((response) => {
       setVehicles(response);
       setFilteredVehicles(response);
+      setLoading(false);
     });
   }, []);
   return (
@@ -80,7 +83,7 @@ const Fleet = () => {
         {/* body */}
         <Box>
           <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            {filteredVehicles?.map((data, key) => {
+            {loading? <Loader /> : filteredVehicles?.map((data, key) => {
               const isEven = key % 2;
               const st = 2;
               // const status = STATUS_LIST[data?.status];

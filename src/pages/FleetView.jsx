@@ -15,16 +15,19 @@ import { VscFilter } from "react-icons/vsc";
 import { useLocation } from "react-router-dom";
 import CInput from "../components/general/Input";
 import FleetServices from "../utils/services/FleetServices";
+import Loader from "../components/Loader";
 
 const FleetView = () => {
   const location = useLocation()?.pathname.split("/");
 
   const [vehicle, setVehicle] = useState({});
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     FleetServices.fetchVehicle(location[location?.length - 1]).then(
       (response) => {
         setVehicle(response);
+        setLoading(false);
       }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -150,7 +153,7 @@ const FleetView = () => {
 
           <Box>
             <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {[]?.map((data, key) => {
+              {loading? <Loader /> : []?.map((data, key) => {
                 const isEven = key % 2;
                 const status = STATUS_LIST[data?.status];
                 const bg =

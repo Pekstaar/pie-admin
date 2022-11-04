@@ -17,6 +17,7 @@ import PrimaryButton from "../components/general/PrimaryButton";
 import PrimaryOutlinedButton from "../components/general/PrimaryOutlinedButton";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
+import Loader from "../components/Loader";
 import UserServices from "../utils/services/UserServices";
 
 const Users = () => {
@@ -25,6 +26,7 @@ const Users = () => {
   const [filteredUser, setFilteredUsers] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -32,6 +34,7 @@ const Users = () => {
     UserServices.fetchUsers().then((response) => {
       setUsers(response);
       setFilteredUsers(response);
+      setLoading(false);
     });
   }, []);
 
@@ -245,7 +248,7 @@ const Users = () => {
         {/* body */}
         <Box>
           <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            {filteredUser?.map((data, key) => {
+            { loading? <Loader/> : filteredUser?.map((data, key) => {
               const isEven = key % 2;
               const status = STATUS_LIST[data?.is_active];
               const bg = !data?.is_active

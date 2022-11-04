@@ -15,11 +15,13 @@ import { BiSort } from "react-icons/bi";
 import { useLocation, useNavigate } from "react-router-dom";
 import DeactivateButton from "../components/general/DeactivateButton";
 import { GoGraph } from "react-icons/go";
+import Loader from "../components/Loader";
 
 const ViewUser = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState([]);
   const [userBookings, setUserBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const location = useLocation()?.pathname.split("/");
 
@@ -29,6 +31,7 @@ const ViewUser = () => {
     UserServices.fetchUsers()
       .then((response) => {
         setUser(response.find((user) => user.first_name === userFirstName))
+        setLoading(false)
       })
 
     BookingServices.ownersBookings(userFirstName).then((response) => {
@@ -214,7 +217,7 @@ const ViewUser = () => {
 
           <Box>
             <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {userBookings?.map((data, key) => {
+              {loading? <Loader /> : userBookings?.map((data, key) => {
                 const isEven = key % 2;
                 const status = STATUS_LIST[data?.status];
                 const bg =

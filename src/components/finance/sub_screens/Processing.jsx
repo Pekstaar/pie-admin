@@ -7,14 +7,17 @@ import { Box, HStack } from "@chakra-ui/react";
 import OutlinedButton from "../../general/OutlinedButton";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import EarningServices from "../../../utils/services/EarningServices";
+import Loader from "../../Loader";
 
 const Failed = () => {
   const [earnings, setEarnings] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     EarningServices.fetchEarnings().then((response) => {
       setEarnings(response.filter((data) => data.status === 0));
+      setLoading(false);
     });
   }, []);
   return (
@@ -31,7 +34,7 @@ const Failed = () => {
       {/* body */}
       <Box className="">
         <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-          {earnings?.filter((data) => {
+          {loading? <Loader/> : earnings?.filter((data) => {
             return (
               data === "" ? data :
               data?.created_at.toLowerCase().includes(searchValue.toLowerCase()) ||

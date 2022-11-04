@@ -16,15 +16,18 @@ import PrimaryButton from "../components/general/PrimaryButton";
 import { GrAdd, GrLocation } from "react-icons/gr";
 import CustomModal from "../components/general/CustomModal";
 import { FaPeopleArrows } from "react-icons/fa";
+import Loader from "../components/Loader";
 // import { AiOutlineMail } from "react-icons/ai";
 
 const Partners = () => {
   const navigate = useNavigate();
   const [partners, setPartners] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     PartnerServices.fetchPartners().then((response) => {
       setPartners(response);
+      setLoading(false);
     });
   }, []);
 
@@ -122,7 +125,7 @@ const Partners = () => {
         {/* body */}
         <Box>
           <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            {partners?.map((data, key) => {
+            {loading ? <Loader /> : partners?.map((data, key) => {
               const isEven = key % 2;
 
               // registration: "kcb 4457k",
@@ -131,9 +134,8 @@ const Partners = () => {
               //     status: 4,
               return (
                 <tr
-                  className={`h-14 capitalize ${
-                    isEven ? "bg-[#F9F9F9]" : "white"
-                  }`}
+                  className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
+                    }`}
                 >
                   <td className="  py-3 px-4">{data?.name}</td>
 
