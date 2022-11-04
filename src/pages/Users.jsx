@@ -35,6 +35,9 @@ const Users = () => {
   const [filteredUser, setFilteredUsers] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
   const [search, setSearch] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [stateLoading, setStateLoading] = useState(true);
 
   const [openModal, setOpenModal] = useState(false);
   const [user, setUser] = useState({
@@ -50,7 +53,7 @@ const Users = () => {
     UserServices.fetchUsers().then((response) => {
       setUsers(response);
       setFilteredUsers(response);
-      setLoading(false);
+      setStateLoading(false);
     });
   }, []);
 
@@ -356,7 +359,7 @@ const Users = () => {
         {/* body */}
         <Box>
           <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            { loading? <Loader/> : filteredUser?.map((data, key) => {
+            { stateLoading? <Loader/> : filteredUser?.map((data, key) => {
               const isEven = key % 2;
               const status = STATUS_LIST[data?.is_active];
               const bg = !data?.is_active

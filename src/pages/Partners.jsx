@@ -11,26 +11,20 @@ import { VscFilter } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/general/BreadCrumb";
 import CustomModal from "../components/general/CustomModal";
-<<<<<<< HEAD
-import { FaPeopleArrows } from "react-icons/fa";
 import Loader from "../components/Loader";
-=======
 import CInput, { CSelect } from "../components/general/Input";
 import PrimaryButton from "../components/general/PrimaryButton";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 import { toastProps } from "../utils/Helper";
 import PartnerServices from "../utils/services/PartnerServices";
->>>>>>> c822ffd9ef5de9e764262606d070c4da14ba6c20
 // import { AiOutlineMail } from "react-icons/ai";
 
 const Partners = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const [partners, setPartners] = useState([]);
-<<<<<<< HEAD
-  const [loading, setLoading] = useState(true);
-=======
+  const [stateLoading, setStateLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [partner, setPartner] = useState({
     name: "",
@@ -39,13 +33,12 @@ const Partners = () => {
     category: "",
     owner: 0,
   });
->>>>>>> c822ffd9ef5de9e764262606d070c4da14ba6c20
 
   useEffect(() => {
     setLoading(false);
     PartnerServices.fetchPartners().then((response) => {
       setPartners(response);
-      setLoading(false);
+      setStateLoading(false);
     });
   }, []);
 
@@ -199,7 +192,7 @@ const Partners = () => {
         {/* body */}
         <Box>
           <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            {loading ? <Loader /> : partners?.map((data, key) => {
+            {stateLoading ? <Loader /> : partners?.map((data, key) => {
               const isEven = key % 2;
 
               // registration: "kcb 4457k",

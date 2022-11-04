@@ -21,6 +21,10 @@ const Bookings = () => {
   const [bookingId, setBookingId] = React.useState();
   const [bookings, setBookings] = React.useState([]);
   const [searchValue, setSearchValue] = React.useState("");
+  const [recievers, setRecievers] = React.useState({});
+  const [current, setCurrent] = React.useState({});
+  const [loading, setLoading] = React.useState(true);
+
 
   const handleOpenModal = React.useCallback((id) => {
     setOpenModal(true);
@@ -34,6 +38,18 @@ const Bookings = () => {
   useEffect(() => {
     BookingService.fetchBookings().then(async (response) => {
       setBookings(response);
+      let receivers = {};
+
+      for (var obj of response) {
+        receivers[obj?.id] = obj;
+        const rec = await BookingService.getBookingReceiver(obj?.booking?.id);
+        receivers[obj?.booking?.id] = rec;
+      }
+
+      console.log(receivers);
+      setRecievers(receivers);
+
+      setLoading(false);
     });
   }, []);
 
@@ -80,7 +96,7 @@ const Bookings = () => {
           {/* body */}
           <Box>
             <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {bookings?.filter((data) => {
+              {loading? <Loader /> : bookings?.filter((data) => {
                 return (
                   data === "" ? data :
                     // data?.booking?.formated_address.toLowerCase().includes(searchValue.toLowerCase()) ||

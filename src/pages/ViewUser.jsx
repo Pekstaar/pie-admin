@@ -10,16 +10,13 @@ import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import CustomModal from "../components/general/CustomModal";
 import DeactivateButton from "../components/general/DeactivateButton";
-<<<<<<< HEAD
-import { GoGraph } from "react-icons/go";
+// import { GoGraph } from "react-icons/go";
 import Loader from "../components/Loader";
-=======
 import CInput from "../components/general/Input";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 import BookingServices from "../utils/services/BookingServices";
 import UserServices from "../utils/services/UserServices";
->>>>>>> c822ffd9ef5de9e764262606d070c4da14ba6c20
 
 const ViewUser = () => {
   const navigate = useNavigate();
@@ -32,17 +29,14 @@ const ViewUser = () => {
   let userFirstName = location[location?.length - 1];
 
   useEffect(() => {
-<<<<<<< HEAD
     UserServices.fetchUsers()
       .then((response) => {
         setUser(response.find((user) => user.first_name === userFirstName))
         setLoading(false)
       })
-=======
     UserServices.fetchUsers().then((response) => {
       setUser(response.find((user) => user.first_name === userFirstName));
     });
->>>>>>> c822ffd9ef5de9e764262606d070c4da14ba6c20
 
     BookingServices.ownersBookings(userFirstName).then((response) => {
       setUserBookings(response);
