@@ -1,23 +1,32 @@
-import { Box, Button, Center, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  HStack,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
-import { AiOutlineMail } from "react-icons/ai";
+import { AiFillLock, AiOutlineMail } from "react-icons/ai";
 import { BiSort } from "react-icons/bi";
 import { BsPeople, BsPerson, BsTelephone } from "react-icons/bs";
 import { FiEye } from "react-icons/fi";
-import { GrAdd, GrLocation } from "react-icons/gr";
+import { GrAdd } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { VscFilter } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/general/BreadCrumb";
 import CustomModal from "../components/general/CustomModal";
-import CInput from "../components/general/Input";
+import CInput, { CSelect } from "../components/general/Input";
 import PrimaryButton from "../components/general/PrimaryButton";
 import PrimaryOutlinedButton from "../components/general/PrimaryOutlinedButton";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 import Loader from "../components/Loader";
+import { toastProps } from "../utils/Helper";
 import UserServices from "../utils/services/UserServices";
 
 const Users = () => {
@@ -26,9 +35,16 @@ const Users = () => {
   const [filteredUser, setFilteredUsers] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
 
   const [openModal, setOpenModal] = useState(false);
+  const [user, setUser] = useState({
+    name: "",
+    category: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
+  const toast = useToast();
 
   useEffect(() => {
     UserServices.fetchUsers().then((response) => {
@@ -37,6 +53,11 @@ const Users = () => {
       setLoading(false);
     });
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e?.target;
+    setUser((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleFilter = React.useCallback(
     (filter) => {
@@ -91,6 +112,46 @@ const Users = () => {
     return newArr;
   };
 
+  const handleCreate = async () => {
+    setLoading(true);
+    try {
+      if (user?.category === "user") {
+        await UserServices.createUser({
+          ...user,
+          password1: user?.password,
+          password2: user?.password,
+        });
+      } else {
+        await UserServices.createDriver({
+          ...user,
+          password1: user?.password,
+          password2: user?.password,
+        });
+      }
+
+      setLoading(false);
+
+      toast({
+        ...toastProps,
+        title: "Success!",
+        description: "User created successfully",
+        status: "success",
+      });
+      UserServices.fetchUsers().then((response) => {
+        setUsers(response);
+        setFilteredUsers(response);
+      });
+    } catch (error) {
+      toast({
+        ...toastProps,
+        title: "Error!",
+        description: error?.message,
+        status: "error",
+      });
+      console.log("USER CREATE ERROR:", error);
+    }
+  };
+
   React.useEffect(() => {
     setFilteredUsers(handleSearch(users, search));
   }, [search, users]);
@@ -104,6 +165,11 @@ const Users = () => {
   }, [handleFilter, selectedFilter, users]);
 
   const handleViewUser = (user) => {
+    // console.log(user);
+    if (user?.is_driver) {
+      navigate(`driver/${user?.id}`, user);
+      return;
+    }
     navigate(`${user}`, user);
   };
   return (
@@ -168,6 +234,8 @@ const Users = () => {
             <TableAction icon={<BiSort className="text-lg" />} text={"Sort"} />
 
             <CustomModal
+              loading={loading}
+              handleSave={handleCreate}
               title={"Add User"}
               isOpen={openModal}
               onClose={() => setOpenModal(false)}
@@ -186,9 +254,12 @@ const Users = () => {
                   <Text fontSize={"sm"}>Full name</Text>
 
                   <CInput
+                    handleChange={handleChange}
                     h={"10"}
                     w={3 / 4}
                     placeholder=""
+                    name={"name"}
+                    value={user?.name}
                     icon={<BsPerson className="text-xl" />}
                     borderRadius={"md"}
                   />
@@ -197,15 +268,29 @@ const Users = () => {
                 <Box className="flex w-full flex-col gap-1">
                   <Text fontSize={"sm"}>Category</Text>
 
-                  <CInput
+                  {/* <CInput
                     h={"10"}
                     w={3 / 4}
                     placeholder=""
                     borderRadius={"md"}
-                  />
+                  /> */}
+
+                  <CSelect
+                    handleChange={(selected) =>
+                      setUser((prev) => ({
+                        ...prev,
+                        category: selected,
+                      }))
+                    }
+                    h={"10"}
+                    w={3 / 4}
+                  >
+                    <option value="user">User</option>
+                    <option value="driver">Driver</option>
+                  </CSelect>
                 </Box>
 
-                <Box className="flex w-full flex-col gap-1">
+                {/* <Box className="flex w-full flex-col gap-1">
                   <Text fontSize={"sm"}>Location</Text>
 
                   <CInput
@@ -215,12 +300,15 @@ const Users = () => {
                     icon={<GrLocation className="text-xl" />}
                     borderRadius={"md"}
                   />
-                </Box>
+                </Box> */}
 
                 <Box className="flex w-full flex-col gap-1">
                   <Text fontSize={"sm"}>Email</Text>
 
                   <CInput
+                    handleChange={handleChange}
+                    value={user?.email}
+                    name={"email"}
                     h={"10"}
                     w={3 / 4}
                     placeholder=""
@@ -233,10 +321,30 @@ const Users = () => {
                   <Text fontSize={"sm"}>Phone</Text>
 
                   <CInput
+                    handleChange={handleChange}
+                    value={user?.phone}
+                    name={"phone"}
                     h={"10"}
                     w={3 / 4}
                     placeholder=""
                     icon={<BsTelephone className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box>
+
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Password</Text>
+
+                  <CInput
+                    handleChange={handleChange}
+                    value={user?.password}
+                    handleEyeClick={() => setShowPassword(!showPassword)}
+                    name={"password"}
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder="password"
+                    type={showPassword ? "name" : "password"}
+                    icon={<AiFillLock className="text-xl" />}
                     borderRadius={"md"}
                   />
                 </Box>
@@ -294,7 +402,7 @@ const Users = () => {
                   <td className={` text-white py-3 px-4  w-32`}>
                     <Box className="flex gap-6 justify-start">
                       <ActionButton
-                        handlePress={() => handleViewUser(data?.first_name)}
+                        handlePress={() => handleViewUser(data)}
                         bg={bg}
                       >
                         <FiEye />

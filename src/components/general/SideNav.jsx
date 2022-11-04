@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { BiIdCard } from "react-icons/bi";
 import { BsPeople } from "react-icons/bs";
 import { FaPeopleArrows } from "react-icons/fa";
-import { FiSettings } from "react-icons/fi";
 import { GoGraph } from "react-icons/go";
 import { MdOutlineDashboard } from "react-icons/md";
 import { RiCarLine } from "react-icons/ri";
@@ -206,21 +205,21 @@ const menu_list = [
     to: "/partners",
     icon: <FaPeopleArrows />,
   },
-  {
-    name: "Settings",
-    icon: <FiSettings />,
-    hasSub: true,
-    subs: [
-      {
-        name: "Users",
-        to: "/settings/users",
-        icon: <BsPeople />,
-      },
-      {
-        name: "Partners",
-        to: "/settings/partners",
-        icon: <FaPeopleArrows />,
-      },
-    ],
-  },
+  // {
+  //   name: "Settings",
+  //   icon: <FiSettings />,
+  //   hasSub: true,
+  //   subs: [
+  //     {
+  //       name: "Users",
+  //       to: "/settings/users",
+  //       icon: <BsPeople />,
+  //     },
+  //     {
+  //       name: "Partners",
+  //       to: "/settings/partners",
+  //       icon: <FaPeopleArrows />,
+  //     },
+  //   ],
+  // },
 ];

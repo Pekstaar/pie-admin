@@ -10,7 +10,7 @@ import Paid from "../components/finance/sub_screens/Paid";
 import Failed from "../components/finance/sub_screens/Processing";
 
 const Finance = () => {
-  const [currentSubNav, setCurrent] = useState("withdrawal"); //processing,paid
+  const [currentSubNav, setCurrent] = useState("paid"); //processing,paid
 
   const bookingsByProduct = React.useMemo(
     () => ({
@@ -72,7 +72,11 @@ const Finance = () => {
             />
           </HStack>
 
-          {currentSubNav === "paid" ? <Paid /> : currentSubNav === "unpaid" && <Failed />}
+          {currentSubNav === "paid" ? (
+            <Paid />
+          ) : (
+            currentSubNav === "unpaid" && <Failed />
+          )}
         </Wrapper>
 
         <Box className="flex flex-col gap-5" w={1 / 3} p={"3"}>

@@ -1,21 +1,25 @@
-import { Box, Button, Center, HStack, Image, Text } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
-import { Lorry, Transaction } from "../assets/svg";
-import BreadCrumb from "../components/general/BreadCrumb";
-import Table from "../components/general/Table";
-import Wrapper from "../components/general/Wrapper";
-import UserServices from "../utils/services/UserServices";
-import BookingServices from "../utils/services/BookingServices";
+import { Box, Button, HStack, Image, Text, VStack } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { BiSort } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
+import { GrEdit } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
 import { VscFilter } from "react-icons/vsc";
-import { GrEdit } from "react-icons/gr";
-import CInput from "../components/general/Input";
-import { BiSort } from "react-icons/bi";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Transaction } from "../assets/svg";
+import BreadCrumb from "../components/general/BreadCrumb";
+import CustomModal from "../components/general/CustomModal";
 import DeactivateButton from "../components/general/DeactivateButton";
+<<<<<<< HEAD
 import { GoGraph } from "react-icons/go";
 import Loader from "../components/Loader";
+=======
+import CInput from "../components/general/Input";
+import Table from "../components/general/Table";
+import Wrapper from "../components/general/Wrapper";
+import BookingServices from "../utils/services/BookingServices";
+import UserServices from "../utils/services/UserServices";
+>>>>>>> c822ffd9ef5de9e764262606d070c4da14ba6c20
 
 const ViewUser = () => {
   const navigate = useNavigate();
@@ -25,22 +29,27 @@ const ViewUser = () => {
 
   const location = useLocation()?.pathname.split("/");
 
-  let userFirstName = location[location?.length - 1]
+  let userFirstName = location[location?.length - 1];
 
   useEffect(() => {
+<<<<<<< HEAD
     UserServices.fetchUsers()
       .then((response) => {
         setUser(response.find((user) => user.first_name === userFirstName))
         setLoading(false)
       })
+=======
+    UserServices.fetchUsers().then((response) => {
+      setUser(response.find((user) => user.first_name === userFirstName));
+    });
+>>>>>>> c822ffd9ef5de9e764262606d070c4da14ba6c20
 
     BookingServices.ownersBookings(userFirstName).then((response) => {
       setUserBookings(response);
-    })
-    
+    });
   }, [userFirstName]);
 
-  console.log(user)
+  // const
 
   const handleViewUser = (user) => {
     navigate(`/users/${user}`, user);
@@ -69,11 +78,7 @@ const ViewUser = () => {
               bg={"gray.300"}
               mb={"3"}
             >
-              <Image
-                h={"full"}
-                objectFit={"cover"}
-                src={user?.image}
-              />
+              <Image h={"full"} objectFit={"cover"} src={user?.image} />
             </Box>
             <Text
               fontSize={"xl"}
@@ -105,6 +110,120 @@ const ViewUser = () => {
                 Personal information
               </Text>
 
+              <CustomModal
+                // loading={loading}
+                // handleSave={handleCreate}
+                title={"Add User"}
+                // isOpen={openModal}
+                // onClose={() => setOpenModal(false)}
+                // button={
+                //   // <PrimaryButton
+                //   //   className={"text-sm items-end"}
+                //   //   handleClick={() => setOpenModal(true)}
+                //   // >
+                //   //   <GrAdd className="text-lg" />
+                //   //   <Text fontWeight={"medium"}>Add User</Text>
+                //   // </PrimaryButton>
+                // }
+              >
+                <VStack gap={"2"} w={"full"}>
+                  {/* <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Full name</Text>
+
+                  <CInput
+                    handleChange={handleChange}
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    name={"name"}
+                    value={user?.name}
+                    icon={<BsPerson className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box> */}
+
+                  <Box className="flex w-full flex-col gap-1">
+                    <Text fontSize={"sm"}>Category</Text>
+
+                    {/* <CInput
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    borderRadius={"md"}
+                  /> */}
+
+                    {/* <CSelect
+                    handleChange={(selected) =>
+                      setUser((prev) => ({
+                        ...prev,
+                        category: selected,
+                      }))
+                    }
+                    h={"10"}
+                    w={3 / 4}
+                  /> */}
+                  </Box>
+
+                  {/* <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Location</Text>
+
+                  <CInput
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    icon={<GrLocation className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box> */}
+
+                  {/* <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Email</Text>
+
+                  <CInput
+                    handleChange={handleChange}
+                    value={user?.email}
+                    name={"email"}
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    icon={<AiOutlineMail className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box>
+
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Phone</Text>
+
+                  <CInput
+                    handleChange={handleChange}
+                    value={user?.phone}
+                    name={"phone"}
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder=""
+                    icon={<BsTelephone className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box>
+
+                <Box className="flex w-full flex-col gap-1">
+                  <Text fontSize={"sm"}>Password</Text>
+
+                  <CInput
+                    handleChange={handleChange}
+                    value={user?.password}
+                    handleEyeClick={() => setShowPassword(!showPassword)}
+                    name={"password"}
+                    h={"10"}
+                    w={3 / 4}
+                    placeholder="password"
+                    type={showPassword ? "name" : "password"}
+                    icon={<AiFillLock className="text-xl" />}
+                    borderRadius={"md"}
+                  />
+                </Box> */}
+                </VStack>
+              </CustomModal>
               <ActionButton>
                 <GrEdit />
               </ActionButton>
@@ -128,8 +247,16 @@ const ViewUser = () => {
               <div className={"bg-zinc-200 h-60 w-0.5 rounded-full"} />
 
               <Box className="text-left flex flex-col gap-4">
-                <Text>{user?.first_name} {user?.last_name}</Text>
-                <Text>{user?.is_admin ? "Admin" : user?.is_driver ? "Driver" : "User"}</Text>
+                <Text>
+                  {user?.first_name} {user?.last_name}
+                </Text>
+                <Text>
+                  {user?.is_admin
+                    ? "Admin"
+                    : user?.is_driver
+                    ? "Driver"
+                    : "User"}
+                </Text>
                 <Text>Nairobi CBD, Nairobi</Text>
                 <Text>{user?.email}</Text>
                 <Text>{user?.phonenumber}</Text>
@@ -140,7 +267,7 @@ const ViewUser = () => {
           </Box>
 
           {/* vehicle information */}
-          <Box>
+          {/* <Box>
             <Box className="flex justify-between py-2 px-5">
               <Text fontSize={"lg"} fontWeight={"medium"}>
                 Payment Details
@@ -152,7 +279,7 @@ const ViewUser = () => {
             </Box>
             <Wrapper my={"2"} borderRadius={"none"} className={"gap-3"}>
               {/* mini cards */}
-              <HStack w={"full"} fontFamily={"Poppins"}>
+          {/* <HStack w={"full"} fontFamily={"Poppins"}>
                 <MiniCard no={"24"} text={"Total Bookings"} icon={<Lorry />} />
                 <MiniCard
                   no={"3"}
@@ -173,8 +300,9 @@ const ViewUser = () => {
 
                     return (
                       <tr
-                        className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
-                          }`}
+                        className={`h-14 capitalize ${
+                          isEven ? "bg-[#F9F9F9]" : "white"
+                        }`}
                       >
                         <td className=" py-3 px-4">{data?.date}</td>
                         <td className=" py-3 px-4">
@@ -187,7 +315,7 @@ const ViewUser = () => {
                 </Table>
               </Box>
             </Wrapper>
-          </Box>
+          </Box>  */}
         </Box>
 
         {/* table */}
@@ -224,17 +352,20 @@ const ViewUser = () => {
                   data?.status === 0
                     ? "bg-primary_red"
                     : data?.status === 5
-                      ? "bg-primary_green"
-                      : "bg-primary_yellow_light";
+                    ? "bg-primary_green"
+                    : "bg-primary_yellow_light";
 
                 return (
                   <tr
-                    className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
-                      }`}
+                    className={`h-14 capitalize ${
+                      isEven ? "bg-[#F9F9F9]" : "white"
+                    }`}
                   >
                     <td className=" py-3 px-4">--</td>
                     <td className="py-3 px-4">--</td>
-                    <td className="py-3 px-4">{data?.driver?.first_name} {data?.driver?.last_name}</td>
+                    <td className="py-3 px-4">
+                      {data?.driver?.first_name} {data?.driver?.last_name}
+                    </td>
                     <td className={`text-white py-3 px-4 `}>
                       <Box className="flex">
                         <Box
@@ -347,43 +478,43 @@ const TableAction = ({ icon, text }) => (
   </button>
 );
 
-const MiniCard = ({ text, no, icon }) => (
-  <Box borderRadius={"xl"} h={"20"} p={"2"} flexGrow={"1"}>
-    <Text fontSize={"sm"} className={"text-zinc-400"}>
-      {text}
-    </Text>
-    <Box className="flex justify-between items-center">
-      <Text fontWeight={"bold"} fontSize={"lg"}>
-        {no}
-      </Text>
+// const MiniCard = ({ text, no, icon }) => (
+//   <Box borderRadius={"xl"} h={"20"} p={"2"} flexGrow={"1"}>
+//     <Text fontSize={"sm"} className={"text-zinc-400"}>
+//       {text}
+//     </Text>
+//     <Box className="flex justify-between items-center">
+//       <Text fontWeight={"bold"} fontSize={"lg"}>
+//         {no}
+//       </Text>
 
-      <Center
-        h={"40px"}
-        w={"40px"}
-        p={"1.5"}
-        bg={"current_bg"}
-        borderRadius={"md"}
-      >
-        {icon}
-      </Center>
-    </Box>
-  </Box>
-);
+//       <Center
+//         h={"40px"}
+//         w={"40px"}
+//         p={"1.5"}
+//         bg={"current_bg"}
+//         borderRadius={"md"}
+//       >
+//         {icon}
+//       </Center>
+//     </Box>
+//   </Box>
+// );
 
-const sample_payment_data = [
-  {
-    date: "5/3/2019",
-    "method of payment": "Mpesa",
-    amount: "350",
-  },
-  {
-    date: "5/3/2019",
-    "method of payment": "Mpesa",
-    amount: "350",
-  },
-  {
-    date: "5/3/2019",
-    "method of payment": "Mpesa",
-    amount: "350",
-  },
-];
+// const sample_payment_data = [
+//   {
+//     date: "5/3/2019",
+//     "method of payment": "Mpesa",
+//     amount: "350",
+//   },
+//   {
+//     date: "5/3/2019",
+//     "method of payment": "Mpesa",
+//     amount: "350",
+//   },
+//   {
+//     date: "5/3/2019",
+//     "method of payment": "Mpesa",
+//     amount: "350",
+//   },
+// ];

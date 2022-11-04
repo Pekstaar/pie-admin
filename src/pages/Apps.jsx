@@ -4,14 +4,13 @@ import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Wrapper from "../components/general/Wrapper";
 
-import Pending from "../components/apps/sub_screens/Pending";
-import Rejected from "../components/apps/sub_screens/Rejected";
-import Accepted from "../components/apps/sub_screens/Accepted";
 import { useNavigate } from "react-router-dom";
+import Accepted from "../components/apps/sub_screens/Accepted";
+import Pending from "../components/apps/sub_screens/Pending";
 
 const Apps = () => {
   const navigate = useNavigate();
-  const [currentSubNav, setCurrent] = useState("pending"); //processing,paid
+  const [currentSubNav, setCurrent] = useState("accepted"); //processing,paid
 
   const handleViewApplication = (name) => {
     navigate(`${name}`, name);
@@ -29,28 +28,21 @@ const Apps = () => {
           mx={"4"}
         >
           <SubNavItem
-            isCurrent={currentSubNav.toLowerCase() === "pending"}
-            title={"Pending"}
-            handleClick={() => setCurrent("pending")}
-          />
-          <SubNavItem
-            isCurrent={currentSubNav.toLowerCase() === "rejected"}
-            handleClick={() => setCurrent("rejected")}
-            title={"Rejected"}
-          />
-          <SubNavItem
             isCurrent={currentSubNav.toLowerCase() === "accepted"}
             handleClick={() => setCurrent("accepted")}
             title={"Accepted"}
+          />
+          <SubNavItem
+            isCurrent={currentSubNav.toLowerCase() === "pending"}
+            title={"Pending"}
+            handleClick={() => setCurrent("pending")}
           />
         </HStack>
 
         {currentSubNav === "pending" ? (
           <Pending handleView={handleViewApplication} />
-        ) : currentSubNav === "rejected" ? (
-          <Rejected />
         ) : (
-          <Accepted />
+          <Accepted handleView={handleViewApplication} />
         )}
       </Wrapper>
     </Box>

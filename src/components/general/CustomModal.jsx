@@ -9,6 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
+import LoadingButton from "./LoadingButton";
 import PrimaryButton from "./PrimaryButton";
 import PrimaryOutlinedButton from "./PrimaryOutlinedButton";
 
@@ -23,6 +24,9 @@ const CustomModal = ({
   hfs,
   ofy = "hidden", //overflowY
   showConfirm = false,
+  handleSave,
+  loading,
+  hideSave = false,
 }) => {
   return (
     <>
@@ -50,9 +54,25 @@ const CustomModal = ({
                   </Text>
                 </PrimaryOutlinedButton>
 
-                <PrimaryButton className={"text-sm items-end px-10"}>
-                  <Text fontWeight={"medium"}>Save</Text>
-                </PrimaryButton>
+                {!hideSave && (
+                  <>
+                    !loading ? (
+                    <PrimaryButton
+                      handleClick={handleSave}
+                      className={"text-sm items-end px-10"}
+                    >
+                      <Text fontWeight={"medium"}>Save</Text>
+                    </PrimaryButton>
+                    ) : (
+                    <LoadingButton
+                      borderRadius={"md"}
+                      fontSize={"14px"}
+                      // w={"75%"}
+                      h={"12"}
+                    />
+                    )
+                  </>
+                )}
               </>
             )}
 

@@ -9,10 +9,23 @@ import { ActionButton } from "./Apps";
 import License from "../assets/images/license.png";
 import Insurance from "../assets/images/certificate.png";
 import RejectModal from "../components/apps/RejectModal";
+import UserServices from "../utils/services/UserServices";
 
 const ViewApp = () => {
   const location = useLocation()?.pathname.split("/");
   const [openRejectModal, setOpenModal] = React.useState(false);
+  const [user, setUser] = React.useState({});
+
+  let userId = location[location?.length - 1];
+  React.useEffect(() => {
+    UserServices.fetchUsers().then((response) => {
+      setUser(response.find((user) => user.id === parseInt(userId)));
+    });
+
+    // BookingServices.ownersBookings(userFirstName).then((response) => {
+    //   setUserBookings(response);
+    // });
+  }, [userId]);
 
   const handleOpenModal = React.useCallback(() => {
     setOpenModal(true);
@@ -28,7 +41,7 @@ const ViewApp = () => {
         <BreadCrumb
           icon={<BiIdCard />}
           title={`Applications /`}
-          subtitle={location[location?.length - 1]}
+          subtitle={user?.first_name}
           c={"capitalize"}
         />
         <Box className="flex gap-3">
@@ -47,11 +60,7 @@ const ViewApp = () => {
                 bg={"gray.300"}
                 mb={"3"}
               >
-                <Image
-                  h={"full"}
-                  objectFit={"cover"}
-                  src="https://media.istockphoto.com/photos/attractive-young-african-woman-picture-id174810353?k=20&m=174810353&s=612x612&w=0&h=7lhfbyHQhlMnVGG6zUcbbrB_INOtNKuzD_9EfU027Gc="
-                />
+                <Image h={"full"} objectFit={"cover"} src={user?.image} />
               </Box>
               <Text
                 fontSize={"xl"}
@@ -62,7 +71,7 @@ const ViewApp = () => {
               </Text>
 
               <Text fontSize={"sm"} fontWeight={"light"}>
-                Driver: Steve Driver
+                {user?.first_name} {user?.last_name}
               </Text>
             </Wrapper>
 
@@ -79,11 +88,11 @@ const ViewApp = () => {
               </Box>
               <Wrapper
                 my={"2"}
-                p={"5"}
+                p={"10"}
                 borderRadius={"none"}
-                className={"flex justify-center items-center gap-3"}
+                className={"flex justify-center items-center gap-3 text-[14px]"}
               >
-                <Box className="text-right text-sm flex flex-col gap-4">
+                <Box className="text-right flex flex-col gap-4">
                   <Text fontWeight={"medium"}>Full name</Text>
                   <Text fontWeight={"medium"}>Category</Text>
                   <Text fontWeight={"medium"}>Location</Text>
@@ -95,13 +104,21 @@ const ViewApp = () => {
 
                 <div className={"bg-zinc-200 h-60 w-0.5 rounded-full"} />
 
-                <Box className="text-left text-sm flex flex-col gap-4">
-                  <Text>Pekmah Cruiz</Text>
-                  <Text>Driver</Text>
+                <Box className="text-left flex flex-col gap-4">
+                  <Text>
+                    {user?.first_name} {user?.last_name}
+                  </Text>
+                  <Text>
+                    {user?.is_admin
+                      ? "Admin"
+                      : user?.is_driver
+                      ? "Driver"
+                      : "User"}
+                  </Text>
                   <Text>Nairobi CBD, Nairobi</Text>
-                  <Text>pekmah@mail.com</Text>
-                  <Text>+254 781223344</Text>
-                  <Text>3/9/2022</Text>
+                  <Text>{user?.email}</Text>
+                  <Text>{user?.phonenumber}</Text>
+                  <Text>{user?.date_joined}</Text>
                   <Text>3/10/2022</Text>
                 </Box>
               </Wrapper>

@@ -8,8 +8,17 @@ import { Box, Button, HStack } from "@chakra-ui/react";
 import { FiEye } from "react-icons/fi";
 import { VscFilter } from "react-icons/vsc";
 import { BiSort } from "react-icons/bi";
+import UserServices from "../../../utils/services/UserServices";
+import { useState } from "react";
 
-const Accepted = () => {
+const Accepted = ({ handleView }) => {
+  const [applications, setApplications] = useState();
+
+  React.useEffect(() => {
+    UserServices.fetchDrivers(true).then((response) => {
+      setApplications(response);
+    });
+  }, []);
   return (
     <>
       {/* search and table actions */}
@@ -29,7 +38,7 @@ const Accepted = () => {
       {/* body */}
       <Box>
         <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-          {tableData?.map((data, key) => {
+          {applications?.map((data, key) => {
             const isEven = key % 2;
 
             return (
@@ -38,15 +47,17 @@ const Accepted = () => {
                   isEven ? "bg-[#F9F9F9]" : "white"
                 }`}
               >
-                <td className="  py-3 px-4">{data?.fullname}</td>
-                <td className="  py-3 px-4">{data?.email}</td>
-                <td className=" py-3 px-4">{data?.phone}</td>
-                <td className=" py-3 px-4">{data?.vehicle_cat}</td>
-                <td className=" py-3 px-4">{data?.["accepted date"]}</td>
+                <td className="  py-3 px-4">
+                  {data?.user?.first_name + " " + data?.user?.last_name}
+                </td>
+                <td className=" py-3 px-4">{data?.user?.phonenumber}</td>
+                <td className="  py-3 px-4">{data?.user?.email}</td>
+                {/* <td className=" py-3 px-4">__</td> */}
+                <td className=" py-3 px-4">{data?.user?.date_joined}</td>
                 {/* actions table */}
                 <td className={`text-center text-white py-3 px-4 w-24 `}>
                   <Box className="flex gap-4 justify-center">
-                    <ActionButton>
+                    <ActionButton handleClick={() => handleView(data?.id)}>
                       <FiEye />
                     </ActionButton>
                   </Box>
@@ -67,7 +78,7 @@ const tableData = [
     fullname: "New User",
     phone: "0711223344",
     email: "brook@okapy.com",
-    vehicle_cat: "Cab",
+    // vehicle_cat: "Cab",
     "accepted date": new Date().toLocaleString(),
   },
   {
@@ -121,8 +132,9 @@ const tableData = [
   },
 ];
 
-export const ActionButton = ({ bg, children }) => (
+export const ActionButton = ({ bg, children, handleClick }) => (
   <Button
+    onClick={handleClick}
     fontSize={"lg"}
     p={"0"}
     h={"30px"}

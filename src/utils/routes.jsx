@@ -8,11 +8,11 @@ import {
   SettingsPartner,
   SettingsUser,
   Users,
-  ViewApp,
   ViewPartner,
   ViewUser,
 } from "../pages";
 import FleetView from "../pages/FleetView";
+import ViewDriver from "../pages/ViewDriver";
 
 export const routes = [
   {
@@ -33,7 +33,7 @@ export const routes = [
   },
   {
     path: "/applications/:name",
-    element: <ViewApp />,
+    element: <ViewDriver />,
   },
   {
     path: "/fleet",
@@ -60,6 +60,10 @@ export const routes = [
   {
     path: "/users/:id",
     element: <ViewUser />,
+  },
+  {
+    path: "/users/driver/:id",
+    element: <ViewDriver />,
   },
   {
     path: "/settings/users",
