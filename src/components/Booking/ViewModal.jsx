@@ -1,5 +1,5 @@
 import { Box, Button, Text, VStack } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsPerson, BsTelephone } from "react-icons/bs";
 import { FiMapPin } from "react-icons/fi";
@@ -7,7 +7,6 @@ import { STATUS_LIST } from "../../utils/Helper";
 import CustomModal from "../general/CustomModal";
 import CInput from "../general/Input";
 import StatusTag from "../general/StatusTag";
-// import BookingService from "../../utils/services/BookingServices";
 import Wrapper from "../general/Wrapper";
 
 const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
@@ -39,12 +38,27 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
   useEffect(() => {
     setUserValues((prev) => ({
       ...prev,
-      name:
-        current?.sender?.owner?.first_name +
-        " " +
-        current?.sender?.owner?.last_name,
-      phoneNumber: current?.sender?.owner?.phonenumber,
-      location: current?.sender?.booking?.formated_address,
+      sender: {
+        name:
+          current?.sender?.owner?.first_name +
+          " " +
+          current?.sender?.owner?.last_name,
+        phoneNumber: current?.sender?.owner?.phonenumber,
+        location: current?.sender?.booking?.formated_address,
+      },
+
+      receiver: {
+        name: current?.receiver?.name,
+        phone: current?.receiver?.phonenumber,
+        location: current?.receiver?.formated_address,
+      },
+      driver: {
+        name:
+          current?.sender?.driver?.first_name +
+          " " +
+          current?.sender?.driver?.last_name,
+        phone: current?.sender?.driver?.phonenumber,
+      },
     }));
   }, [current]);
 
@@ -66,7 +80,9 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
       px={0}
       showHeader={false}
       ofy={"scroll"}
+      hideSave
     >
+      {/* {JSON.stringify(current)} */}
       <Wrapper className={"flex gap-8 items-center"} px={6} borderRadius={"0"}>
         <Text fontSize={"sm"}>Status</Text>
 
@@ -119,7 +135,7 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
-                value={usersValues?.sender?.phone}
+                value={usersValues?.sender?.phoneNumber}
                 icon={<BsTelephone className="text-xl" />}
                 borderRadius={"md"}
               />
@@ -150,7 +166,7 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
         <Wrapper borderRadius={0} px={"7"}>
           <VStack gap={"0.5"} w={"full"} mx={0}>
             <Box className="flex w-full flex-col gap-1">
-              <Text fontSize={"sm"}>Partner name</Text>
+              <Text fontSize={"sm"}> Name</Text>
 
               <CInput
                 h={"10"}
@@ -200,7 +216,7 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
         <Wrapper borderRadius={0} px={"7"}>
           <VStack gap={"0.5"} w={"full"} mx={0}>
             <Box className="flex w-full flex-col gap-1">
-              <Text fontSize={"sm"}>Partner name</Text>
+              <Text fontSize={"sm"}>Driver name</Text>
 
               <CInput
                 h={"10"}
@@ -219,7 +235,7 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
-                value={usersValues?.driver?.name}
+                value={usersValues?.driver?.phone}
                 icon={<BsTelephone className="text-xl" />}
                 borderRadius={"md"}
               />

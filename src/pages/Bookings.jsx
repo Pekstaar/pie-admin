@@ -23,8 +23,6 @@ const Bookings = () => {
   const [recievers, setRecievers] = React.useState({});
   const [current, setCurrent] = React.useState({});
 
-  
-
   const handleOpenModal = React.useCallback((id) => {
     setOpenModal(true);
     setBookingId(id);
