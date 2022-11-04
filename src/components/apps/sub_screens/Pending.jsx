@@ -9,13 +9,16 @@ import { FiEye } from "react-icons/fi";
 import { VscFilter } from "react-icons/vsc";
 import { BiSort } from "react-icons/bi";
 import UserServices from "../../../utils/services/UserServices";
+import Loader from "../../Loader";
 
 const Pending = ({ handleView }) => {
   const [applications, setApplications] = useState();
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     UserServices.fetchDrivers(false).then((response) => {
       setApplications(response);
+      setLoading(false);
     });
   }, []);
   return (
@@ -37,14 +40,13 @@ const Pending = ({ handleView }) => {
       {/* body */}
       <Box>
         <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-          {applications?.map((data, key) => {
+          {loading ? <Loader /> : applications?.map((data, key) => {
             const isEven = key % 2;
 
             return (
               <tr
-                className={`h-14 capitalize ${
-                  isEven ? "bg-[#F9F9F9]" : "white"
-                }`}
+                className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
+                  }`}
               >
                 <td className="  py-3 px-4">
                   {data?.user?.first_name + " " + data?.user?.last_name}

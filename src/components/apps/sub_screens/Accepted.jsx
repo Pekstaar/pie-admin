@@ -10,13 +10,16 @@ import { VscFilter } from "react-icons/vsc";
 import { BiSort } from "react-icons/bi";
 import UserServices from "../../../utils/services/UserServices";
 import { useState } from "react";
+import Loader from "../../Loader";
 
 const Accepted = ({ handleView }) => {
   const [applications, setApplications] = useState();
+  const [loading, setLoading] = useState(true)
 
   React.useEffect(() => {
     UserServices.fetchDrivers(true).then((response) => {
       setApplications(response);
+      setLoading(false);
     });
   }, []);
   return (
@@ -38,7 +41,7 @@ const Accepted = ({ handleView }) => {
       {/* body */}
       <Box>
         <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-          {applications?.map((data, key) => {
+          {loading? <Loader/> : applications?.map((data, key) => {
             const isEven = key % 2;
 
             return (
