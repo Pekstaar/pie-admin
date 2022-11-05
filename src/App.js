@@ -1,24 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import { ChakraProvider } from "@chakra-ui/react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { routes } from "./utils/routes";
+import { extendTheme } from "@chakra-ui/react";
+// import { colors, font, styles } from "./assets/Theme";
+import PrivateRoute from "./utils/PrivateRoute";
+import { colors, Roboto } from "./assets/Theme";
+import Frame from "./components/Frame";
 
 function App() {
+  const theme = extendTheme({
+    colors: colors,
+    fonts: {
+      body: Roboto,
+    },
+    // styles: {
+    //   global: styles,
+    // },
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ChakraProvider theme={theme}>
+      <BrowserRouter>
+        <PrivateRoute>
+          <Frame>
+            <Routes>
+              {routes.map((route, key) => (
+                <Route
+                  key={key}
+                  exact
+                  path={route?.path}
+                  element={route?.element}
+                />
+              ))}
+            </Routes>
+          </Frame>
+        </PrivateRoute>
+      </BrowserRouter>
+    </ChakraProvider>
   );
 }
 
