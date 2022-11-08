@@ -5,6 +5,7 @@ const Table = ({
   children,
   hasCheckbox = false,
   headerClass,
+  footer,
 }) => {
   return (
     <div className="  w-full">
@@ -30,6 +31,10 @@ const Table = ({
           </thead>
           <tbody className="font-normal text-sm">{children}</tbody>
         </table>
+
+        <div className="w-full bg-slate-200 relative right-0 left-0">
+          {footer}
+        </div>
       </div>
     </div>
   );

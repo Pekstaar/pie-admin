@@ -15,6 +15,8 @@ import { Lorry } from "../assets/svg";
 import CInput from "../components/general/Input";
 import FleetServices from "../utils/services/FleetServices";
 import Loader from "../components/Loader";
+import useTable from "../hooks/UseTable";
+import TableFooter from "../components/Table/Footer";
 
 const Fleet = () => {
   const navigate = useNavigate();
@@ -22,6 +24,9 @@ const Fleet = () => {
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const [page, setPage] = useState(1);
+  const { slice, range } = useTable(filteredVehicles, page, 20);
 
   const handleViewFleet = (plate) => {
     navigate(`${plate}`, plate);
@@ -82,64 +87,78 @@ const Fleet = () => {
 
         {/* body */}
         <Box>
-          <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            {loading? <Loader /> : filteredVehicles?.map((data, key) => {
-              const isEven = key % 2;
-              const st = 2;
-              // const status = STATUS_LIST[data?.status];
-              const status = STATUS_LIST[2];
-              const bg =
-                st === 0
-                  ? "bg-primary_red"
-                  : st === 2
-                  ? "bg-primary_green"
-                  : "bg-primary_yellow_light";
-              // registration: "kcb 4457k",
-              // driver: "Brooke Manor",
-              // "license expiry": "Collins joe",
-              //     status: 4,
-              return (
-                <tr
-                  className={`h-10 capitalize ${
-                    isEven ? "bg-[#F9F9F9]" : "white"
-                  }`}
-                >
-                  <td className="  py-3 px-4">{data?.reg_number}</td>
-                  <td className="  py-3 px-4">
-                    {data?.owner?.first_name + " " + data?.owner?.last_name}
-                  </td>
-                  <td className=" py-3 px-4">{data?.insurance_expiry}</td>
+          <Table
+            headers={[...Object.keys(tableData[0]), "Actions"]}
+            footer={
+              <TableFooter
+                range={range}
+                slice={slice}
+                setPage={setPage}
+                page={page}
+              />
+            }
+          >
+            {loading ? (
+              <Loader />
+            ) : (
+              slice?.map((data, key) => {
+                const isEven = key % 2;
+                const st = 2;
+                // const status = STATUS_LIST[data?.status];
+                const status = STATUS_LIST[2];
+                const bg =
+                  st === 0
+                    ? "bg-primary_red"
+                    : st === 2
+                    ? "bg-primary_green"
+                    : "bg-primary_yellow_light";
+                // registration: "kcb 4457k",
+                // driver: "Brooke Manor",
+                // "license expiry": "Collins joe",
+                //     status: 4,
+                return (
+                  <tr
+                    className={`h-10 capitalize ${
+                      isEven ? "bg-[#F9F9F9]" : "white"
+                    }`}
+                  >
+                    <td className="  py-3 px-4">{data?.reg_number}</td>
+                    <td className="  py-3 px-4">
+                      {data?.owner?.first_name + " " + data?.owner?.last_name}
+                    </td>
+                    <td className=" py-3 px-4">{data?.insurance_expiry}</td>
 
-                  <td className={` text-white py-3 px-4 `}>
-                    <Box className="flex">
-                      <Box
-                        py={"1"}
-                        px={"2"}
-                        fontSize={"xs"}
-                        className={`${bg} rounded-md font-medium  `}
-                      >
-                        {status}
+                    <td className={` text-white py-3 px-4 `}>
+                      <Box className="flex">
+                        <Box
+                          py={"1"}
+                          px={"2"}
+                          fontSize={"xs"}
+                          className={`${bg} rounded-md font-medium  `}
+                        >
+                          {status}
+                        </Box>
                       </Box>
-                    </Box>
-                  </td>
-                  {/* actions table */}
-                  <td className={` text-white py-3 px-4 w-32`}>
-                    <Box className="flex gap-4">
-                      <ActionButton
-                        handlePress={() => handleViewFleet(data?.id)}
-                        bg={bg}
-                      >
-                        <FiEye />
-                      </ActionButton>
+                    </td>
+                    {/* actions table */}
+                    <td className={` text-white py-3 px-4 w-32`}>
+                      <Box className="flex gap-4">
+                        <ActionButton
+                          handlePress={() => handleViewFleet(data?.id)}
+                          bg={bg}
+                        >
+                          <FiEye />
+                        </ActionButton>
 
-                      <ActionButton bg={bg}>
-                        <RiDeleteBin5Line />
-                      </ActionButton>
-                    </Box>
-                  </td>
-                </tr>
-              );
-            })}
+                        <ActionButton bg={bg}>
+                          <RiDeleteBin5Line />
+                        </ActionButton>
+                      </Box>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </Table>
         </Box>
       </Wrapper>

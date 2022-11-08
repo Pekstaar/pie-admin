@@ -11,10 +11,14 @@ import { BiSort } from "react-icons/bi";
 import UserServices from "../../../utils/services/UserServices";
 import { useState } from "react";
 import Loader from "../../Loader";
+import TableFooter from "../../Table/Footer";
+import useTable from "../../../hooks/UseTable";
 
 const Accepted = ({ handleView }) => {
   const [applications, setApplications] = useState();
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const { slice, range } = useTable(applications, page, 20);
 
   React.useEffect(() => {
     UserServices.fetchDrivers(true).then((response) => {
@@ -40,34 +44,48 @@ const Accepted = ({ handleView }) => {
 
       {/* body */}
       <Box>
-        <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-          {loading? <Loader/> : applications?.map((data, key) => {
-            const isEven = key % 2;
+        <Table
+          footer={
+            <TableFooter
+              range={range}
+              slice={slice}
+              setPage={setPage}
+              page={page}
+            />
+          }
+          headers={[...Object.keys(tableData[0]), "Actions"]}
+        >
+          {loading ? (
+            <Loader />
+          ) : (
+            slice?.map((data, key) => {
+              const isEven = key % 2;
 
-            return (
-              <tr
-                className={`h-14 capitalize ${
-                  isEven ? "bg-[#F9F9F9]" : "white"
-                }`}
-              >
-                <td className="  py-3 px-4">
-                  {data?.user?.first_name + " " + data?.user?.last_name}
-                </td>
-                <td className=" py-3 px-4">{data?.user?.phonenumber}</td>
-                <td className="  py-3 px-4">{data?.user?.email}</td>
-                {/* <td className=" py-3 px-4">__</td> */}
-                <td className=" py-3 px-4">{data?.user?.date_joined}</td>
-                {/* actions table */}
-                <td className={`text-center text-white py-3 px-4 w-24 `}>
-                  <Box className="flex gap-4 justify-center">
-                    <ActionButton handleClick={() => handleView(data?.id)}>
-                      <FiEye />
-                    </ActionButton>
-                  </Box>
-                </td>
-              </tr>
-            );
-          })}
+              return (
+                <tr
+                  className={`h-14 capitalize ${
+                    isEven ? "bg-[#F9F9F9]" : "white"
+                  }`}
+                >
+                  <td className="  py-3 px-4">
+                    {data?.user?.first_name + " " + data?.user?.last_name}
+                  </td>
+                  <td className=" py-3 px-4">{data?.user?.phonenumber}</td>
+                  <td className="  py-3 px-4">{data?.user?.email}</td>
+                  {/* <td className=" py-3 px-4">__</td> */}
+                  <td className=" py-3 px-4">{data?.user?.date_joined}</td>
+                  {/* actions table */}
+                  <td className={`text-center text-white py-3 px-4 w-24 `}>
+                    <Box className="flex gap-4 justify-center">
+                      <ActionButton handleClick={() => handleView(data?.id)}>
+                        <FiEye />
+                      </ActionButton>
+                    </Box>
+                  </td>
+                </tr>
+              );
+            })
+          )}
         </Table>
       </Box>
     </>

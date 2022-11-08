@@ -14,6 +14,8 @@ import ViewModal from "../components/Booking/ViewModal";
 import CInput from "../components/general/Input";
 import { STATUS_LIST } from "../utils/Helper";
 import Loader from "../components/Loader";
+import TableFooter from "../components/Table/Footer";
+import useTable from "../hooks/UseTable";
 
 const Bookings = () => {
   // const toast = useToast();
@@ -25,6 +27,8 @@ const Bookings = () => {
   const [current, setCurrent] = React.useState({});
   const [loading, setLoading] = React.useState(true);
 
+  const [page, setPage] = React.useState(1);
+  const { slice, range } = useTable(bookings, page, 20);
 
   const handleOpenModal = React.useCallback((id) => {
     setOpenModal(true);
@@ -95,85 +99,108 @@ const Bookings = () => {
 
           {/* body */}
           <Box>
-            <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {loading? <Loader /> : bookings?.filter((data) => {
-                return (
-                  data === "" ? data :
-                    // data?.booking?.formated_address.toLowerCase().includes(searchValue.toLowerCase()) ||
-                    data?.owner?.first_name.toLowerCase().includes(searchValue.toLowerCase()) ||
-                    data?.owner?.last_name.toLowerCase().includes(searchValue.toLowerCase()) ||
-                    data?.driver?.last_name.toLowerCase().includes(searchValue.toLowerCase()) ||
-                    data?.driver?.last_name.toLowerCase().includes(searchValue.toLowerCase())
-                )
-              }).map((data, key) => {
-                const isEven = key % 2;
-                const status = STATUS_LIST[data?.status];
-                const bg =
-                  data?.status === 0
-                    ? "bg-primary_red"
-                    : data?.status === 5
-                      ? "bg-primary_green"
-                      : "bg-primary_yellow_light";
-                  const booking_receiver = recievers[data?.booking?.id];
+            <Table
+              footer={
+                <TableFooter
+                  range={range}
+                  slice={slice}
+                  setPage={setPage}
+                  page={page}
+                />
+              }
+              headers={[...Object.keys(tableData[0]), "Actions"]}
+            >
+              {loading ? (
+                <Loader />
+              ) : (
+                slice
+                  ?.filter((data) => {
+                    return data === ""
+                      ? data
+                      : // data?.booking?.formated_address.toLowerCase().includes(searchValue.toLowerCase()) ||
+                        data?.owner?.first_name
+                          .toLowerCase()
+                          .includes(searchValue.toLowerCase()) ||
+                          data?.owner?.last_name
+                            .toLowerCase()
+                            .includes(searchValue.toLowerCase()) ||
+                          data?.driver?.last_name
+                            .toLowerCase()
+                            .includes(searchValue.toLowerCase()) ||
+                          data?.driver?.last_name
+                            .toLowerCase()
+                            .includes(searchValue.toLowerCase());
+                  })
+                  .map((data, key) => {
+                    const isEven = key % 2;
+                    const status = STATUS_LIST[data?.status];
+                    const bg =
+                      data?.status === 0
+                        ? "bg-primary_red"
+                        : data?.status === 5
+                        ? "bg-primary_green"
+                        : "bg-primary_yellow_light";
+                    const booking_receiver = recievers[data?.booking?.id];
 
-                  console.log(data);
+                    console.log(data);
 
-                  return (
-                    <tr
-                      className={`h-14 capitalize ${
-                        isEven ? "bg-[#F9F9F9]" : "white"
-                      }`}
-                    >
-                      <td className="  py-3 px-4">
-                        {data?.booking?.formated_address}
-                      </td>
-                      <td className="  py-3 px-4">
-                        {booking_receiver?.formated_address}
-                      </td>
-                      <td className=" py-3 px-4">
-                        {data?.owner?.first_name} {data?.owner?.last_name}
-                      </td>
-                      <td className=" py-3 px-4">{booking_receiver?.name}</td>
-                      <td className=" py-3 px-4">
-                        {data?.driver?.first_name} {data?.driver?.last_name}
-                      </td>
-                      <td className={` text-white py-3 px-4 `}>
-                        <Box className="flex  ">
-                          <Box
-                            py={"0.5"}
-                            px={"2"}
-                            fontSize={"xs"}
-                            className={`${bg} rounded-md font-medium  `}
-                          >
-                            {status}
+                    return (
+                      <tr
+                        className={`h-14 capitalize ${
+                          isEven ? "bg-[#F9F9F9]" : "white"
+                        }`}
+                      >
+                        <td className="  py-3 px-4">
+                          {data?.booking?.formated_address}
+                        </td>
+                        <td className="max-w-[300px] py-3 px-4">
+                          {booking_receiver?.formated_address}
+                        </td>
+                        <td className=" py-3 px-4">
+                          {data?.owner?.first_name} {data?.owner?.last_name}
+                        </td>
+                        <td className=" py-3 px-4">{booking_receiver?.name}</td>
+                        <td className=" py-3 px-4">
+                          {data?.driver?.first_name} {data?.driver?.last_name}
+                        </td>
+                        <td className={` text-white py-3 px-4 `}>
+                          <Box className="flex  ">
+                            <Box
+                              py={"0.5"}
+                              px={"2"}
+                              fontSize={"xs"}
+                              className={`${bg} rounded-md font-medium  `}
+                            >
+                              {status}
+                            </Box>
                           </Box>
-                        </Box>
-                      </td>
-                      {/* actions table */}
-                      <td className={`text-center text-white py-3 px-4 w-32`}>
-                        <Box className="flex gap-4">
-                          <Box
-                            onClick={() => {
-                              setCurrent({
-                                receiver: booking_receiver,
-                                sender: data,
-                              });
-                              handleOpenModal(data?.id);
-                            }}
-                          >
-                            <ActionButton>
-                              <FiEye />
+                        </td>
+                        {/* actions table */}
+                        <td className={`text-center text-white py-3 px-4 w-32`}>
+                          <Box className="flex gap-4">
+                            <Box
+                              onClick={() => {
+                                setCurrent({
+                                  receiver: booking_receiver,
+                                  sender: data,
+                                });
+                                handleOpenModal(data?.id);
+                              }}
+                            >
+                              <ActionButton>
+                                <FiEye />
+                              </ActionButton>
+                            </Box>
+
+                            <ActionButton bg={bg}>
+                              <RiDeleteBin5Line />
                             </ActionButton>
                           </Box>
-
-                          <ActionButton bg={bg}>
-                            <RiDeleteBin5Line />
-                          </ActionButton>
-                        </Box>
-                      </td>
-                    </tr>
-                  );
-                })}
+                        </td>
+                      </tr>
+                    );
+                  })
+              )}
             </Table>
           </Box>
         </Wrapper>

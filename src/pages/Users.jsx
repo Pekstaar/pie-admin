@@ -26,6 +26,8 @@ import PrimaryOutlinedButton from "../components/general/PrimaryOutlinedButton";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 import Loader from "../components/Loader";
+import TableFooter from "../components/Table/Footer";
+import useTable from "../hooks/UseTable";
 import { toastProps } from "../utils/Helper";
 import UserServices from "../utils/services/UserServices";
 
@@ -38,6 +40,9 @@ const Users = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [stateLoading, setStateLoading] = useState(true);
+
+  const [page, setPage] = useState(1);
+  const { slice, range } = useTable(filteredUser, page, 20);
 
   const [openModal, setOpenModal] = useState(false);
   const [user, setUser] = useState({
@@ -358,67 +363,84 @@ const Users = () => {
 
         {/* body */}
         <Box>
-          <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            { stateLoading? <Loader/> : filteredUser?.map((data, key) => {
-              const isEven = key % 2;
-              const status = STATUS_LIST[data?.is_active];
-              const bg = !data?.is_active
-                ? "bg-primary_red"
-                : data?.is_active
-                ? "bg-primary_green"
-                : "";
-              // registration: "kcb 4457k",
-              // driver: "Brooke Manor",
-              // "license expiry": "Collins joe",
-              //     status: 4,
-              return (
-                <tr
-                  className={`h-14 capitalize ${
-                    isEven ? "bg-[#F9F9F9]" : "white"
-                  }`}
-                >
-                  <td className="  py-3 px-4">
-                    {data?.first_name} {data?.last_name}
-                  </td>
-                  <td className="  py-3 px-4">{data?.email}</td>
-                  <td className=" py-3 px-4">{data?.phonenumber}</td>{" "}
-                  <td className=" py-3 px-4">
-                    {data?.is_admin
-                      ? "admin"
-                      : data?.is_driver
-                      ? "driver"
-                      : "user"}
-                  </td>
-                  <td className={` text-white py-3 px-4 `}>
-                    <Box className="flex  justify-start">
-                      <Box
-                        py={"1"}
-                        px={"2"}
-                        fontSize={"xs"}
-                        className={`${bg} rounded-md font-medium  `}
-                      >
-                        {status}
+          <Table
+            headers={[...Object.keys(tableData[0]), "Actions"]}
+            footer={
+              <TableFooter
+                range={range}
+                slice={slice}
+                setPage={setPage}
+                page={page}
+              />
+            }
+          >
+            {stateLoading ? (
+              <Loader />
+            ) : (
+              slice?.map((data, key) => {
+                const isEven = key % 2;
+                const status = STATUS_LIST[data?.is_active];
+                const bg = !data?.is_active
+                  ? "bg-primary_red"
+                  : data?.is_active
+                  ? "bg-primary_green"
+                  : "";
+                // registration: "kcb 4457k",
+                // driver: "Brooke Manor",
+                // "license expiry": "Collins joe",
+                //     status: 4,
+                return (
+                  <tr
+                    className={`h-14 capitalize ${
+                      isEven ? "bg-[#F9F9F9]" : "white"
+                    }`}
+                  >
+                    <td className="  py-3 px-4">
+                      {data?.first_name} {data?.last_name}
+                    </td>
+                    <td className="  py-3 px-4">{data?.email}</td>
+                    <td className=" py-3 px-4">{data?.phonenumber}</td>{" "}
+                    <td className=" py-3 px-4">
+                      {data?.is_admin
+                        ? "admin"
+                        : data?.is_driver
+                        ? "driver"
+                        : "user"}
+                    </td>
+                    <td className={` text-white py-3 px-4 `}>
+                      <Box className="flex  justify-start">
+                        <Box
+                          py={"1"}
+                          px={"2"}
+                          fontSize={"xs"}
+                          className={`${bg} rounded-md font-medium  `}
+                        >
+                          {status}
+                        </Box>
                       </Box>
-                    </Box>
-                  </td>
-                  {/* actions table */}
-                  <td className={` text-white py-3 px-4  w-32`}>
-                    <Box className="flex gap-6 justify-start">
-                      <ActionButton
-                        handlePress={() => handleViewUser(data)}
-                        bg={bg}
-                      >
-                        <FiEye />
-                      </ActionButton>
+                    </td>
+                    {/* actions table */}
+                    <td className={` text-white py-3 px-4  w-32`}>
+                      <Box className="flex gap-6 justify-start">
+                        <ActionButton
+                          handlePress={() => handleViewUser(data)}
+                          bg={bg}
+                        >
+                          <FiEye />
+                        </ActionButton>
 
-                      <ActionButton bg={bg}>
-                        <RiDeleteBin5Line />
-                      </ActionButton>
-                    </Box>
-                  </td>
-                </tr>
-              );
-            })}
+                        <ActionButton bg={bg}>
+                          <RiDeleteBin5Line />
+                        </ActionButton>
+                      </Box>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+            {/* <tfoot className="bg-gray-200 w-[100%"> */}
+
+            {/* </tfoot> */}
           </Table>
         </Box>
       </Wrapper>

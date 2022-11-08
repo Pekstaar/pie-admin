@@ -28,11 +28,11 @@ const Finance = () => {
       },
 
       data: {
-        labels: ["Gifts", "Electronics", "Documents", "Package", "Others"],
+        labels: ["Gifts"],
         datasets: [
           {
             label: "# of Votes",
-            data: [(Math.random() * 20) / 10, (Math.random() * 30) / 10],
+            data: [1],
             backgroundColor: ["#FFBDA7", "#7B61FF"],
           },
         ],
@@ -167,7 +167,7 @@ const Finance = () => {
                   Revenue this month
                 </Text>
                 <Text fontWeight={"semibold"} fontSize={"22px"}>
-                  KES. 300000
+                  KES. 0
                 </Text>
               </Box>
 
@@ -190,7 +190,7 @@ const Finance = () => {
                   fontSize={"lg"}
                   textColor="chart_primary"
                 >
-                  KES. 150000
+                  KES. 0
                 </Text>
               </Box>
 
@@ -204,7 +204,7 @@ const Finance = () => {
                   textColor="chart_secondary"
                   letterSpacing={"wide"}
                 >
-                  KES. 150,000
+                  KES. 0
                 </Text>
               </Box>
             </Box>
