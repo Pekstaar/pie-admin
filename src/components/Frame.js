@@ -23,11 +23,12 @@ import {
 import React, { useState } from "react";
 import { FiBell, FiChevronDown, FiMenu, FiSettings } from "react-icons/fi";
 import { MdDashboard } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 import Logo from "../assets/images/flite_logo.png";
 
 const LinkItems = [
-  { name: "Subjects", icon: MdDashboard },
+  { name: "Subjects", icon: MdDashboard, to: "/" },
   { name: "Settings", icon: FiSettings },
 ];
 
@@ -65,6 +66,8 @@ export default function SidebarWithHeader({ children }) {
 const SidebarContent = ({ onClose, ...rest }) => {
   const [current, setCurrent] = useState("subjects");
 
+  const navigate = useNavigate();
+
   return (
     <Box
       transition="3s ease"
@@ -98,7 +101,10 @@ const SidebarContent = ({ onClose, ...rest }) => {
             fontWeight={"semibold"}
             fontSize={"15"}
             my={"1"}
-            onClick={() => setCurrent(link?.name)}
+            onClick={() => {
+              setCurrent(link?.name);
+              navigate(link?.to);
+            }}
           >
             {link.name}
           </NavItem>
@@ -153,6 +159,8 @@ const MobileNav = ({ onOpen, ...rest }) => {
       px={{ base: 4, md: 4 }}
       height="16"
       alignItems="center"
+      position={"sticky"}
+      top={"0"}
       bg={useColorModeValue("white", "gray.900")}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue("gray.200", "gray.700")}

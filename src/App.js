@@ -4,14 +4,14 @@ import { routes } from "./utils/routes";
 import { extendTheme } from "@chakra-ui/react";
 // import { colors, font, styles } from "./assets/Theme";
 import PrivateRoute from "./utils/PrivateRoute";
-import { colors, Roboto } from "./assets/Theme";
+import { colors, OpenSans } from "./assets/Theme";
 import Frame from "./components/Frame";
 
 function App() {
   const theme = extendTheme({
     colors: colors,
     fonts: {
-      body: Roboto,
+      body: OpenSans,
     },
     // styles: {
     //   global: styles,

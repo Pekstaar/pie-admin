@@ -1,5 +1,7 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 import React from "react";
+import { Link } from "react-router-dom";
+import SubjectItem from "../components/SubjectItem";
 
 const Home = () => {
   return (
@@ -32,20 +34,18 @@ const Home = () => {
 
         {/* list */}
         <VStack gap={"2"}>
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-            <Box
-              p={"3"}
-              w={"full"}
-              borderRadius={"xl"}
-              bg={"#F8F9FB"}
-              borderWidth={"thin"}
-              borderColor={"gray.300"}
-              h={"12"}
-              _hover={{
-                bg: "#E6E7F0",
-                cursor: "pointer",
-              }}
-            ></Box>
+          {subjects.map((sub, i) => (
+            <Link
+              to={"/" + sub?.pre?.slice(1, sub?.pre.length)}
+              as={"div"}
+              className={"w-full"}
+            >
+              <SubjectItem
+                title={sub?.name}
+                prefix={sub?.pre}
+                color={color_tags[i]}
+              />
+            </Link>
           ))}
         </VStack>
       </Box>
@@ -74,4 +74,43 @@ const color_tags = [
   "#FCDE9D",
   "#FF8399",
   "#7DA6FA",
+];
+
+const subjects = [
+  {
+    name: "Airlaw",
+    pre: "#ARLAW",
+  },
+  {
+    name: "Meteorology",
+    pre: "#METEO",
+  },
+  {
+    name: "Aircraft tech",
+    pre: "#ATECH",
+  },
+  {
+    name: "Flight learning and Performance",
+    pre: "#FLPER",
+  },
+  {
+    name: "Human Performance",
+    pre: "#HNPER",
+  },
+  {
+    name: "Navigation",
+    pre: "#NVGTN",
+  },
+  {
+    name: "Operation Procedures",
+    pre: "#OPPRO",
+  },
+  {
+    name: "Principles of flight",
+    pre: "#PRFLT",
+  },
+  {
+    name: "Radio Telephone",
+    pre: "#RDTEL",
+  },
 ];
