@@ -32,9 +32,7 @@ const Table = ({
           <tbody className="font-normal text-sm">{children}</tbody>
         </table>
 
-        <div className="w-full bg-slate-200 relative right-0 left-0">
-          {footer}
-        </div>
+        <div className="w-full bg-white relative right-0 left-0">{footer}</div>
       </div>
     </div>
   );
