@@ -218,11 +218,13 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
             <Box className="flex w-full flex-col gap-1">
               <Text fontSize={"sm"}>Driver name</Text>
 
+              {/* {JSON.stringify(usersValues?.driver)} */}
+
               <CInput
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
-                value={usersValues?.driver?.name}
+                value={usersValues?.driver?.name || ""}
                 icon={<BsPerson className="text-xl" />}
                 borderRadius={"md"}
               />
