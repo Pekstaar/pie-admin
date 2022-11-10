@@ -1,10 +1,15 @@
-import { Box, Center, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, Center, HStack, Text } from "@chakra-ui/react";
 import React from "react";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { sample_questions } from "../utils/quiz";
 
 const Test = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const handleComplete = () => {
+    navigate("/" + id + "/complete");
+  };
   return (
     <Box className="md:container mx-auto flex flex-col gap-2">
       {/* Bread crumb */}
@@ -28,6 +33,19 @@ const Test = () => {
             />
           </>
         ))}
+
+        {/* footer */}
+        <Center className=" p-4 bg-[#FBFCFE] ">
+          <Button
+            h={"12"}
+            w={{ md: "40%", base: "80%" }}
+            bg={"primary"}
+            color={"white"}
+            onClick={handleComplete}
+          >
+            Complete Test
+          </Button>
+        </Center>
       </Box>
     </Box>
   );
@@ -39,7 +57,7 @@ const Header = ({ title }) => {
   const navigate = useNavigate();
 
   return (
-    <HStack gap={"1"} className="p-3 rounded-t-lg bg-white">
+    <HStack gap={"1"} className="p-3 rounded-t-lg bg-white ">
       {/* back icon */}
 
       <Center
@@ -88,7 +106,7 @@ const AnswerItem = ({ answer, index, isSelected = false }) => (
     <Center className="h-10 w-10 border-r border-slate-300 font-semibold ">
       {index}
     </Center>
-    <Box className="text-sm font-medium ">{answer}</Box>
+    <Box className="text-sm font-semibold ">{answer}</Box>
   </HStack>
 );
 
