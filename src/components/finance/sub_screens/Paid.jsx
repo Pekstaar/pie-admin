@@ -30,14 +30,10 @@ const Paid = () => {
       <HStack py={"4"} justifyContent={"space-between"} px={"4"}>
         {/* /search input */}
         <CInput
-          icon={
-            <IoSearchOutline
-              className="text-xl"
-              handleChange={(e) => {
-                setSearchValue(e?.target?.value);
-              }}
-            />
-          }
+          icon={<IoSearchOutline className="text-xl"/>}
+          handleChange={(e) => {
+            setSearchValue(e?.target?.value);
+          }}
         />
         {/* pay invoices button */}
       </HStack>
@@ -61,27 +57,18 @@ const Paid = () => {
               ?.filter((data) => {
                 return data === ""
                   ? data
-                  : data?.created_at
-                      .toLowerCase()
-                      .includes(searchValue.toLowerCase()) ||
-                      data?.owner?.first_name
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase()) ||
-                      data?.owner?.last_name
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase()) ||
-                      data?.amount
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase());
+                  : data?.created_at.toLowerCase().includes(searchValue.toLowerCase()) ||
+                  data?.owner?.first_name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                  data?.owner?.last_name.toLowerCase().includes(searchValue.toLowerCase())
               })
               .map((data, key) => {
                 const isEven = key % 2;
 
                 return (
                   <tr
-                    className={`h-14 capitalize ${
-                      isEven ? "bg-[#F9F9F9]" : "white"
-                    }`}
+                    className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
+                      }`}
+                    key={key}
                   >
                     <td className="py-3 px-4">{data?.created_at}</td>
 

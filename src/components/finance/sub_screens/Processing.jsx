@@ -34,13 +34,13 @@ const Failed = () => {
       {/* body */}
       <Box className="">
         <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-          {loading? <Loader/> : earnings?.filter((data) => {
+          {loading ? <Loader /> : earnings?.filter((data) => {
             return (
               data === "" ? data :
-              data?.created_at.toLowerCase().includes(searchValue.toLowerCase()) ||
-              data?.owner.first_name.toLowerCase().includes(searchValue.toLowerCase()) ||
-              data?.owner.last_name.toLowerCase().includes(searchValue.toLowerCase()) ||
-              data?.amount.toLowerCase().includes(searchValue.toLowerCase())
+                data?.created_at
+                .toLowerCase().includes(searchValue.toLowerCase()) ||
+                data?.owner.first_name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                data?.owner.last_name.toLowerCase().includes(searchValue.toLowerCase())
             )
           }).map((data, key) => {
             const isEven = key % 2;
@@ -49,6 +49,7 @@ const Failed = () => {
               <tr
                 className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
                   }`}
+                  key={key}
               >
                 <td className="  py-3 px-4">{data?.created_at}</td>
 

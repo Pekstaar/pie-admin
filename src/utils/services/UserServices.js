@@ -44,12 +44,22 @@ async function createDriver(data) {
   return res.data;
 }
 
+async function deleteUser() {
+  setAuthToken(AxiosUtility);
+  const res = await AxiosUtility.delete(
+    "/users/api/user/delete/"
+  );
+
+  return res.data;
+}
+
 const UserServices = {
   ApproveDriver,
   fetchUsers,
   createUser,
   createDriver,
   fetchDrivers,
+  deleteUser
 };
 
 export default UserServices;

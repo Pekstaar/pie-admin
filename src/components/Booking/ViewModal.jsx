@@ -110,7 +110,7 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
       {/* sender information */}
       <Box className={""}>
         <Box className="px-7 py-3" fontSize={"lg"} fontWeight={"semibold"}>
-          Sender Infromation
+          Sender Information
         </Box>
 
         <Wrapper borderRadius={0} px={"7"}>
@@ -160,7 +160,7 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
       {/* receiver information */}
       <Box className={""}>
         <Box className="px-7 py-3" fontSize={"lg"} fontWeight={"semibold"}>
-          Receiver Infromation
+          Receiver Information
         </Box>
 
         <Wrapper borderRadius={0} px={"7"}>
@@ -210,7 +210,7 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
       {/* driver information */}
       <Box className={""}>
         <Box className="px-7 py-3" fontSize={"lg"} fontWeight={"semibold"}>
-          Driver Infromation
+          Driver Information
         </Box>
 
         <Wrapper borderRadius={0} px={"7"}>

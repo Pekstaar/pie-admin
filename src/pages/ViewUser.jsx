@@ -354,6 +354,7 @@ const ViewUser = () => {
                     className={`h-14 capitalize ${
                       isEven ? "bg-[#F9F9F9]" : "white"
                     }`}
+                    key={key}
                   >
                     <td className=" py-3 px-4">--</td>
                     <td className="py-3 px-4">--</td>
