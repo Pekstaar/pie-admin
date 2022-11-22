@@ -167,7 +167,7 @@ const ViewDriver = () => {
                         is_admin: driverProfile?.user?.is_admin,
                         is_driver: driverProfile?.user?.is_driver,
                         email: driverProfile?.user?.email,
-                        phone_number: driverProfile?.user?.phonenumber,
+                        phonenumber: driverProfile?.user?.phonenumber,
                       })
                       handleEditPersonalInfoOpenModal()
                     }}

@@ -173,12 +173,12 @@ const Users = () => {
   }, [handleFilter, selectedFilter, users]);
 
   const handleViewUser = (user) => {
-    // console.log(user);
+    console.log(user);
     if (user?.is_driver) {
       navigate(`driver/${user?.id}`, user);
       return;
     }
-    navigate(`${user}`, user);
+    navigate(`${user?.first_name}`, user);
   };
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>

@@ -22,10 +22,10 @@ const EditVehicleModal = ({ openModal, handleCloseModal, current }) => {
   useEffect(() => {
     setUserValues((prev) => ({
       ...prev,
-      reg_number: current.reg_number,
-      color: current.color,
-      vehicle_type: current.vehicle_type,
-      model: current.model
+      reg_number: current?.reg_number,
+      color: current?.color,
+      vehicle_type: current?.vehicle_type,
+      model: current?.model
     }));
   }, [current]);
 
@@ -33,7 +33,7 @@ const EditVehicleModal = ({ openModal, handleCloseModal, current }) => {
 
   return (
     <CustomModal
-      title="Booking"
+      title={`Vehicle Information/${usersValues?.reg_number}`}
       isOpen={openModal}
       onClose={handleCloseModal}
       bg={"gray.100"}

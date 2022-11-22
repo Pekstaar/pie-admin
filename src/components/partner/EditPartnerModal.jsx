@@ -1,11 +1,11 @@
 import { Box, Button, Text, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { BsMailbox, BsPerson, BsTelephone } from "react-icons/bs";
 import CustomModal from "../general/CustomModal";
+import { BsMailbox, BsPerson, BsTelephone } from "react-icons/bs";
 import CInput from "../general/Input";
 import Wrapper from "../general/Wrapper";
 
-const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
+const EditPartnerModal = ({ openModal, handleCloseModal, current }) => {
   const [usersValues, setUserValues] = useState({
     first_name: "",
     last_name: "",
@@ -26,12 +26,18 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
       email: current?.email,
       phonenumber: current?.phonenumber,
     }));
-  }, [current?.first_name, current?.last_name, current?.is_admin, current?.is_driver, current?.email, current?.phonenumber]);
+  }, [current]);
 
+  // useEffect(() => {
+  //   BookingService.fetchBookings().then((response) => {
+  //     setBooking(response.find((data) => data.id === bookingId));
+  //     setUserValues();
+  //   });
+  // }, [bookingId]);
 
   return (
     <CustomModal
-      title={`Application/${usersValues?.first_name + " " +  usersValues?.last_name}`}
+      title={`Partner/${usersValues?.first_name + " " + usersValues?.last_name }`}
       isOpen={openModal}
       onClose={handleCloseModal}
       bg={"gray.100"}
@@ -42,7 +48,7 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
     >
       {/* {JSON.stringify(current)} */}
       <Wrapper className={"flex justify-end"} px={6} borderRadius={"0"}>
-      <Button
+        <Button
           h={"30px"}
           borderRadius={"6"}
           className={"border border-yellow-400 text-yellow-400"}
@@ -56,11 +62,11 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
       {/* sender information */}
       <Box className={""}>
         <Box className="px-7 py-3" fontSize={"lg"} fontWeight={"semibold"}>
-          Personal Information
+          User Information
         </Box>
 
         <Wrapper borderRadius={0} px={"7"}>
-          <VStack gap={"0.5"} w={"full"} mx={0}>
+        <VStack gap={"0.5"} w={"full"} mx={0}>
             <Box className="flex w-full flex-col gap-1">
               <Text fontSize={"sm"}>First name</Text>
 
@@ -94,7 +100,7 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
-                value={usersValues?.is_driver ? "Driver" : usersValues?.is_admin ? "Admin" : "User"}
+                value={usersValues?.is_admin ? "Admin" : usersValues?.is_driver ? "Driver" : "User"}
                 icon={<BsPerson className="text-xl" />}
                 borderRadius={"md"}
               />
@@ -129,11 +135,12 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
           </VStack>
         </Wrapper>
       </Box>
+
     </CustomModal>
   );
 };
 
-export default EditPersonalInfoModal;
+export default EditPartnerModal;
 export const ActionButton = ({ bg, children, handleClick }) => (
   <Button
     fontSize={"lg"}
@@ -145,3 +152,4 @@ export const ActionButton = ({ bg, children, handleClick }) => (
     {children}
   </Button>
 );
+

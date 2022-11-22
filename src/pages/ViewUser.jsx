@@ -1,5 +1,5 @@
 import { Box, Button, HStack, Image, Text, VStack } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { BiSort } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
 import { GrEdit } from "react-icons/gr";
@@ -17,12 +17,15 @@ import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 import BookingServices from "../utils/services/BookingServices";
 import UserServices from "../utils/services/UserServices";
+import EditUserModal from "../components/settings_user/EditUserModal";
 
 const ViewUser = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState([]);
   const [userBookings, setUserBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
+  const [current, setCurrent] = useState({});
 
   const location = useLocation()?.pathname.split("/");
 
@@ -36,78 +39,85 @@ const ViewUser = () => {
       })
     UserServices.fetchUsers().then((response) => {
       setUser(response.find((user) => user.first_name === userFirstName));
-    });
+    })
 
     BookingServices.ownersBookings(userFirstName).then((response) => {
       setUserBookings(response);
     });
   }, [userFirstName]);
 
-  // const
+  const handleOpenModal = useCallback(() => {
+    setOpenModal(true);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setOpenModal(false);
+  }, []);
 
   const handleViewUser = (user) => {
     navigate(`/users/${user}`, user);
   };
   // const
   return (
-    <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
-      <BreadCrumb
-        icon={<Transaction />}
-        title={`User management /`}
-        subtitle={user?.first_name}
-      />
-      <Box className="flex gap-3 ">
-        <Box className="w-2/5">
-          <Wrapper
-            my={"4"}
-            p={"10"}
-            borderRadius={"none"}
-            className={"flex flex-col justify-center items-center rounded"}
-          >
-            {/* body */}
-            <Box
-              className="rounded-full overflow-hidden"
-              h={40}
-              w={40}
-              bg={"gray.300"}
-              mb={"3"}
+    <>
+      <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
+        <BreadCrumb
+          icon={<Transaction />}
+          title={`User management /`}
+          subtitle={user?.first_name}
+        />
+        <Box className="flex gap-3 ">
+          <Box className="w-2/5">
+            <Wrapper
+              my={"4"}
+              p={"10"}
+              borderRadius={"none"}
+              className={"flex flex-col justify-center items-center rounded"}
             >
-              <Image h={"full"} objectFit={"cover"} src={user?.image} />
-            </Box>
-            <Text
-              fontSize={"xl"}
-              textTransform={"uppercase"}
-              fontWeight={"semibold"}
-            >
-              {user?.first_name}
-            </Text>
-
-            <Text fontSize={"sm"} fontWeight={"light"}>
-              Customer
-            </Text>
-
-            <DeactivateButton className={"mt-1"}>
-              <Text
-                fontSize={"sm"}
-                textTransform={"capitalize"}
-                fontWeight={"medium"}
+              {/* body */}
+              <Box
+                className="rounded-full overflow-hidden"
+                h={40}
+                w={40}
+                bg={"gray.300"}
+                mb={"3"}
               >
-                Deactivate User
-              </Text>
-            </DeactivateButton>
-          </Wrapper>
-
-          {/* Personal information*/}
-          <Box>
-            <Box className="flex justify-between py-2 px-5">
-              <Text fontSize={"lg"} fontWeight={"medium"}>
-                Personal information
+                <Image h={"full"} objectFit={"cover"} src={user?.image} />
+              </Box>
+              <Text
+                fontSize={"xl"}
+                textTransform={"uppercase"}
+                fontWeight={"semibold"}
+              >
+                {user?.first_name}
               </Text>
 
-              <CustomModal
-                // loading={loading}
-                // handleSave={handleCreate}
-                title={"Add User"}
+              <Text fontSize={"sm"} fontWeight={"light"}>
+                Customer
+              </Text>
+
+              <DeactivateButton className={"mt-1"}>
+                <Text
+                  fontSize={"sm"}
+                  textTransform={"capitalize"}
+                  fontWeight={"medium"}
+                >
+                  Deactivate User
+                </Text>
+              </DeactivateButton>
+            </Wrapper>
+
+            {/* Personal information*/}
+            <Box>
+              <Box className="flex justify-between py-2 px-5">
+                <Text fontSize={"lg"} fontWeight={"medium"}>
+                  Personal information
+                </Text>
+
+                <CustomModal
+                  // loading={loading}
+                  // handleSave={handleCreate}
+                  title={"Add User"}
                 // isOpen={openModal}
                 // onClose={() => setOpenModal(false)}
                 // button={
@@ -119,9 +129,9 @@ const ViewUser = () => {
                 //   //   <Text fontWeight={"medium"}>Add User</Text>
                 //   // </PrimaryButton>
                 // }
-              >
-                <VStack gap={"2"} w={"full"}>
-                  {/* <Box className="flex w-full flex-col gap-1">
+                >
+                  <VStack gap={"2"} w={"full"}>
+                    {/* <Box className="flex w-full flex-col gap-1">
                   <Text fontSize={"sm"}>Full name</Text>
 
                   <CInput
@@ -136,17 +146,17 @@ const ViewUser = () => {
                   />
                 </Box> */}
 
-                  <Box className="flex w-full flex-col gap-1">
-                    <Text fontSize={"sm"}>Category</Text>
+                    <Box className="flex w-full flex-col gap-1">
+                      <Text fontSize={"sm"}>Category</Text>
 
-                    {/* <CInput
+                      {/* <CInput
                     h={"10"}
                     w={3 / 4}
                     placeholder=""
                     borderRadius={"md"}
                   /> */}
 
-                    {/* <CSelect
+                      {/* <CSelect
                     handleChange={(selected) =>
                       setUser((prev) => ({
                         ...prev,
@@ -156,9 +166,9 @@ const ViewUser = () => {
                     h={"10"}
                     w={3 / 4}
                   /> */}
-                  </Box>
+                    </Box>
 
-                  {/* <Box className="flex w-full flex-col gap-1">
+                    {/* <Box className="flex w-full flex-col gap-1">
                   <Text fontSize={"sm"}>Location</Text>
 
                   <CInput
@@ -170,7 +180,7 @@ const ViewUser = () => {
                   />
                 </Box> */}
 
-                  {/* <Box className="flex w-full flex-col gap-1">
+                    {/* <Box className="flex w-full flex-col gap-1">
                   <Text fontSize={"sm"}>Email</Text>
 
                   <CInput
@@ -216,52 +226,64 @@ const ViewUser = () => {
                     borderRadius={"md"}
                   />
                 </Box> */}
-                </VStack>
-              </CustomModal>
-              <ActionButton>
-                <GrEdit />
-              </ActionButton>
+                  </VStack>
+                </CustomModal>
+                <ActionButton>
+                  <GrEdit 
+                  onClick={() => {
+                    setCurrent({
+                      first_name: user?.first_name,
+                      last_name: user?.last_name,
+                      is_admin: user?.is_admin,
+                      is_driver: user?.is_driver,
+                      email: user?.email,
+                      phonenumber: user?.phonenumber,
+                    })
+                    handleOpenModal()
+                  }}
+                  />
+                </ActionButton>
+              </Box>
+              <Wrapper
+                my={"2"}
+                p={"10"}
+                borderRadius={"none"}
+                className={"flex justify-center items-center gap-3 text-[14px]"}
+              >
+                <Box className="text-right flex flex-col gap-4">
+                  <Text fontWeight={"medium"}>Full name</Text>
+                  <Text fontWeight={"medium"}>Category</Text>
+                  <Text fontWeight={"medium"}>Location</Text>
+                  <Text fontWeight={"medium"}>Email</Text>
+                  <Text fontWeight={"medium"}>Phone number</Text>
+                  <Text fontWeight={"medium"}>Onboarding date</Text>
+                  <Text fontWeight={"medium"}>Last edit date</Text>
+                </Box>
+
+                <div className={"bg-zinc-200 h-60 w-0.5 rounded-full"} />
+
+                <Box className="text-left flex flex-col gap-4">
+                  <Text>
+                    {user?.first_name} {user?.last_name}
+                  </Text>
+                  <Text>
+                    {user?.is_admin
+                      ? "Admin"
+                      : user?.is_driver
+                        ? "Driver"
+                        : "User"}
+                  </Text>
+                  {/* <Text>Nairobi CBD, Nairobi</Text> */}
+                  <Text>{user?.email}</Text>
+                  <Text>{user?.phonenumber}</Text>
+                  <Text>{user?.date_joined}</Text>
+                  <Text>3/10/2022</Text>
+                </Box>
+              </Wrapper>
             </Box>
-            <Wrapper
-              my={"2"}
-              p={"10"}
-              borderRadius={"none"}
-              className={"flex justify-center items-center gap-3 text-[14px]"}
-            >
-              <Box className="text-right flex flex-col gap-4">
-                <Text fontWeight={"medium"}>Full name</Text>
-                <Text fontWeight={"medium"}>Category</Text>
-                <Text fontWeight={"medium"}>Location</Text>
-                <Text fontWeight={"medium"}>Email</Text>
-                <Text fontWeight={"medium"}>Phone number</Text>
-                <Text fontWeight={"medium"}>Onboarding date</Text>
-                <Text fontWeight={"medium"}>Last edit date</Text>
-              </Box>
 
-              <div className={"bg-zinc-200 h-60 w-0.5 rounded-full"} />
-
-              <Box className="text-left flex flex-col gap-4">
-                <Text>
-                  {user?.first_name} {user?.last_name}
-                </Text>
-                <Text>
-                  {user?.is_admin
-                    ? "Admin"
-                    : user?.is_driver
-                    ? "Driver"
-                    : "User"}
-                </Text>
-                <Text>Nairobi CBD, Nairobi</Text>
-                <Text>{user?.email}</Text>
-                <Text>{user?.phonenumber}</Text>
-                <Text>{user?.date_joined}</Text>
-                <Text>3/10/2022</Text>
-              </Box>
-            </Wrapper>
-          </Box>
-
-          {/* vehicle information */}
-          {/* <Box>
+            {/* vehicle information */}
+            {/* <Box>
             <Box className="flex justify-between py-2 px-5">
               <Text fontSize={"lg"} fontWeight={"medium"}>
                 Payment Details
@@ -273,7 +295,7 @@ const ViewUser = () => {
             </Box>
             <Wrapper my={"2"} borderRadius={"none"} className={"gap-3"}>
               {/* mini cards */}
-          {/* <HStack w={"full"} fontFamily={"Poppins"}>
+            {/* <HStack w={"full"} fontFamily={"Poppins"}>
                 <MiniCard no={"24"} text={"Total Bookings"} icon={<Lorry />} />
                 <MiniCard
                   no={"3"}
@@ -310,88 +332,94 @@ const ViewUser = () => {
               </Box>
             </Wrapper>
           </Box>  */}
-        </Box>
-
-        {/* table */}
-        <Wrapper mb={"2"} mt={3} p={"5 "} className={"w-3/5"}>
-          <Text fontWeight={"semibold"} fontSize={"lg"}>
-            Bookings
-          </Text>
-
-          {/* search and table actions */}
-          <HStack py={"6"} justifyContent={"space-between"}>
-            {/* /search input */}
-            <CInput icon={<IoSearchOutline className="text-xl" />} />
-            {/* actions */}
-            <HStack gap={"2"}>
-              <TableAction
-                icon={<VscFilter className="text-lg" />}
-                text={"Filter"}
-              />
-              <TableAction
-                icon={<BiSort className="text-lg" />}
-                text={"Sort"}
-              />
-            </HStack>
-          </HStack>
-
-          {/* body */}
-
-          <Box>
-            <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {loading? <Loader /> : userBookings?.map((data, key) => {
-                const isEven = key % 2;
-                const status = STATUS_LIST[data?.status];
-                const bg =
-                  data?.status === 0
-                    ? "bg-primary_red"
-                    : data?.status === 5
-                    ? "bg-primary_green"
-                    : "bg-primary_yellow_light";
-
-                return (
-                  <tr
-                    className={`h-14 capitalize ${
-                      isEven ? "bg-[#F9F9F9]" : "white"
-                    }`}
-                    key={key}
-                  >
-                    <td className=" py-3 px-4">--</td>
-                    <td className="py-3 px-4">--</td>
-                    <td className="py-3 px-4">
-                      {data?.driver?.first_name} {data?.driver?.last_name}
-                    </td>
-                    <td className={`text-white py-3 px-4 `}>
-                      <Box className="flex">
-                        <Box
-                          py={"1"}
-                          px={"2"}
-                          fontSize={"xs"}
-                          className={`${bg} rounded-md font-medium  `}
-                        >
-                          {status}
-                        </Box>
-                      </Box>
-                    </td>
-                    {/* actions table */}
-                    <td className={` text-white py-3 px-4 w-24`}>
-                      <Box className="flex gap-4 justify-center">
-                        <ActionButton
-                          bg={bg}
-                          handleClick={() => handleViewUser(data?.driver)}
-                        >
-                          <FiEye />
-                        </ActionButton>
-                      </Box>
-                    </td>
-                  </tr>
-                );
-              })}
-            </Table>
           </Box>
-        </Wrapper>
+
+          {/* table */}
+          <Wrapper mb={"2"} mt={3} p={"5 "} className={"w-3/5"}>
+            <Text fontWeight={"semibold"} fontSize={"lg"}>
+              Bookings
+            </Text>
+
+            {/* search and table actions */}
+            <HStack py={"6"} justifyContent={"space-between"}>
+              {/* /search input */}
+              <CInput icon={<IoSearchOutline className="text-xl" />} />
+              {/* actions */}
+              <HStack gap={"2"}>
+                <TableAction
+                  icon={<VscFilter className="text-lg" />}
+                  text={"Filter"}
+                />
+                <TableAction
+                  icon={<BiSort className="text-lg" />}
+                  text={"Sort"}
+                />
+              </HStack>
+            </HStack>
+
+            {/* body */}
+
+            <Box>
+              <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
+                {loading ? <Loader /> : userBookings?.map((data, key) => {
+                  const isEven = key % 2;
+                  const status = STATUS_LIST[data?.status];
+                  const bg =
+                    data?.status === 0
+                      ? "bg-primary_red"
+                      : data?.status === 5
+                        ? "bg-primary_green"
+                        : "bg-primary_yellow_light";
+
+                  return (
+                    <tr
+                      className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
+                        }`}
+                      key={key}
+                    >
+                      <td className=" py-3 px-4">--</td>
+                      <td className="py-3 px-4">--</td>
+                      <td className="py-3 px-4">
+                        {data?.driver?.first_name} {data?.driver?.last_name}
+                      </td>
+                      <td className={`text-white py-3 px-4 `}>
+                        <Box className="flex">
+                          <Box
+                            py={"1"}
+                            px={"2"}
+                            fontSize={"xs"}
+                            className={`${bg} rounded-md font-medium  `}
+                          >
+                            {status}
+                          </Box>
+                        </Box>
+                      </td>
+                      {/* actions table */}
+                      <td className={` text-white py-3 px-4 w-24`}>
+                        <Box className="flex gap-4 justify-center">
+                          <ActionButton
+                            bg={bg}
+                            handleClick={() => handleViewUser(data?.driver)}
+                          >
+                            <FiEye />
+                          </ActionButton>
+                        </Box>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </Table>
+            </Box>
+          </Wrapper>
+        </Box>
       </Box>
-    </Box>
+
+      <EditUserModal
+        openModal={openModal}
+        handleCloseModal={handleCloseModal}
+        current={current}
+      />
+    </>
   );
 };
 
