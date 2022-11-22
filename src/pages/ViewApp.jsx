@@ -10,10 +10,12 @@ import License from "../assets/images/license.png";
 import Insurance from "../assets/images/certificate.png";
 import RejectModal from "../components/apps/RejectModal";
 import UserServices from "../utils/services/UserServices";
+import EditPersonalInfoModal from "../components/apps/EditPesonalInfoModal";
 
 const ViewApp = () => {
   const location = useLocation()?.pathname.split("/");
-  const [openRejectModal, setOpenModal] = React.useState(false);
+  const [openModal, setOpenModal] = React.useState(false);
+  const [current, setCurrent] = React.useState({});
   const [user, setUser] = React.useState({});
 
   let userId = location[location?.length - 1];
@@ -26,6 +28,7 @@ const ViewApp = () => {
     //   setUserBookings(response);
     // });
   }, [userId]);
+
 
   const handleOpenModal = React.useCallback(() => {
     setOpenModal(true);
@@ -82,7 +85,19 @@ const ViewApp = () => {
                   Personal information
                 </Text>
 
-                <ActionButton>
+                <ActionButton
+                  onClick={() => {
+                    setCurrent({
+                      first_name: user?.first_name,
+                      last_name: user?.last_name,
+                      is_admin: user?.is_admin,
+                      is_driver: user?.is_driver,
+                      email: user?.email,
+                      phone_number: user?.phonenumber,
+                    })
+                    handleOpenModal()
+                  }}
+                >
                   <GrEdit />
                 </ActionButton>
               </Box>
@@ -112,8 +127,8 @@ const ViewApp = () => {
                     {user?.is_admin
                       ? "Admin"
                       : user?.is_driver
-                      ? "Driver"
-                      : "User"}
+                        ? "Driver"
+                        : "User"}
                   </Text>
                   <Text>Nairobi CBD, Nairobi</Text>
                   <Text>{user?.email}</Text>
@@ -129,7 +144,19 @@ const ViewApp = () => {
               <Box className="flex justify-between py-2 px-5">
                 <Text fontWeight={"medium"}>Vehicle information</Text>
 
-                <ActionButton>
+                <ActionButton
+                  onClick={() => {
+                    setCurrent({
+                      first_name: user?.first_name,
+                      last_name: user?.last_name,
+                      is_admin: user?.is_admin,
+                      is_driver: user?.is_driver,
+                      email: user?.email,
+                      phone_number: user?.phonenumber,
+                    })
+                    handleOpenModal()
+                  }}
+                >
                   <GrEdit />
                 </ActionButton>
               </Box>
@@ -200,9 +227,15 @@ const ViewApp = () => {
         </Box>
       </Box>
 
+      <EditPersonalInfoModal
+        openModal={openModal}
+        handleCloseModal={handleCloseModal}
+        current={current}
+      />
+
       <RejectModal
         handleCloseModal={handleCloseModal}
-        openModal={openRejectModal}
+        openModal={openModal}
       />
     </>
   );

@@ -12,10 +12,15 @@ import auth from "../utils/services/AuthServices";
 import FleetServices from "../utils/services/FleetServices";
 import UserServices from "../utils/services/UserServices";
 import { ActionButton } from "./Apps";
+import EditPersonalInfoModal from "../components/apps/EditPesonalInfoModal";
+import EditVehicleModal from "../components/apps/EditVehicleInfoModal";
 
 const ViewDriver = () => {
   const location = useLocation()?.pathname.split("/");
-  const [openRejectModal, setOpenModal] = React.useState(false);
+  const [openPersonalInfoModal, setOpenPersonalInfoModal] = React.useState(false);
+  const [openVehicleInfoModal, setOpenVehicleInfoModal] = React.useState(false);
+  const [openRejectModal, setOpenRejectModal] = React.useState(false);
+  const [current, setCurrent] = React.useState({});
   const [user] = useState({});
   const [vehicle, setVehicle] = useState({});
   const [driverProfile, setDriverProfile] = useState({});
@@ -24,12 +29,28 @@ const ViewDriver = () => {
 
   let profileId = location[location?.length - 1];
 
-  const handleOpenModal = React.useCallback(() => {
-    setOpenModal(true);
+  const handleEditPersonalInfoOpenModal = React.useCallback(() => {
+    setOpenPersonalInfoModal(true);
   }, []);
 
-  const handleCloseModal = React.useCallback(() => {
-    setOpenModal(false);
+  const handleEditPersonalInfoCloseModal = React.useCallback(() => {
+    setOpenPersonalInfoModal(false);
+  }, []);
+
+  const handleEditVehicleInfoOpenModal = React.useCallback(() => {
+    setOpenVehicleInfoModal(true);
+  }, []);
+
+  const handleEditVehicleInfoCloseModal = React.useCallback(() => {
+    setOpenVehicleInfoModal(false);
+  }, []);
+
+  const handleRejectOpenModal = React.useCallback(() => {
+    setOpenRejectModal(true);
+  }, []);
+
+  const handleRejectCloseModal = React.useCallback(() => {
+    setOpenRejectModal(false);
   }, []);
 
   useEffect(() => {
@@ -120,8 +141,8 @@ const ViewDriver = () => {
                 {driverProfile?.user?.is_driver
                   ? "Driver"
                   : driverProfile?.user?.is_admin
-                  ? "Admin"
-                  : "User"}
+                    ? "Admin"
+                    : "User"}
                 :{" "}
                 {driverProfile?.user?.first_name +
                   " " +
@@ -136,8 +157,21 @@ const ViewDriver = () => {
                   Personal information
                 </Text>
 
-                <ActionButton>
-                  <GrEdit />
+                <ActionButton
+                >
+                  <GrEdit
+                    onClick={() => {
+                      setCurrent({
+                        first_name: driverProfile?.user?.first_name,
+                        last_name: driverProfile?.user?.last_name,
+                        is_admin: driverProfile?.user?.is_admin,
+                        is_driver: driverProfile?.user?.is_driver,
+                        email: driverProfile?.user?.email,
+                        phone_number: driverProfile?.user?.phonenumber,
+                      })
+                      handleEditPersonalInfoOpenModal()
+                    }}
+                  />
                 </ActionButton>
               </Box>
               <Wrapper
@@ -169,8 +203,8 @@ const ViewDriver = () => {
                     {driverProfile?.user?.is_driver
                       ? "Driver"
                       : driverProfile?.user?.is_admin
-                      ? "Admin"
-                      : "User"}
+                        ? "Admin"
+                        : "User"}
                     :{" "}
                     {driverProfile?.user?.first_name +
                       " " +
@@ -191,7 +225,17 @@ const ViewDriver = () => {
                 <Text fontWeight={"medium"}>Vehicle information</Text>
 
                 <ActionButton>
-                  <GrEdit />
+                  <GrEdit
+                    onClick={() => {
+                      setCurrent({
+                        reg_number: vehicle?.reg_number,
+                        color: vehicle?.color,
+                        vehicle_type: vehicle?.vehicle_type,
+                        model: vehicle?.model
+                      })
+                      handleEditVehicleInfoOpenModal()
+                    }}
+                  />
                 </ActionButton>
               </Box>
               <Wrapper
@@ -256,7 +300,7 @@ const ViewDriver = () => {
                 {!driverProfile?.is_approved && (
                   <>
                     <button
-                      onClick={handleOpenModal}
+                      onClick={handleRejectOpenModal}
                       className="text-primary_yellow border-[1.5px] border-primary_yellow rounded-md items-center flex gap-2 px-16 py-3"
                     >
                       <Text fontWeight={"semibold"}>Reject</Text>
@@ -285,8 +329,20 @@ const ViewDriver = () => {
         </Box>
       </Box>
 
+      <EditPersonalInfoModal
+        openModal={openPersonalInfoModal}
+        handleCloseModal={handleEditPersonalInfoCloseModal}
+        current={current}
+      />
+
+      <EditVehicleModal
+        openModal={openVehicleInfoModal}
+        handleCloseModal={handleEditVehicleInfoCloseModal}
+        current={current}
+      />
+
       <RejectModal
-        handleCloseModal={handleCloseModal}
+        handleCloseModal={handleRejectCloseModal}
         openModal={openRejectModal}
       />
     </>
