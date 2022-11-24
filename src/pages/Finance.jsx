@@ -7,7 +7,7 @@ import { GoGraph } from "react-icons/go";
 import { Doughnat } from "../components/charts/Doughnat";
 import FinanceCard from "../components/finance/FinanceCard";
 import Paid from "../components/finance/sub_screens/Paid";
-import Failed from "../components/finance/sub_screens/Processing";
+import Received from "../components/finance/sub_screens/Received";
 
 const Finance = () => {
   const [currentSubNav, setCurrent] = useState("paid"); //processing,paid
@@ -75,7 +75,7 @@ const Finance = () => {
           {currentSubNav === "paid" ? (
             <Paid />
           ) : (
-            currentSubNav === "unpaid" && <Failed />
+            currentSubNav === "unpaid" && <Received />
           )}
         </Wrapper>
 

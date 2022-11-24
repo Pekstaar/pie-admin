@@ -8,6 +8,14 @@ async function fetchEarnings() {
   return res.data;
 }
 
-const EarningServices = { fetchEarnings };
+async function fetchRequestEarnings() {
+  setAuthToken(AxiosUtility);
+
+  const res = await AxiosUtility.get("admins/api/earnings/requests/");
+
+  return res.data;
+}
+
+const EarningServices = { fetchEarnings, fetchRequestEarnings };
 
 export default EarningServices;

@@ -56,7 +56,7 @@ const CustomModal = ({
 
                 {!hideSave && (
                   <>
-                    !loading ? (
+                   { !loading ? (
                     <PrimaryButton
                       handleClick={handleSave}
                       className={"text-sm items-end px-10"}
@@ -70,7 +70,7 @@ const CustomModal = ({
                       // w={"75%"}
                       h={"12"}
                     />
-                    )
+                    )}
                   </>
                 )}
               </>

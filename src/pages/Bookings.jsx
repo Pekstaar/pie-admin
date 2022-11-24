@@ -50,7 +50,7 @@ const Bookings = () => {
         receivers[obj?.booking?.id] = rec;
       }
 
-      console.log(receivers);
+      // console.log(receivers);
       setRecievers(receivers);
 
       setLoading(false);
@@ -70,7 +70,7 @@ const Bookings = () => {
             h={"12"}
             mx={"2"}
           >
-            <SubNavItem isCurrent title={"Ongoing"} handleClick={() => { }} />
+            <SubNavItem isCurrent title={"Ongoing"} handleClick={() => {}} />
             {/* <SubNavItem title={"Scheduled"} handleClick={() => {}} />
             <SubNavItem title={"Completed"} handleClick={() => {}} /> */}
           </HStack>
@@ -118,18 +118,18 @@ const Bookings = () => {
                     return data === ""
                       ? data
                       : // data?.booking?.formated_address.toLowerCase().includes(searchValue.toLowerCase()) ||
-                      data?.owner?.first_name
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase()) ||
-                      data?.owner?.last_name
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase()) ||
-                      data?.driver?.last_name
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase()) ||
-                      data?.driver?.last_name
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase());
+                        data?.owner?.first_name
+                          .toLowerCase()
+                          .includes(searchValue.toLowerCase()) ||
+                          data?.owner?.last_name
+                            .toLowerCase()
+                            .includes(searchValue.toLowerCase()) ||
+                          data?.driver?.last_name
+                            .toLowerCase()
+                            .includes(searchValue.toLowerCase()) ||
+                          data?.driver?.last_name
+                            .toLowerCase()
+                            .includes(searchValue.toLowerCase());
                   })
                   .map((data, key) => {
                     const isEven = key % 2;
@@ -138,16 +138,17 @@ const Bookings = () => {
                       data?.status === 0
                         ? "bg-primary_red"
                         : data?.status === 5
-                          ? "bg-primary_green"
-                          : "bg-primary_yellow_light";
+                        ? "bg-primary_green"
+                        : "bg-primary_yellow_light";
                     const booking_receiver = recievers[data?.booking?.id];
 
                     console.log(data);
 
                     return (
                       <tr
-                        className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
-                          }`}
+                        className={`h-14 capitalize ${
+                          isEven ? "bg-[#F9F9F9]" : "white"
+                        }`}
                       >
                         <td className="  py-3 px-4">
                           {data?.booking?.formated_address}
@@ -225,8 +226,9 @@ const SubNavItem = ({ title, isCurrent }) => (
     cursor={"pointer"}
     borderRadius={"none"}
     bg={"white "}
-    className={`text-primary_yellow text-xl ${isCurrent ? "text-dark_green " : "text-zinc-400 "
-      }`}
+    className={`text-primary_yellow text-xl ${
+      isCurrent ? "text-dark_green " : "text-zinc-400 "
+    }`}
     //  onClick={handleLogout}
     _hover={{
       bg: "white",
