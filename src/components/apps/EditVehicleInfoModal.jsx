@@ -1,7 +1,8 @@
 import { Box, Button, Text, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import FleetServices from "../../utils/services/FleetServices";
 import CustomModal from "../general/CustomModal";
-import CInput from "../general/Input";
+import CInput, { CSelect } from "../general/Input";
 import Wrapper from "../general/Wrapper";
 
 const EditVehicleModal = ({ openModal, handleCloseModal, current }) => {
@@ -9,15 +10,8 @@ const EditVehicleModal = ({ openModal, handleCloseModal, current }) => {
     reg_number: "",
     color: "",
     vehicle_type: "",
-    model: ""
+    model: "",
   });
-
-  // useEffect(() => {
-  //   BookingService.fetchBookings().then((response) => {
-  //     setBooking(response.find((data) => data.id === bookingId));
-  //     setUserValues();
-  //   });
-  // }, [bookingId]);
 
   useEffect(() => {
     setUserValues((prev) => ({
@@ -25,15 +19,40 @@ const EditVehicleModal = ({ openModal, handleCloseModal, current }) => {
       reg_number: current?.reg_number,
       color: current?.color,
       vehicle_type: current?.vehicle_type,
-      model: current?.model
+      model: current?.model,
     }));
   }, [current]);
 
+  const handleInput = (e) => {
+    e.persist();
+    setUserValues({ ...usersValues, [e.target.name]: e.target.value });
+  }
 
+  const handleUpdate = (e) => {
+    e.preventDefault();
+
+    const data = {
+      id: current?.id,
+      reg_number: usersValues?.reg_number,
+      color: usersValues?.color,
+      vehicle_type: parseInt(usersValues?.vehicle_type),
+      model: usersValues?.model,
+      owner: parseInt(current?.owner),
+    }
+
+    try {
+      FleetServices.updateDriverVehicle(data).then(() => {
+        handleCloseModal()
+      })
+    }
+    catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <CustomModal
-      title={`Vehicle Information/${usersValues?.reg_number}`}
+      title={`Vehicle Information/${current?.reg_number}`}
       isOpen={openModal}
       onClose={handleCloseModal}
       bg={"gray.100"}
@@ -50,6 +69,7 @@ const EditVehicleModal = ({ openModal, handleCloseModal, current }) => {
           className={"border border-yellow-400 text-yellow-400"}
           px={4}
           py={6}
+          onClick={handleUpdate}
         >
           Update
         </Button>
@@ -72,6 +92,8 @@ const EditVehicleModal = ({ openModal, handleCloseModal, current }) => {
                 placeholder=""
                 value={usersValues?.reg_number}
                 borderRadius={"md"}
+                name="reg_number"
+                onChange={handleInput}
               />
             </Box>
 
@@ -84,19 +106,27 @@ const EditVehicleModal = ({ openModal, handleCloseModal, current }) => {
                 placeholder=""
                 value={usersValues?.color}
                 borderRadius={"md"}
+                name="color"
+                onChange={handleInput}
               />
             </Box>
 
             <Box className="flex w-full flex-col gap-1">
               <Text fontSize={"sm"}>Vehicle type</Text>
 
-              <CInput
+              <CSelect
                 h={"10"}
                 w={3 / 4}
                 placeholder=""
-                value={vehicle_types[usersValues?.vehicle_type]}
+                // value={vehicle_types[usersValues?.vehicle_type]}
                 borderRadius={"md"}
-              />
+                onChange={handleInput}
+              >
+                <option value={usersValues?.vehicle_type}>{vehicle_types[usersValues?.vehicle_type]}</option>
+                {vehicle_types?.map((vehicle_type, index) =>
+                  <option key={index} value={index}>{vehicle_type}</option>
+                )}
+              </CSelect>
             </Box>
 
             <Box className="flex w-full flex-col gap-1">
@@ -108,6 +138,7 @@ const EditVehicleModal = ({ openModal, handleCloseModal, current }) => {
                 placeholder=""
                 value={usersValues?.model}
                 borderRadius={"md"}
+                onChange={handleInput}
               />
             </Box>
           </VStack>

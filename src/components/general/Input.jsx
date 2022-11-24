@@ -63,7 +63,7 @@ const CInput = ({
 
 export const CSelect = ({
   icon,
-  placeholder = "search",
+  placeholder,
   type = "text",
 
   value,
@@ -88,11 +88,12 @@ export const CSelect = ({
   >
     <Select
       variant="outline"
-      placeholder="--select user category--"
+      placeholder={placeholder}
       borderWidth={0}
       w={"full"}
       m={"0"}
       onChange={handleChange}
+      value={value}
     >
       {children}
     </Select>

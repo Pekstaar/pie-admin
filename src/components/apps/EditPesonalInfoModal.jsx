@@ -1,9 +1,11 @@
 import { Box, Button, Text, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { BsMailbox, BsPerson, BsTelephone } from "react-icons/bs";
+import UserServices from "../../utils/services/UserServices";
 import CustomModal from "../general/CustomModal";
 import CInput from "../general/Input";
 import Wrapper from "../general/Wrapper";
+
 
 const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
   const [usersValues, setUserValues] = useState({
@@ -28,10 +30,36 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
     }));
   }, [current?.first_name, current?.last_name, current?.is_admin, current?.is_driver, current?.email, current?.phonenumber]);
 
+  const handleInput = (e) => {
+    e.persist();
+    setUserValues({ ...usersValues, [e.target.name]: e.target.value });
+  }
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+
+    const data = {
+      id: parseInt(current?.id),
+      first_name: usersValues?.first_name,
+      last_name: usersValues?.last_name,
+      email: usersValues?.email,
+      phonenumber: usersValues?.phonenumber,
+    }
+
+    try{
+      UserServices.updateUser(data).then(() => {
+        handleCloseModal()
+      })
+    }
+    catch(error){
+      console.log(error.message)
+    }
+  }
+
 
   return (
     <CustomModal
-      title={`Application/${usersValues?.first_name + " " +  usersValues?.last_name}`}
+      title={`Application/${current?.first_name + " " +  current?.last_name}`}
       isOpen={openModal}
       onClose={handleCloseModal}
       bg={"gray.100"}
@@ -48,6 +76,7 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
           className={"border border-yellow-400 text-yellow-400"}
           px={4}
           py={6}
+          onClick={handleUpdate}
         >
           Update
         </Button>
@@ -71,6 +100,8 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
                 value={usersValues?.first_name}
                 icon={<BsPerson className="text-xl" />}
                 borderRadius={"md"}
+                name="first_name"
+                onChange={handleInput}
               />
             </Box>
 
@@ -84,10 +115,12 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
                 value={usersValues?.last_name}
                 icon={<BsPerson className="text-xl" />}
                 borderRadius={"md"}
+                name="last_name"
+                onChange={handleInput}
               />
             </Box>
 
-            <Box className="flex w-full flex-col gap-1">
+            {/* <Box className="flex w-full flex-col gap-1">
               <Text fontSize={"sm"}>Category</Text>
 
               <CInput
@@ -97,8 +130,9 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
                 value={usersValues?.is_driver ? "Driver" : usersValues?.is_admin ? "Admin" : "User"}
                 icon={<BsPerson className="text-xl" />}
                 borderRadius={"md"}
+                
               />
-            </Box>
+            </Box> */}
 
             <Box className="flex w-full flex-col gap-1">
               <Text fontSize={"sm"}>Email</Text>
@@ -110,6 +144,8 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
                 value={usersValues?.email}
                 icon={<BsMailbox className="text-xl" />}
                 borderRadius={"md"}
+                name="email"
+                onChange={handleInput}
               />
             </Box>
 
@@ -123,6 +159,8 @@ const EditPersonalInfoModal = ({ openModal, handleCloseModal, current }) => {
                 value={usersValues?.phonenumber}
                 icon={<BsTelephone className="text-xl" />}
                 borderRadius={"md"}
+                name="phonenumber"
+                onChange={handleInput}
               />
             </Box>
 

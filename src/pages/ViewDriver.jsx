@@ -63,10 +63,10 @@ const ViewDriver = () => {
       );
     });
 
-    FleetServices.fetchDriversVehicles(profileId).then((response) => {
+    FleetServices.fetchDriversVehicles(driverProfile?.user?.id).then((response) => {
       setVehicle(response[0] || {});
     });
-  }, [profileId]);
+  }, [profileId, driverProfile?.user?.id]);
 
   const handleApprove = () => {
     if (window.confirm("Are you sure you want to approve driver?")) {
@@ -162,6 +162,7 @@ const ViewDriver = () => {
                   <GrEdit
                     onClick={() => {
                       setCurrent({
+                        id: driverProfile?.user?.id,
                         first_name: driverProfile?.user?.first_name,
                         last_name: driverProfile?.user?.last_name,
                         is_admin: driverProfile?.user?.is_admin,
@@ -228,10 +229,12 @@ const ViewDriver = () => {
                   <GrEdit
                     onClick={() => {
                       setCurrent({
+                        id: vehicle?.id,
                         reg_number: vehicle?.reg_number,
                         color: vehicle?.color,
                         vehicle_type: vehicle?.vehicle_type,
-                        model: vehicle?.model
+                        model: vehicle?.model,
+                        owner: driverProfile?.user?.id,
                       })
                       handleEditVehicleInfoOpenModal()
                     }}
