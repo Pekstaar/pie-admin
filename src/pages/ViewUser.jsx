@@ -229,18 +229,19 @@ const ViewUser = () => {
                   </VStack>
                 </CustomModal>
                 <ActionButton>
-                  <GrEdit 
-                  onClick={() => {
-                    setCurrent({
-                      first_name: user?.first_name,
-                      last_name: user?.last_name,
-                      is_admin: user?.is_admin,
-                      is_driver: user?.is_driver,
-                      email: user?.email,
-                      phonenumber: user?.phonenumber,
-                    })
-                    handleOpenModal()
-                  }}
+                  <GrEdit
+                    onClick={() => {
+                      setCurrent({
+                        id: user?.id,
+                        first_name: user?.first_name,
+                        last_name: user?.last_name,
+                        is_admin: user?.is_admin,
+                        is_driver: user?.is_driver,
+                        email: user?.email,
+                        phonenumber: user?.phonenumber,
+                      })
+                      handleOpenModal()
+                    }}
                   />
                 </ActionButton>
               </Box>

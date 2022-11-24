@@ -93,6 +93,7 @@ const ViewPartner = () => {
                   <GrEdit
                     onClick={() => {
                       setCurrent({
+                        id: partner?.owner?.id,
                         first_name: partner?.owner?.first_name,
                         last_name: partner?.owner?.last_name,
                         is_admin: partner?.owner?.is_admin,
