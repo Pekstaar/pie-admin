@@ -1,5 +1,5 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { BarChart } from "../components/charts/Bar";
 import { Doughnat } from "../components/charts/Doughnat";
 // import { Doughnat } from "../components/charts/Doughnat";
@@ -9,8 +9,80 @@ import ActivitiesCard from "../components/dashboard/ActivitiesCard";
 import Breadcrumb from "../components/dashboard/Breadcrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
+import BookingService from "../utils/services/BookingServices";
 
 const Dashboard = () => {
+  const [bookings, setBookings] = useState([]);
+  const [chartMonths, setChartMonths] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  const [createdBooking, setCreatedBooking] = useState("");
+  const [completedBooking, setCompletedBooking] = useState("");
+
+  const MONTHS = useMemo(() => [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ], []);
+
+  useEffect(() => {
+    BookingService.fetchBookings().then(async (response) => {
+      setBookings(response);
+
+      // setLoading(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (bookings.length > 0) {
+      const months = Object.entries(
+        bookings.reduce((b, a) => {
+          let month = a.created_at.split("T")[0].substr(0, 10);
+          if (b.hasOwnProperty(month)) b[month].push(a);
+          else b[month] = [a];
+          return b;
+        }, {})
+      )
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map((e) => ({ [e[0]]: e[1] }));
+
+      let monthsArray = [];
+      let monthlyCreatedTotals = [];
+      let monthlyCompletedTotals = [];
+
+      months.forEach((item) => {
+        const key = Object.keys(item)[0];
+        const monthOfDate = MONTHS[new Date(key).getMonth()];
+        monthsArray.push(monthOfDate);
+
+        const arrayOfBookings = Object.values(item)[0];
+
+        const totalCreatedBookingsMonthly = arrayOfBookings.reduce((acc, obj) => obj.status >= 0 ? acc += 1 : acc, 0);
+        monthlyCreatedTotals.push(totalCreatedBookingsMonthly)
+
+        const totalCompletedBookingsMonthly = arrayOfBookings.reduce((acc, obj) => obj.status === 5 ? acc += 1 : acc, 0);
+        monthlyCompletedTotals.push(totalCompletedBookingsMonthly)
+
+      });
+      setChartMonths(monthsArray);
+      setCreatedBooking(monthlyCreatedTotals);
+      setCompletedBooking(monthlyCompletedTotals)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bookings]);
+
+  console.log(chartMonths)
+  console.log(createdBooking)
+  console.log(completedBooking)
+
   const bookingsByProduct = useMemo(
     () => ({
       options: {
@@ -53,15 +125,7 @@ const Dashboard = () => {
     []
   );
 
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
+  const labels = chartMonths;
   const barChart = useMemo(
     () => ({
       options: {
@@ -83,12 +147,12 @@ const Dashboard = () => {
         datasets: [
           {
             label: "Created booking",
-            data: labels.map(() => Math.random() * 100),
+            data: createdBooking,
             backgroundColor: "#EFAF1D",
           },
           {
             label: "Complete booking",
-            data: labels.map(() => Math.random() * 100),
+            data: completedBooking,
             backgroundColor: "#00A406",
           },
         ],

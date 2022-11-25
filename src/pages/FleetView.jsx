@@ -1,5 +1,5 @@
 import { Box, Button, HStack, Image, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import car from "../assets/images/car.png";
 import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
@@ -16,12 +16,15 @@ import { useLocation } from "react-router-dom";
 import CInput from "../components/general/Input";
 import FleetServices from "../utils/services/FleetServices";
 import Loader from "../components/Loader";
+import EditVehicleModal from "../components/apps/EditVehicleInfoModal";
 
 const FleetView = () => {
   const location = useLocation()?.pathname.split("/");
 
   const [vehicle, setVehicle] = useState({});
   const [loading, setLoading] = useState(true);
+  const [openVehicleInfoModal, setOpenVehicleInfoModal] = useState(false);
+  const [current, setCurrent] = useState({});
 
   React.useEffect(() => {
     FleetServices.fetchVehicle(location[location?.length - 1]).then(
@@ -33,178 +36,205 @@ const FleetView = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleEditVehicleInfoOpenModal = useCallback(() => {
+    setOpenVehicleInfoModal(true);
+  }, []);
+
+  const handleEditVehicleInfoCloseModal = useCallback(() => {
+    setOpenVehicleInfoModal(false);
+  }, []);
+
   // const
   return (
-    <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
-      <BreadCrumb
-        icon={<Transaction />}
-        title={`Fleet management /`}
-        subtitle={location[location?.length - 1]}
-      />
-      <Box className="flex gap-3 ">
-        <Box className={"w-1/3"} flex={"1"}>
-          <Wrapper
-            my={"4"}
-            p={"5"}
-            borderRadius={"none"}
-            className={"flex flex-col justify-center items-center"}
-          >
-            {/* body */}
-            <Image src={car} h={40} w={44} mb={"3"} />
-            <Text
-              fontSize={"xl"}
-              textTransform={"uppercase"}
-              fontWeight={"semibold"}
-            >
-              {vehicle?.reg_number || "_"}
-            </Text>
-
-            <Text fontSize={"sm"} fontWeight={"light"}>
-              Driver:{" "}
-              {`${vehicle?.owner?.first_name?.toLowerCase()} ${vehicle?.owner?.last_name?.toLowerCase()}`}
-            </Text>
-          </Wrapper>
-
-          {/* vehicle information */}
-          <Box>
-            <Box className="flex justify-between py-2 px-5">
-              <Text fontSize={"lg"} fontWeight={"medium"}>
-                Vehicle information
-              </Text>
-
-              <ActionButton>
-                <GrEdit />
-              </ActionButton>
-            </Box>
+    <>
+      <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
+        <BreadCrumb
+          icon={<Transaction />}
+          title={`Fleet management /`}
+          subtitle={location[location?.length - 1]}
+        />
+        <Box className="flex gap-3 ">
+          <Box className={"w-1/3"} flex={"1"}>
             <Wrapper
-              my={"2"}
+              my={"4"}
               p={"5"}
               borderRadius={"none"}
-              className={"flex justify-center items-center gap-3 text-sm"}
+              className={"flex flex-col justify-center items-center"}
             >
-              <Box className="text-right flex flex-col gap-2">
-                <Text fontWeight={"medium"}>Reg no</Text>
-                <Text fontWeight={"medium"}>Color</Text>
-                <Text fontWeight={"medium"}>Type</Text>
-                <Text fontWeight={"medium"}>Model</Text>
-                <Text fontWeight={"medium"}>License Expiry</Text>
-              </Box>
-
-              <div className={"bg-zinc-200 h-32 w-0.5 rounded-full"} />
-
-              <Box className="text-left flex flex-col gap-2">
-                <Text> {vehicle?.reg_number}</Text>
-                <Text>{vehicle?.color}</Text>
-                <Text>{vehicle_types[vehicle?.model] || "_"}</Text>
-                <Text>{vehicle?.model}</Text>
-                <Text>{vehicle?.insurance_expiry}</Text>
-              </Box>
-            </Wrapper>
-          </Box>
-
-          {/* Documents */}
-          <Box>
-            <Box className="flex justify-between py-2 px-5">
-              <Text fontSize={"lg"} fontWeight={"medium"}>
-                Documents
+              {/* body */}
+              <Image src={car} h={40} w={44} mb={"3"} />
+              <Text
+                fontSize={"xl"}
+                textTransform={"uppercase"}
+                fontWeight={"semibold"}
+              >
+                {vehicle?.reg_number || "_"}
               </Text>
-            </Box>
-            <Wrapper my={"2"} p={"5"} borderRadius={"none"} className={""}>
-              <Box className="">
-                <Text fontSize={"lg"} mb={"2"} fontWeight={"medium"}>
-                  Insurance
+
+              <Text fontSize={"sm"} fontWeight={"light"}>
+                Driver:{" "}
+                {`${vehicle?.owner?.first_name?.toLowerCase()} ${vehicle?.owner?.last_name?.toLowerCase()}`}
+              </Text>
+            </Wrapper>
+
+            {/* vehicle information */}
+            <Box>
+              <Box className="flex justify-between py-2 px-5">
+                <Text fontSize={"lg"} fontWeight={"medium"}>
+                  Vehicle information
                 </Text>
 
-                {/* <DocItem text={"My_insurance docs.pdf"} /> */}
+                <ActionButton>
+                  <GrEdit
+                    onClick={() => {
+                      setCurrent({
+                        id: vehicle?.id,
+                        reg_number: vehicle?.reg_number,
+                        color: vehicle?.color,
+                        vehicle_type: vehicle?.vehicle_type,
+                        model: vehicle?.model,
+                        owner: vehicle?.owner?.id,
+                      })
+                      handleEditVehicleInfoOpenModal()
+                    }}
+                  />
+                </ActionButton>
               </Box>
+              <Wrapper
+                my={"2"}
+                p={"5"}
+                borderRadius={"none"}
+                className={"flex justify-center items-center gap-3 text-sm"}
+              >
+                <Box className="text-right flex flex-col gap-2">
+                  <Text fontWeight={"medium"}>Reg no</Text>
+                  <Text fontWeight={"medium"}>Color</Text>
+                  <Text fontWeight={"medium"}>Type</Text>
+                  <Text fontWeight={"medium"}>Model</Text>
+                  <Text fontWeight={"medium"}>License Expiry</Text>
+                </Box>
 
-              <Box className="flex justify-end py-5">
-                <button className="rounded border border-primary_yellow text-primary_yellow hover:bg-gray-50 p-3">
-                  Add document
-                </button>
+                <div className={"bg-zinc-200 h-32 w-0.5 rounded-full"} />
+
+                <Box className="text-left flex flex-col gap-2">
+                  <Text> {vehicle?.reg_number}</Text>
+                  <Text>{vehicle?.color}</Text>
+                  <Text>{vehicle_types[vehicle?.vehicle_type]}</Text>
+                  <Text>{vehicle?.model}</Text>
+                  <Text>{vehicle?.insurance_expiry}</Text>
+                </Box>
+              </Wrapper>
+            </Box>
+
+            {/* Documents */}
+            <Box>
+              <Box className="flex justify-between py-2 px-5">
+                <Text fontSize={"lg"} fontWeight={"medium"}>
+                  Documents
+                </Text>
               </Box>
-            </Wrapper>
+              <Wrapper my={"2"} p={"5"} borderRadius={"none"} className={""}>
+                <Box className="">
+                  <Text fontSize={"lg"} mb={"2"} fontWeight={"medium"}>
+                    Insurance
+                  </Text>
+
+                  {/* <DocItem text={"My_insurance docs.pdf"} /> */}
+                </Box>
+
+                <Box className="flex justify-end py-5">
+                  <button className="rounded border border-primary_yellow text-primary_yellow hover:bg-gray-50 p-3">
+                    Add document
+                  </button>
+                </Box>
+              </Wrapper>
+            </Box>
           </Box>
-        </Box>
 
-        <Wrapper mt={"4"} mb={"2"} p={"5 "} className={"w-2/3"}>
-          <Text fontWeight={"semibold"} fontSize={"lg"}>
-            Bookings
-          </Text>
+          <Wrapper mt={"4"} mb={"2"} p={"5 "} className={"w-2/3"}>
+            <Text fontWeight={"semibold"} fontSize={"lg"}>
+              Bookings
+            </Text>
 
-          {/* search and table actions */}
-          <HStack py={"6"} justifyContent={"space-between"}>
-            {/* /search input */}
-            <CInput icon={<IoSearchOutline className="text-xl" />} />
-            {/* actions */}
-            <HStack gap={"2"}>
-              <TableAction
-                icon={<VscFilter className="text-lg" />}
-                text={"Filter"}
-              />
-              <TableAction
-                icon={<BiSort className="text-lg" />}
-                text={"Sort"}
-              />
+            {/* search and table actions */}
+            <HStack py={"6"} justifyContent={"space-between"}>
+              {/* /search input */}
+              <CInput icon={<IoSearchOutline className="text-xl" />} />
+              {/* actions */}
+              <HStack gap={"2"}>
+                <TableAction
+                  icon={<VscFilter className="text-lg" />}
+                  text={"Filter"}
+                />
+                <TableAction
+                  icon={<BiSort className="text-lg" />}
+                  text={"Sort"}
+                />
+              </HStack>
             </HStack>
-          </HStack>
 
-          {/* body */}
+            {/* body */}
 
-          <Box>
-            <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-              {loading? <Loader /> : []?.map((data, key) => {
-                const isEven = key % 2;
-                const status = STATUS_LIST[data?.status];
-                const bg =
-                  data?.status === 0
-                    ? "bg-primary_red"
-                    : data?.status === 5
-                    ? "bg-primary_green"
-                    : "bg-primary_yellow_light";
+            <Box>
+              <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
+                {loading ? <Loader /> : []?.map((data, key) => {
+                  const isEven = key % 2;
+                  const status = STATUS_LIST[data?.status];
+                  const bg =
+                    data?.status === 0
+                      ? "bg-primary_red"
+                      : data?.status === 5
+                        ? "bg-primary_green"
+                        : "bg-primary_yellow_light";
 
-                return (
-                  <tr
-                    className={`h-14 capitalize ${
-                      isEven ? "bg-[#F9F9F9]" : "white"
-                    }`}
-                  >
-                    <td className="  py-3 px-4">{data?.destination}</td>
-                    <td className=" py-3 px-4">{data?.sender}</td>
-                    <td className=" py-3 px-4">{data?.receiver}</td>
-                    <td className=" py-3 px-4">{data?.driver}</td>
-                    <td className={` text-white py-3 px-4 `}>
-                      <Box className="flex  justify-center">
-                        <Box
-                          py={"0.5"}
-                          px={"2"}
-                          fontSize={"xs"}
-                          className={`${bg} rounded-md font-medium  `}
-                        >
-                          {status}
+                  return (
+                    <tr
+                      className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
+                        }`}
+                    >
+                      <td className="  py-3 px-4">{data?.destination}</td>
+                      <td className=" py-3 px-4">{data?.sender}</td>
+                      <td className=" py-3 px-4">{data?.receiver}</td>
+                      <td className=" py-3 px-4">{data?.driver}</td>
+                      <td className={` text-white py-3 px-4 `}>
+                        <Box className="flex  justify-center">
+                          <Box
+                            py={"0.5"}
+                            px={"2"}
+                            fontSize={"xs"}
+                            className={`${bg} rounded-md font-medium  `}
+                          >
+                            {status}
+                          </Box>
                         </Box>
-                      </Box>
-                    </td>
-                    {/* actions table */}
-                    <td className={` text-white py-3 px-4 w-32`}>
-                      <Box className="flex gap-4">
-                        <ActionButton bg={bg}>
-                          <FiEye />
-                        </ActionButton>
+                      </td>
+                      {/* actions table */}
+                      <td className={` text-white py-3 px-4 w-32`}>
+                        <Box className="flex gap-4">
+                          <ActionButton bg={bg}>
+                            <FiEye />
+                          </ActionButton>
 
-                        <ActionButton bg={bg}>
-                          <RiDeleteBin5Line />
-                        </ActionButton>
-                      </Box>
-                    </td>
-                  </tr>
-                );
-              })}
-            </Table>
-          </Box>
-        </Wrapper>
+                          <ActionButton bg={bg}>
+                            <RiDeleteBin5Line />
+                          </ActionButton>
+                        </Box>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </Table>
+            </Box>
+          </Wrapper>
+        </Box>
       </Box>
-    </Box>
+
+      <EditVehicleModal
+        openModal={openVehicleInfoModal}
+        handleCloseModal={handleEditVehicleInfoCloseModal}
+        current={current}
+      />
+    </>
   );
 };
 
