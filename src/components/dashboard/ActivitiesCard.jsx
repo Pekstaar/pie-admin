@@ -6,9 +6,11 @@ import { Doughnat } from "../charts/Doughnat";
 import Wrapper from "../general/Wrapper";
 import ActivityItem from "./ActivityItem";
 
-const ActivitiesCard = () => {
+const ActivitiesCard = ({percentageCompleted}) => {
   //   const handleChart = useCallback(() => {}, []);
   // const handleChart = React.useMemo(() => );
+  const percentageNotCompleted = 100 - percentageCompleted;
+  
   const chartOptions = {
     plugins: {
       centerText: {
@@ -26,7 +28,7 @@ const ActivitiesCard = () => {
     datasets: [
       {
         label: "# of Votes",
-        data: [75, 25],
+        data: [percentageCompleted, percentageNotCompleted],
         backgroundColor: ["#16AC52", "#2DFC3430"],
       },
     ],
@@ -61,7 +63,7 @@ const ActivitiesCard = () => {
               fontWeight={"semibold"}
               fontSize={"xl"}
             >
-              75/100
+              {percentageCompleted}/100
             </Text>
             <Text
               fontSize={"sm"}

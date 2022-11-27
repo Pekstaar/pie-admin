@@ -17,6 +17,7 @@ const Dashboard = () => {
   // const [loading, setLoading] = useState(true);
   const [createdBooking, setCreatedBooking] = useState("");
   const [completedBooking, setCompletedBooking] = useState("");
+  const [totalBookingPercentage, setTotalBookingPercentage]= useState("")
 
   const MONTHS = useMemo(() => [
     "January",
@@ -57,6 +58,7 @@ const Dashboard = () => {
       let monthsArray = [];
       let monthlyCreatedTotals = [];
       let monthlyCompletedTotals = [];
+      let percentageCompleted = ''
 
       months.forEach((item) => {
         const key = Object.keys(item)[0];
@@ -71,17 +73,22 @@ const Dashboard = () => {
         const totalCompletedBookingsMonthly = arrayOfBookings.reduce((acc, obj) => obj.status === 5 ? acc += 1 : acc, 0);
         monthlyCompletedTotals.push(totalCompletedBookingsMonthly)
 
+        // Sum created booking
+        const totalCreatedBookings = monthlyCreatedTotals?.reduce((acc, obj) => acc += obj, 0);
+
+        //Sum up completed booking
+        const totalCompletedBookings = monthlyCompletedTotals?.reduce((acc, obj) => acc += obj, 0);
+
+        //Calculate completed percentage
+        percentageCompleted = Math.round(totalCompletedBookings / totalCreatedBookings * 100)
       });
       setChartMonths(monthsArray);
       setCreatedBooking(monthlyCreatedTotals);
       setCompletedBooking(monthlyCompletedTotals)
+      setTotalBookingPercentage(percentageCompleted)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bookings]);
 
-  console.log(chartMonths)
-  console.log(createdBooking)
-  console.log(completedBooking)
+  }, [MONTHS, bookings]);
 
   const bookingsByProduct = useMemo(
     () => ({
@@ -173,7 +180,7 @@ const Dashboard = () => {
     <Box p={"3"} className="max-h-[calc(100%-80px)]" overflowY={"scroll"}>
       <Breadcrumb />
 
-      <ActivitiesCard />
+      <ActivitiesCard percentageCompleted={totalBookingPercentage} />
 
       {/* body */}
       {/* Bookings and customer satisfaction */}
@@ -250,9 +257,8 @@ const Dashboard = () => {
 
               return (
                 <tr
-                  className={`h-10 capitalize text-[12px] ${
-                    isEven ? "bg-[#F9F9F9]" : "white"
-                  }`}
+                  className={`h-10 capitalize text-[12px] ${isEven ? "bg-[#F9F9F9]" : "white"
+                    }`}
                 >
                   <td className="  py-1 px-4">{data?.location}</td>
                   <td className="  py-1 px-4">{data?.created}</td>
