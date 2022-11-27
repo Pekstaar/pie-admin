@@ -10,26 +10,22 @@ import {
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { AiFillLock, AiOutlineMail } from "react-icons/ai";
-import { BiSort } from "react-icons/bi";
 import { BsPeople, BsPerson, BsTelephone } from "react-icons/bs";
-import { FiEye } from "react-icons/fi";
 import { GrAdd } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { VscFilter } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/general/BreadCrumb";
 import CustomModal from "../components/general/CustomModal";
 import CInput, { CSelect } from "../components/general/Input";
 import PrimaryButton from "../components/general/PrimaryButton";
 import PrimaryOutlinedButton from "../components/general/PrimaryOutlinedButton";
-import Table from "../components/general/Table";
+// import Table from "../components/general/Table";
+import { ConfigProvider, Table } from "antd";
 import Wrapper from "../components/general/Wrapper";
-import Loader from "../components/Loader";
-import TableFooter from "../components/Table/Footer";
-import useTable from "../hooks/UseTable";
 import { toastProps } from "../utils/Helper";
 import UserServices from "../utils/services/UserServices";
+import { FiEye } from "react-icons/fi";
+import { RiDeleteBin5Line } from "react-icons/ri";
 
 const Users = () => {
   const navigate = useNavigate();
@@ -42,7 +38,6 @@ const Users = () => {
   const [stateLoading, setStateLoading] = useState(true);
 
   const [page, setPage] = useState(1);
-  const { slice, range } = useTable(filteredUser, page, 20);
 
   const [openModal, setOpenModal] = useState(false);
   const [user, setUser] = useState({
@@ -55,12 +50,100 @@ const Users = () => {
   const toast = useToast();
 
   useEffect(() => {
+    setStateLoading(true);
+
     UserServices.fetchUsers().then((response) => {
-      setUsers(response);
-      setFilteredUsers(response);
+      let arr = [];
+      for (let i = 0; i <= response?.length; i++) {
+        const newUser = response[i];
+        const category = newUser?.is_admin
+          ? "admin"
+          : newUser?.is_driver
+          ? "driver"
+          : "user";
+        const status = STATUS_LIST[newUser?.is_active];
+        const newUserObj = {
+          fullname: newUser?.first_name || "" + newUser?.last_name || "",
+          phone: newUser?.phonenumber || "",
+          email: newUser?.email || "",
+          category,
+          status,
+          id: newUser?.id,
+        };
+
+        arr.push(newUserObj);
+      }
+
+      setUsers(arr);
       setStateLoading(false);
     });
   }, []);
+
+  const columns = [
+    {
+      title: "Fullname",
+      dataIndex: "fullname",
+      render: (text) => <a>{text}</a>,
+      sorter: (a, b) => a?.fullname.localeCompare(b?.fullname),
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      sorter: (a, b) => a?.email.localeCompare(b?.email),
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+      filters: [...userCategories],
+      render: (text) => <Box className={"text-uppercase"}>{text}</Box>,
+      onFilter: (value, record) =>
+        record.category.startsWith(value.toLowerCase()),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (text) => {
+        const bg =
+          !text === "deactivated" ? "bg-primary_red" : "bg-primary_green";
+        return (
+          <Box display={"flex"}>
+            <Box
+              py={"1"}
+              px={"2"}
+              fontSize={"xs"}
+              textTransform={"capitalize"}
+              className={`${bg} rounded-md font-medium text-center text-white`}
+            >
+              {text}
+            </Box>
+          </Box>
+        );
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (text) => {
+        return (
+          <Box className="flex gap-6 justify-start">
+            <ActionButton
+            // handlePress={() => handleViewUser(data)}
+            >
+              <FiEye />
+            </ActionButton>
+
+            <ActionButton>
+              <RiDeleteBin5Line />
+            </ActionButton>
+          </Box>
+        );
+      },
+    },
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e?.target;
@@ -91,12 +174,10 @@ const Users = () => {
   );
 
   const groupings = React.useMemo(() => {
-    const admins = _.filter(users, { is_admin: true });
-    const drivers = _.filter(users, { is_driver: true });
+    const admins = _.filter(users, { category: "admin" });
+    const drivers = _.filter(users, { category: "driver" });
     const senders = _.filter(users, {
-      is_driver: false,
-      is_admin: false,
-      is_superuser: false,
+      category: "user",
     });
 
     return {
@@ -204,43 +285,9 @@ const Users = () => {
                 setSearch(e?.target?.value);
               }}
             />
-
-            <HStack gap={"2"} mt={"5"}>
-              <PrimaryOutlinedButton
-                className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
-                handleClick={() => setSelectedFilter("")}
-              >
-                All
-              </PrimaryOutlinedButton>
-              <PrimaryOutlinedButton
-                className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
-                handleClick={() => setSelectedFilter("is_admin")}
-              >
-                Admin
-              </PrimaryOutlinedButton>
-              <PrimaryOutlinedButton
-                className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
-                handleClick={() => setSelectedFilter("is_driver")}
-              >
-                Drivers
-              </PrimaryOutlinedButton>
-              <PrimaryOutlinedButton
-                className={"h-[30px] px-2 border-[2px] rounded-lg text-sm"}
-                handleClick={() => setSelectedFilter("is_user")}
-              >
-                Users
-              </PrimaryOutlinedButton>
-            </HStack>
           </Box>
           {/* actions */}
           <HStack gap={"2"}>
-            <TableAction
-              icon={<VscFilter className="text-lg" />}
-              text={"Filter"}
-            />
-
-            <TableAction icon={<BiSort className="text-lg" />} text={"Sort"} />
-
             <CustomModal
               loading={loading}
               handleSave={handleCreate}
@@ -362,90 +409,54 @@ const Users = () => {
         </HStack>
 
         {/* body */}
-        <Box>
-          <Table
-            headers={[...Object.keys(tableData[0]), "Actions"]}
-            footer={
-              <TableFooter
-                range={range}
-                slice={slice}
-                setPage={setPage}
-                page={page}
-              />
-            }
-          >
-            {stateLoading ? (
-              <Loader />
-            ) : (
-              slice?.map((data, key) => {
-                const isEven = key % 2;
-                const status = STATUS_LIST[data?.is_active];
-                const bg = !data?.is_active
-                  ? "bg-primary_red"
-                  : data?.is_active
-                  ? "bg-primary_green"
-                  : "";
-                // registration: "kcb 4457k",
-                // driver: "Brooke Manor",
-                // "license expiry": "Collins joe",
-                //     status: 4,
-                return (
-                  <tr
-                    className={`h-14 capitalize ${
-                      isEven ? "bg-[#F9F9F9]" : "white"
-                    }`}
-                  >
-                    <td className="  py-3 px-4">
-                      {data?.first_name} {data?.last_name}
-                    </td>
-                    <td className="  py-3 px-4">{data?.email}</td>
-                    <td className=" py-3 px-4">{data?.phonenumber}</td>{" "}
-                    <td className=" py-3 px-4">
-                      {data?.is_admin
-                        ? "admin"
-                        : data?.is_driver
-                        ? "driver"
-                        : "user"}
-                    </td>
-                    <td className={` text-white py-3 px-4 `}>
-                      <Box className="flex  justify-start">
-                        <Box
-                          py={"1"}
-                          px={"2"}
-                          fontSize={"xs"}
-                          className={`${bg} rounded-md font-medium  `}
-                        >
-                          {status}
-                        </Box>
-                      </Box>
-                    </td>
-                    {/* actions table */}
-                    <td className={` text-white py-3 px-4  w-32`}>
-                      <Box className="flex gap-6 justify-start">
-                        <ActionButton
-                          handlePress={() => handleViewUser(data)}
-                          bg={bg}
-                        >
-                          <FiEye />
-                        </ActionButton>
-
-                        <ActionButton bg={bg}>
-                          <RiDeleteBin5Line />
-                        </ActionButton>
-                      </Box>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-            {/* <tfoot className="bg-gray-200 w-[100%"> */}
-
-            {/* </tfoot> */}
-          </Table>
-        </Box>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: "#EFAF1C",
+              colorPrimaryTextActive: "#19411D",
+              colorPrimaryText: "#19411D",
+              // colorBgBase: "#19411D",
+              colorPrimaryBg: "#EFAF1C",
+            },
+          }}
+        >
+          <Box>
+            <Table
+              rowKey={(data) => data.id}
+              loading={stateLoading}
+              pagination={{
+                defaultPageSize: 15,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "15", "20", "30"],
+              }}
+              // rowSelection={{
+              //   type: "checkbox",
+              //   ...rowSelection,
+              // }}
+              columns={columns}
+              dataSource={users}
+            />
+          </Box>
+        </ConfigProvider>
       </Wrapper>
     </Box>
   );
+};
+
+// rowSelection object indicates the need for row selection
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(
+      `selectedRowKeys: ${selectedRowKeys}`,
+      "selectedRows: ",
+      selectedRows
+    );
+  },
+  getCheckboxProps: (record) => ({
+    // disabled: record.name === "Disabled User",
+    // Column configuration not to be checked
+    name: record.name,
+  }),
 };
 
 export default Users;
@@ -513,6 +524,12 @@ const STATUS_LIST = {
   true: "active",
   false: "deactivated",
 };
+
+const userCategories = [
+  { text: "Admin", value: "Admin" },
+  { text: "User", value: "User" },
+  { text: "Driver", value: "Driver" },
+];
 const ActionButton = ({ bg, children, handlePress }) => (
   <Button
     fontSize={"lg"}
