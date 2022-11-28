@@ -27,18 +27,21 @@ const Fleet = () => {
 
   const handleSearch = (arr, cond) => {
     const newArr = _.filter(arr, (obj) => {
-      const name = `${obj?.owner?.first_name?.toLowerCase()} ${obj?.owner?.last_name?.toLowerCase()}`;
-      return (
-        name.includes(cond?.toLowerCase()) ||
-        obj?.reg_number?.toLowerCase()?.includes(cond?.toLowerCase())
-      );
+      if (cond) {
+        return (
+          obj?.fullname?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.regNumber?.toLowerCase()?.includes(cond?.toLowerCase())
+        );
+      }
     });
 
-    return newArr;
+    if (cond) return newArr;
+    else return vehicles;
   };
 
   React.useEffect(() => {
     setFilteredVehicles(handleSearch(vehicles, search));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, vehicles]);
 
   useEffect(() => {
@@ -63,16 +66,16 @@ const Fleet = () => {
     {
       title: "Registration",
       dataIndex: "regNumber",
-      sorter: (a, b) => a?.regNumber.localeCompare(b?.regNumber),
-    },
-    {
-      title: "Driver",
-      dataIndex: "fullname",
       render: (text, u) => (
         <Link as={"a"} to={"/fleet/" + u?.id}>
           {text}
         </Link>
       ),
+      sorter: (a, b) => a?.regNumber.localeCompare(b?.regNumber),
+    },
+    {
+      title: "Driver",
+      dataIndex: "fullname",
       sorter: (a, b) => a?.fullname.localeCompare(b?.fullname),
     },
     {
@@ -121,7 +124,7 @@ const Fleet = () => {
           />
         </HStack>
 
-         {/* body */}
+        {/* body */}
         <ConfigProvider
           theme={{
             token: {
