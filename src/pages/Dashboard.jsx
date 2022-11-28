@@ -12,13 +12,22 @@ import Wrapper from "../components/general/Wrapper";
 import BookingService from "../utils/services/BookingServices";
 
 const Dashboard = () => {
+  // Bar chart data
   const [bookings, setBookings] = useState([]);
-  const [chartMonths, setChartMonths] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  const [barchartMonths, setBarChartMonths] = useState([]);
   const [createdBooking, setCreatedBooking] = useState("");
   const [completedBooking, setCompletedBooking] = useState("");
-  const [totalBookingPercentage, setTotalBookingPercentage]= useState("")
 
+  // Doughnat chart data total bookings
+  const [totalBookingPercentage, setTotalBookingPercentage] = useState("");
+
+  // Doughnat chart data vehicle type fliters
+  const [vehicleTypeCount, setVehicleTypeCount] = useState("");
+  const [vehiclesTypes, setVehiclesType] = useState("");
+ 
+  // const [loading, setLoading] = useState(true);
+
+  // Array of Months
   const MONTHS = useMemo(() => [
     "January",
     "February",
@@ -34,6 +43,13 @@ const Dashboard = () => {
     "December"
   ], []);
 
+  const VECHILE_TYPES = useMemo(() => [
+    "Motorbike", 
+    "Vehicle", 
+    "Van", 
+    "Truck"
+  ], []);
+
   useEffect(() => {
     BookingService.fetchBookings().then(async (response) => {
       setBookings(response);
@@ -43,6 +59,7 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    // Bar chart and Doughnat chart data
     if (bookings.length > 0) {
       const months = Object.entries(
         bookings.reduce((b, a) => {
@@ -67,10 +84,10 @@ const Dashboard = () => {
 
         const arrayOfBookings = Object.values(item)[0];
 
-        const totalCreatedBookingsMonthly = arrayOfBookings.reduce((acc, obj) => obj.status >= 0 ? acc += 1 : acc, 0);
+        const totalCreatedBookingsMonthly = arrayOfBookings?.reduce((acc, obj) => obj.status >= 0 ? acc += 1 : acc, 0);
         monthlyCreatedTotals.push(totalCreatedBookingsMonthly)
 
-        const totalCompletedBookingsMonthly = arrayOfBookings.reduce((acc, obj) => obj.status === 5 ? acc += 1 : acc, 0);
+        const totalCompletedBookingsMonthly = arrayOfBookings?.reduce((acc, obj) => obj.status === 5 ? acc += 1 : acc, 0);
         monthlyCompletedTotals.push(totalCompletedBookingsMonthly)
 
         // Sum created booking
@@ -82,13 +99,43 @@ const Dashboard = () => {
         //Calculate completed percentage
         percentageCompleted = Math.round(totalCompletedBookings / totalCreatedBookings * 100)
       });
-      setChartMonths(monthsArray);
+      setBarChartMonths(monthsArray);
       setCreatedBooking(monthlyCreatedTotals);
       setCompletedBooking(monthlyCompletedTotals)
       setTotalBookingPercentage(percentageCompleted)
+
+      //Vehicle type vehicle type count
+      const vehicles = Object.entries(
+        bookings.reduce((b, a) => {
+          let vehicle = a.booking.vehicle_type;
+          if (b.hasOwnProperty(vehicle)) b[vehicle].push(a);
+          else b[vehicle] = [a];
+          return b;
+        }, {})
+      )
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map((e) => ({ [e[0]]: e[1] }));
+
+      let vehicleArray = []
+      let vehicleCount = []
+
+
+      vehicles.forEach((item) => {
+        const key = Object.keys(item)[0];
+        const vehicle = VECHILE_TYPES[key];
+        vehicleArray.push(vehicle);
+
+        const arrayOfVehicle = Object.values(item)[0];
+
+        const totalCountOfVehiclePerType = arrayOfVehicle.reduce((acc, obj) => acc += 1, 0);
+        vehicleCount.push(totalCountOfVehiclePerType);
+        console.log(totalCountOfVehiclePerType)
+      });
+      setVehiclesType(vehicleArray);
+      setVehicleTypeCount(vehicleCount);
     }
 
-  }, [MONTHS, bookings]);
+  }, [MONTHS, VECHILE_TYPES, bookings]);
 
   const bookingsByProduct = useMemo(
     () => ({
@@ -106,17 +153,11 @@ const Dashboard = () => {
       },
 
       data: {
-        labels: ["Gifts", "Electronics", "Documents", "Package", "Others"],
+        labels: vehiclesTypes,
         datasets: [
           {
             label: "# of Votes",
-            data: [
-              (Math.random() * 20) / 10,
-              (Math.random() * 30) / 10,
-              (Math.random() * 40) / 10,
-              (Math.random() * 50) / 10,
-              (Math.random() * 60) / 10,
-            ],
+            data: vehicleTypeCount,
             backgroundColor: [
               "#6EF07B",
               "#6FCDFB",
@@ -129,10 +170,10 @@ const Dashboard = () => {
         text: "40",
       },
     }),
-    []
+    [vehicleTypeCount, vehiclesTypes]
   );
 
-  const labels = chartMonths;
+  const labels = barchartMonths;
   const barChart = useMemo(
     () => ({
       options: {
@@ -165,8 +206,8 @@ const Dashboard = () => {
         ],
       },
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+
+    [labels, createdBooking, completedBooking]
   );
 
   const radialKeys = [
