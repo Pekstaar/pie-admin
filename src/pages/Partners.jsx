@@ -1,29 +1,33 @@
 import { Box, Button, HStack, Text, useToast, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { BiSort } from "react-icons/bi";
+// import { BiSort } from "react-icons/bi";
+import _ from "lodash";
 import { BsPerson } from "react-icons/bs";
 import { FaPeopleArrows } from "react-icons/fa";
 import { FiEye } from "react-icons/fi";
 import { GrAdd, GrLocation } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { VscFilter } from "react-icons/vsc";
-import { useNavigate } from "react-router-dom";
+// import { VscFilter } from "react-icons/vsc";
+import { useNavigate, Link } from "react-router-dom";
 import BreadCrumb from "../components/general/BreadCrumb";
 import CustomModal from "../components/general/CustomModal";
-import Loader from "../components/Loader";
+// import Loader from "../components/Loader";
 import CInput, { CSelect } from "../components/general/Input";
 import PrimaryButton from "../components/general/PrimaryButton";
-import Table from "../components/general/Table";
+// import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 import { toastProps } from "../utils/Helper";
 import PartnerServices from "../utils/services/PartnerServices";
+import { ConfigProvider, Table } from "antd";
 // import { AiOutlineMail } from "react-icons/ai";
 
 const Partners = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const [partners, setPartners] = useState([]);
+  const [filteredPartner, setFilteredPartners] = useState([]);
+  const [search, setSearch] = useState("");
   const [stateLoading, setStateLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [partner, setPartner] = useState({
@@ -37,10 +41,83 @@ const Partners = () => {
   useEffect(() => {
     setLoading(false);
     PartnerServices.fetchPartners().then((response) => {
-      setPartners(response);
+      let arr = [];
+      response.forEach((element) => {
+        const partnerObj = {
+          fullname: element?.name || "",
+          phone: element?.owner?.phonenumber || "",
+          category: partnerCategories[element?.sector],
+          id: element?.id,
+        };
+        arr.push(partnerObj)
+        console.log(element)
+      })
+      setPartners(arr);
+      setFilteredPartners(arr);
       setStateLoading(false);
     });
   }, []);
+
+  const handleSearch = (arr, cond) => {
+    const newArr = _.filter(arr, (obj) => {
+      if (cond) {
+        return (
+          obj?.fullname?.includes(cond?.toLowerCase()) ||
+          obj?.category?.includes(cond?.toLowerCase()) ||
+          obj?.phone?.includes(cond?.toLowerCase())
+        );
+      }
+    });
+
+    if (cond) return newArr;
+    else return partners;
+  };
+
+  React.useEffect(() => {
+    setFilteredPartners(handleSearch(partners, search));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, partners]);
+
+  const columns = [
+    {
+      title: "Partner name",
+      dataIndex: "fullname",
+      render: (text, u) => (
+        <Link as={"a"} to={"/users/" + u?.id}>
+          {text}
+        </Link>
+      ),
+      sorter: (a, b) => a?.fullname.localeCompare(b?.fullname),
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+      render: (text) => <Box className={"text-uppercase"}>{text}</Box>,
+      onFilter: (value, record) =>
+        record.category.startsWith(value?.toLowerCase()),
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (_, n) => {
+        return (
+          <Box className="flex gap-6 justify-start">
+            <ActionButton handlePress={() => handleViewUser(n)}>
+              <FiEye />
+            </ActionButton>
+
+            <ActionButton>
+              <RiDeleteBin5Line />
+            </ActionButton>
+          </Box>
+        );
+      },
+    },
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e?.target;
@@ -50,7 +127,7 @@ const Partners = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const handleViewUser = (partner) => {
-    navigate(`${partner}`, partner);
+    navigate(`${partner.id}`, partner.id);
   };
 
   const handleCreate = async () => {
@@ -93,16 +170,15 @@ const Partners = () => {
         <HStack py={"4"} justifyContent={"space-between"} alignItems={"end"}>
           {/* /search input */}
           <Box>
-            <CInput icon={<IoSearchOutline className="text-xl" />} />
+            <CInput
+              icon={<IoSearchOutline className="text-xl" />}
+              handleChange={(e) => {
+                setSearch(e?.target?.value);
+              }}
+            />
           </Box>
           {/* actions */}
           <HStack gap={"2"}>
-            <TableAction
-              icon={<VscFilter className="text-lg" />}
-              text={"Filter"}
-            />
-
-            <TableAction icon={<BiSort className="text-lg" />} text={"Sort"} />
 
             <CustomModal
               loading={loading}
@@ -190,47 +266,35 @@ const Partners = () => {
         </HStack>
 
         {/* body */}
-        <Box>
-          <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-            {stateLoading ? <Loader /> : partners?.map((data, key) => {
-              const isEven = key % 2;
-
-              // registration: "kcb 4457k",
-              // driver: "Brooke Manor",
-              // "license expiry": "Collins joe",
-              //     status: 4,
-              return (
-                <tr
-                  className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
-                    }`}
-                >
-                  <td className="  py-3 px-4">{data?.name}</td>
-
-                  <td className=" py-3 px-4">
-                    {partnerCategories[data?.sector]}
-                  </td>
-                  {/* <td className=" py-3 px-4">{data?.location || "_"}</td> */}
-                  <td className=" py-3 px-4">{data?.owner?.phonenumber}</td>
-
-                  {/* actions table */}
-                  <td className={` text-white py-3 px-4 w-32`}>
-                    <Box className="flex gap-6 justify-start">
-                      <ActionButton
-                        handlePress={() => handleViewUser(data?.id)}
-                      >
-                        <FiEye />
-                      </ActionButton>
-
-                      <ActionButton>
-                        <RiDeleteBin5Line />
-                      </ActionButton>
-                    </Box>
-                  </td>
-                </tr>
-              );
-            })}
-          </Table>
-        </Box>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: "#EFAF1C",
+              colorPrimaryTextActive: "#19411D",
+              colorPrimaryText: "#19411D",
+              // colorBgBase: "#19411D",
+              colorPrimaryBg: "#EFAF1C",
+            },
+          }}
+        >
+          <Box>
+            <Table
+              rowKey={(data) => data.id}
+              loading={stateLoading}
+              pagination={{
+                defaultPageSize: 15,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "15", "20", "30"],
+              }}
+              // rowSelection={{
+              //   type: "checkbox",
+              //   ...rowSelection,
+              // }}
+              columns={columns}
+              dataSource={filteredPartner}
+            />
+          </Box>
+        </ConfigProvider>
       </Wrapper>
     </Box>
   );
@@ -247,56 +311,56 @@ export const partnerCategories = [
   "Restaurants",
 ];
 
-const tableData = [
-  {
-    "partner name": "New User",
-    category: "admin",
-    // location: "Nairobi CBD, Nairobi",
-    phone: "0711334455",
-  },
-  {
-    "partner name": "New User",
-    category: "admin",
-    location: "Nairobi CBD, Nairobi",
-    phone: "0711334455",
-  },
-  {
-    "partner name": "New User",
-    category: "admin",
-    location: "Nairobi CBD, Nairobi",
-    phone: "0711334455",
-  },
-  {
-    "partner name": "New User",
-    category: "admin",
-    location: "Nairobi CBD, Nairobi",
-    phone: "0711334455",
-  },
-  {
-    "partner name": "New User",
-    category: "admin",
-    location: "Nairobi CBD, Nairobi",
-    phone: "0711334455",
-  },
-  {
-    "partner name": "New User",
-    category: "admin",
-    location: "Nairobi CBD, Nairobi",
-    phone: "0711334455",
-  },
-  {
-    "partner name": "New User",
-    category: "admin",
-    location: "Nairobi CBD, Nairobi",
-    phone: "0711334455",
-  },
-  {
-    "partner name": "New User",
-    category: "admin",
-    location: "Nairobi CBD, Nairobi",
-    phone: "0711334455",
-  },
-];
+// const tableData = [
+//   {
+//     "partner name": "New User",
+//     category: "admin",
+//     // location: "Nairobi CBD, Nairobi",
+//     phone: "0711334455",
+//   },
+//   {
+//     "partner name": "New User",
+//     category: "admin",
+//     location: "Nairobi CBD, Nairobi",
+//     phone: "0711334455",
+//   },
+//   {
+//     "partner name": "New User",
+//     category: "admin",
+//     location: "Nairobi CBD, Nairobi",
+//     phone: "0711334455",
+//   },
+//   {
+//     "partner name": "New User",
+//     category: "admin",
+//     location: "Nairobi CBD, Nairobi",
+//     phone: "0711334455",
+//   },
+//   {
+//     "partner name": "New User",
+//     category: "admin",
+//     location: "Nairobi CBD, Nairobi",
+//     phone: "0711334455",
+//   },
+//   {
+//     "partner name": "New User",
+//     category: "admin",
+//     location: "Nairobi CBD, Nairobi",
+//     phone: "0711334455",
+//   },
+//   {
+//     "partner name": "New User",
+//     category: "admin",
+//     location: "Nairobi CBD, Nairobi",
+//     phone: "0711334455",
+//   },
+//   {
+//     "partner name": "New User",
+//     category: "admin",
+//     location: "Nairobi CBD, Nairobi",
+//     phone: "0711334455",
+//   },
+// ];
 
 const ActionButton = ({ bg, children, handlePress }) => (
   <Button
@@ -309,9 +373,9 @@ const ActionButton = ({ bg, children, handlePress }) => (
     {children}
   </Button>
 );
-const TableAction = ({ icon, text }) => (
-  <button className="bg-zinc-200 px-3 py-1.5 gap-1 rounded-md text-sm capitalize flex  ">
-    {icon}
-    {text}
-  </button>
-);
+// const TableAction = ({ icon, text }) => (
+//   <button className="bg-zinc-200 px-3 py-1.5 gap-1 rounded-md text-sm capitalize flex  ">
+//     {icon}
+//     {text}
+//   </button>
+// );

@@ -39,10 +39,11 @@ const ViewPartner = () => {
   }, []);
 
   React.useEffect(() => {
-    PartnerServices.fetchSinglePartner(params?.id).then((response) => {
+    PartnerServices.fetchSinglePartner(params.id).then((response) => {
       setPartner(response);
+      console.log(response)
     });
-  }, [params?.id]);
+  }, [params]);
   // const
   return (
     <>
@@ -50,7 +51,7 @@ const ViewPartner = () => {
         <BreadCrumb
           icon={<Transaction />}
           title={`Partners /`}
-          subtitle={params?.id}
+          subtitle={partner?.owner?.first_name + " " + partner?.owner?.last_name}
         />
         <Box className="flex gap-3 ">
           <Box className="w-2/5">
@@ -74,7 +75,7 @@ const ViewPartner = () => {
                 textTransform={"uppercase"}
                 fontWeight={"semibold"}
               >
-                {params?.id}
+                {partner?.owner?.first_name + " " + partner?.owner?.last_name}
               </Text>
 
               <Text fontSize={"sm"} fontWeight={"normal"}>
