@@ -17,11 +17,9 @@ async function getBookingReceiver(booking_id) {
   return res.data;
 }
 
-async function ownersBookings(first_name) {
+async function ownersBookings(id) {
   setAuthToken(AxiosUtility);
-  const res = await AxiosUtility.get(
-    `/admins/api/orders/?owner__first_name=${first_name}`
-  );
+  const res = await AxiosUtility.get(`/admins/api/orders/?owner__id=${id}`);
 
   return res.data;
 }
