@@ -13,31 +13,27 @@ import { AiFillLock, AiOutlineMail } from "react-icons/ai";
 import { BsPeople, BsPerson, BsTelephone } from "react-icons/bs";
 import { GrAdd } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BreadCrumb from "../components/general/BreadCrumb";
 import CustomModal from "../components/general/CustomModal";
 import CInput, { CSelect } from "../components/general/Input";
 import PrimaryButton from "../components/general/PrimaryButton";
-import PrimaryOutlinedButton from "../components/general/PrimaryOutlinedButton";
 // import Table from "../components/general/Table";
 import { ConfigProvider, Table } from "antd";
+import { FiEye } from "react-icons/fi";
+import { RiDeleteBin5Line } from "react-icons/ri";
 import Wrapper from "../components/general/Wrapper";
 import { toastProps } from "../utils/Helper";
 import UserServices from "../utils/services/UserServices";
-import { FiEye } from "react-icons/fi";
-import { RiDeleteBin5Line } from "react-icons/ri";
 
 const Users = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [filteredUser, setFilteredUsers] = useState([]);
-  const [selectedFilter, setSelectedFilter] = useState("");
   const [search, setSearch] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [stateLoading, setStateLoading] = useState(true);
-
-  const [page, setPage] = useState(1);
 
   const [openModal, setOpenModal] = useState(false);
   const [user, setUser] = useState({
@@ -75,6 +71,8 @@ const Users = () => {
       }
 
       setUsers(arr);
+
+      setFilteredUsers(arr);
       setStateLoading(false);
     });
   }, []);
@@ -83,7 +81,11 @@ const Users = () => {
     {
       title: "Fullname",
       dataIndex: "fullname",
-      render: (text) => <a>{text}</a>,
+      render: (text, u) => (
+        <Link as={"a"} to={"/users/" + u?.id}>
+          {text}
+        </Link>
+      ),
       sorter: (a, b) => a?.fullname.localeCompare(b?.fullname),
     },
     {
@@ -101,14 +103,16 @@ const Users = () => {
       filters: [...userCategories],
       render: (text) => <Box className={"text-uppercase"}>{text}</Box>,
       onFilter: (value, record) =>
-        record.category.startsWith(value.toLowerCase()),
+        record.category.startsWith(value?.toLowerCase()),
     },
     {
       title: "Status",
       dataIndex: "status",
       render: (text) => {
         const bg =
-          !text === "deactivated" ? "bg-primary_red" : "bg-primary_green";
+          text?.toLowerCase() === "deactivated"
+            ? "bg-primary_red"
+            : "bg-primary_green";
         return (
           <Box display={"flex"}>
             <Box
@@ -127,12 +131,10 @@ const Users = () => {
     {
       title: "Action",
       dataIndex: "action",
-      render: (text) => {
+      render: (_, n) => {
         return (
           <Box className="flex gap-6 justify-start">
-            <ActionButton
-            // handlePress={() => handleViewUser(data)}
-            >
+            <ActionButton handlePress={() => handleViewUser(n)}>
               <FiEye />
             </ActionButton>
 
@@ -149,29 +151,6 @@ const Users = () => {
     const { name, value } = e?.target;
     setUser((prev) => ({ ...prev, [name]: value }));
   };
-
-  const handleFilter = React.useCallback(
-    (filter) => {
-      // const result = intersectionBy(users, conditionArr, "user");
-
-      let newList = [];
-
-      if (filter === "is_user") {
-        newList = users?.filter(
-          (item) =>
-            item?.is_admin === false &&
-            item?.is_superuser === false &&
-            item?.is_driver === false
-        );
-
-        return newList;
-      }
-      newList = users?.filter((item) => item?.[filter] === true);
-
-      return newList;
-    },
-    [users]
-  );
 
   const groupings = React.useMemo(() => {
     const admins = _.filter(users, { category: "admin" });
@@ -190,15 +169,18 @@ const Users = () => {
 
   const handleSearch = (arr, cond) => {
     const newArr = _.filter(arr, (obj) => {
-      const name = `${obj?.first_name?.toLowerCase()} ${obj?.last_name?.toLowerCase()}`;
-      return (
-        name.includes(cond?.toLowerCase()) ||
-        obj?.email?.includes(cond?.toLowerCase()) ||
-        obj?.phonenumber?.includes(cond?.toLowerCase())
-      );
+      const name = `${obj?.fullname}`;
+      if (cond) {
+        return (
+          name?.includes(cond?.toLowerCase()) ||
+          obj?.email?.includes(cond?.toLowerCase()) ||
+          obj?.phone?.includes(cond?.toLowerCase())
+        );
+      }
     });
 
-    return newArr;
+    if (cond) return newArr;
+    else return users;
   };
 
   const handleCreate = async () => {
@@ -243,23 +225,24 @@ const Users = () => {
 
   React.useEffect(() => {
     setFilteredUsers(handleSearch(users, search));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, users]);
 
-  React.useEffect(() => {
-    if (selectedFilter === "") {
-      setFilteredUsers(users);
-      return;
-    }
-    setFilteredUsers(handleFilter(selectedFilter));
-  }, [handleFilter, selectedFilter, users]);
+  // React.useEffect(() => {
+  //   if (selectedFilter === "") {
+  //     setFilteredUsers(users);
+  //     return;
+  //   }
+  //   setFilteredUsers(handleFilter(selectedFilter));
+  // }, [handleFilter, selectedFilter, users]);
 
   const handleViewUser = (user) => {
     console.log(user);
-    if (user?.is_driver) {
+    if (user?.category === "driver") {
       navigate(`driver/${user?.id}`, user);
       return;
     }
-    navigate(`${user?.first_name}`, user);
+    navigate(`${user?.id}`, user);
   };
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
@@ -434,7 +417,7 @@ const Users = () => {
               //   ...rowSelection,
               // }}
               columns={columns}
-              dataSource={users}
+              dataSource={filteredUser}
             />
           </Box>
         </ConfigProvider>
@@ -444,82 +427,8 @@ const Users = () => {
 };
 
 // rowSelection object indicates the need for row selection
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  getCheckboxProps: (record) => ({
-    // disabled: record.name === "Disabled User",
-    // Column configuration not to be checked
-    name: record.name,
-  }),
-};
-
 export default Users;
 
-const tableData = [
-  {
-    fullname: "New User",
-    "email address": "newuser@gmail.com",
-    phone: "0711334455",
-    category: "admin",
-    status: 1,
-  },
-  {
-    fullname: "New User",
-    "email address": "newuser@gmail.com",
-    phone: "0711334455",
-    category: "admin",
-    status: 1,
-  },
-  {
-    fullname: "New User",
-    "email address": "newuser@gmail.com",
-    phone: "0711334455",
-    category: "admin",
-    status: 0,
-  },
-  {
-    fullname: "New User",
-    "email address": "newuser@gmail.com",
-    phone: "0711334455",
-    category: "admin",
-    status: 0,
-  },
-  {
-    fullname: "New User",
-    "email address": "newuser@gmail.com",
-    phone: "0711334455",
-    category: "admin",
-    status: 1,
-  },
-  {
-    fullname: "New User",
-    "email address": "newuser@gmail.com",
-    phone: "0711334455",
-    category: "admin",
-    status: 1,
-  },
-  {
-    fullname: "New User",
-    "email address": "newuser@gmail.com",
-    phone: "0711334455",
-    category: "admin",
-
-    status: 0,
-  },
-  {
-    fullname: "New User",
-    "email address": "newuser@gmail.com",
-    phone: "0711334455",
-    category: "admin",
-    status: 1,
-  },
-];
 const STATUS_LIST = {
   true: "active",
   false: "deactivated",
@@ -541,12 +450,7 @@ const ActionButton = ({ bg, children, handlePress }) => (
     {children}
   </Button>
 );
-const TableAction = ({ icon, text }) => (
-  <button className="bg-zinc-200 px-3 py-1.5 gap-1 rounded-md text-sm capitalize flex  ">
-    {icon}
-    {text}
-  </button>
-);
+
 const cards_data = [
   {
     text: "Senders",
