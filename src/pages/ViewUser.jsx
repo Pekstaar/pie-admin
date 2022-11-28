@@ -1,4 +1,12 @@
-import { Box, Button, HStack, Image, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  Image,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import React, { useEffect, useState, useCallback } from "react";
 import { BiSort } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
@@ -18,6 +26,8 @@ import Wrapper from "../components/general/Wrapper";
 import BookingServices from "../utils/services/BookingServices";
 import UserServices from "../utils/services/UserServices";
 import EditUserModal from "../components/settings_user/EditUserModal";
+import { ConfigProvider, Popconfirm } from "antd";
+import { toastProps } from "../utils/Helper";
 
 const ViewUser = () => {
   const navigate = useNavigate();
@@ -27,24 +37,23 @@ const ViewUser = () => {
   const [openModal, setOpenModal] = useState(false);
   const [current, setCurrent] = useState({});
 
+  const toast = useToast();
+
   const location = useLocation()?.pathname.split("/");
 
-  let userFirstName = location[location?.length - 1];
+  let id = location[location?.length - 1];
 
   useEffect(() => {
-    UserServices.fetchUsers()
-      .then((response) => {
-        setUser(response.find((user) => user.first_name === userFirstName))
-        setLoading(false)
-      })
+    setLoading(true);
     UserServices.fetchUsers().then((response) => {
-      setUser(response.find((user) => user.first_name === userFirstName));
-    })
-
-    BookingServices.ownersBookings(userFirstName).then((response) => {
-      setUserBookings(response);
+      setUser(response.find((user) => user.id === parseInt(id)));
     });
-  }, [userFirstName]);
+
+    BookingServices.ownersBookings(id).then((response) => {
+      setUserBookings(response);
+      setLoading(false);
+    });
+  }, [id]);
 
   const handleOpenModal = useCallback(() => {
     setOpenModal(true);
@@ -56,6 +65,39 @@ const ViewUser = () => {
 
   const handleViewUser = (user) => {
     navigate(`/users/${user}`, user);
+  };
+
+  const handleDeactivateUser = async () => {
+    try {
+      setLoading(true);
+      const data = {
+        id: user?.id,
+        is_active: !user?.is_active,
+        email: user?.email,
+        phonenumber: user?.phonenumber,
+      };
+
+      await UserServices.updateUser(data);
+
+      toast({
+        ...toastProps,
+        title: "Success!",
+        description: user.is_active ? "user deactivated!" : "user Activated!",
+        status: "success",
+      });
+      navigate(-1);
+      setLoading(false);
+    } catch (error) {
+      toast({
+        ...toastProps,
+        title: "Error!",
+        description: user.is_active
+          ? "user not deactivated!"
+          : "user not Activated!",
+        status: "error",
+      });
+      setLoading(false);
+    }
   };
   // const
   return (
@@ -96,15 +138,50 @@ const ViewUser = () => {
                 Customer
               </Text>
 
-              <DeactivateButton className={"mt-1"}>
-                <Text
-                  fontSize={"sm"}
-                  textTransform={"capitalize"}
-                  fontWeight={"medium"}
+              <ConfigProvider
+                theme={{
+                  token: {
+                    colorPrimary: "#EFAF1C",
+                    colorPrimaryTextActive: "#19411D",
+                    colorPrimaryText: "#19411D",
+                    // colorBgBase: "#19411D",
+                    colorPrimaryBg: "#EFAF1C",
+                  },
+                }}
+              >
+                <Popconfirm
+                  placement="top"
+                  title={
+                    `Are you sure you want to ${
+                      user.is_active ? "deactivate " : "activate "
+                    } ` + user?.first_name
+                  }
+                  onConfirm={handleDeactivateUser}
+                  okText="Yes"
+                  cancelText="No"
+                  okButtonProps={{ type: "default" }}
+                  cancelButtonProps={{ type: "link", color: "red" }}
                 >
-                  Deactivate User
-                </Text>
-              </DeactivateButton>
+                  <Box>
+                    <DeactivateButton
+                      className={`mt-1 cursor-pointer ${
+                        user?.is_active === false
+                          ? "bg-primary_green text-white"
+                          : "bg-red-100  text-red-600 "
+                      }`}
+                      // handleClick={() => setShowConfirm(true)}
+                    >
+                      <Text
+                        fontSize={"sm"}
+                        textTransform={"capitalize"}
+                        fontWeight={"medium"}
+                      >
+                        {user?.is_active ? "Deactivate user" : "Activate user"}
+                      </Text>
+                    </DeactivateButton>
+                  </Box>
+                </Popconfirm>
+              </ConfigProvider>
             </Wrapper>
 
             {/* Personal information*/}
@@ -118,17 +195,17 @@ const ViewUser = () => {
                   // loading={loading}
                   // handleSave={handleCreate}
                   title={"Add User"}
-                // isOpen={openModal}
-                // onClose={() => setOpenModal(false)}
-                // button={
-                //   // <PrimaryButton
-                //   //   className={"text-sm items-end"}
-                //   //   handleClick={() => setOpenModal(true)}
-                //   // >
-                //   //   <GrAdd className="text-lg" />
-                //   //   <Text fontWeight={"medium"}>Add User</Text>
-                //   // </PrimaryButton>
-                // }
+                  // isOpen={openModal}
+                  // onClose={() => setOpenModal(false)}
+                  // button={
+                  //   // <PrimaryButton
+                  //   //   className={"text-sm items-end"}
+                  //   //   handleClick={() => setOpenModal(true)}
+                  //   // >
+                  //   //   <GrAdd className="text-lg" />
+                  //   //   <Text fontWeight={"medium"}>Add User</Text>
+                  //   // </PrimaryButton>
+                  // }
                 >
                   <VStack gap={"2"} w={"full"}>
                     {/* <Box className="flex w-full flex-col gap-1">
@@ -239,8 +316,8 @@ const ViewUser = () => {
                         is_driver: user?.is_driver,
                         email: user?.email,
                         phonenumber: user?.phonenumber,
-                      })
-                      handleOpenModal()
+                      });
+                      handleOpenModal();
                     }}
                   />
                 </ActionButton>
@@ -251,7 +328,7 @@ const ViewUser = () => {
                 borderRadius={"none"}
                 className={"flex justify-center items-center gap-3 text-[14px]"}
               >
-                <Box className="text-right flex flex-col gap-4">
+                <Box className="text-right flex flex-col gap-3">
                   <Text fontWeight={"medium"}>Full name</Text>
                   <Text fontWeight={"medium"}>Category</Text>
                   <Text fontWeight={"medium"}>Location</Text>
@@ -271,8 +348,8 @@ const ViewUser = () => {
                     {user?.is_admin
                       ? "Admin"
                       : user?.is_driver
-                        ? "Driver"
-                        : "User"}
+                      ? "Driver"
+                      : "User"}
                   </Text>
                   {/* <Text>Nairobi CBD, Nairobi</Text> */}
                   <Text>{user?.email}</Text>
@@ -362,53 +439,58 @@ const ViewUser = () => {
 
             <Box>
               <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-                {loading ? <Loader /> : userBookings?.map((data, key) => {
-                  const isEven = key % 2;
-                  const status = STATUS_LIST[data?.status];
-                  const bg =
-                    data?.status === 0
-                      ? "bg-primary_red"
-                      : data?.status === 5
+                {loading ? (
+                  <Loader />
+                ) : (
+                  userBookings?.map((data, key) => {
+                    const isEven = key % 2;
+                    const status = STATUS_LIST[data?.status];
+                    const bg =
+                      data?.status === 0
+                        ? "bg-primary_red"
+                        : data?.status === 5
                         ? "bg-primary_green"
                         : "bg-primary_yellow_light";
 
-                  return (
-                    <tr
-                      className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
+                    return (
+                      <tr
+                        className={`h-14 capitalize ${
+                          isEven ? "bg-[#F9F9F9]" : "white"
                         }`}
-                      key={key}
-                    >
-                      <td className=" py-3 px-4">--</td>
-                      <td className="py-3 px-4">--</td>
-                      <td className="py-3 px-4">
-                        {data?.driver?.first_name} {data?.driver?.last_name}
-                      </td>
-                      <td className={`text-white py-3 px-4 `}>
-                        <Box className="flex">
-                          <Box
-                            py={"1"}
-                            px={"2"}
-                            fontSize={"xs"}
-                            className={`${bg} rounded-md font-medium  `}
-                          >
-                            {status}
+                        key={key}
+                      >
+                        <td className=" py-3 px-4">--</td>
+                        <td className="py-3 px-4">--</td>
+                        <td className="py-3 px-4">
+                          {data?.driver?.first_name} {data?.driver?.last_name}
+                        </td>
+                        <td className={`text-white py-3 px-4 `}>
+                          <Box className="flex">
+                            <Box
+                              py={"1"}
+                              px={"2"}
+                              fontSize={"xs"}
+                              className={`${bg} rounded-md font-medium  `}
+                            >
+                              {status}
+                            </Box>
                           </Box>
-                        </Box>
-                      </td>
-                      {/* actions table */}
-                      <td className={` text-white py-3 px-4 w-24`}>
-                        <Box className="flex gap-4 justify-center">
-                          <ActionButton
-                            bg={bg}
-                            handleClick={() => handleViewUser(data?.driver)}
-                          >
-                            <FiEye />
-                          </ActionButton>
-                        </Box>
-                      </td>
-                    </tr>
-                  );
-                })}
+                        </td>
+                        {/* actions table */}
+                        <td className={` text-white py-3 px-4 w-24`}>
+                          <Box className="flex gap-4 justify-center">
+                            <ActionButton
+                              bg={bg}
+                              handleClick={() => handleViewUser(data?.driver)}
+                            >
+                              <FiEye />
+                            </ActionButton>
+                          </Box>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </Table>
             </Box>
           </Wrapper>
