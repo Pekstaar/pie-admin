@@ -50,7 +50,6 @@ const Partners = () => {
           id: element?.id,
         };
         arr.push(partnerObj)
-        console.log(element)
       })
       setPartners(arr);
       setFilteredPartners(arr);
@@ -127,7 +126,7 @@ const Partners = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const handleViewUser = (partner) => {
-    navigate(`${partner.id}`, partner.id);
+    navigate(`${partner?.id}`, partner?.id);
   };
 
   const handleCreate = async () => {

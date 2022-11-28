@@ -26,6 +26,8 @@ const FleetView = () => {
   const [openVehicleInfoModal, setOpenVehicleInfoModal] = useState(false);
   const [current, setCurrent] = useState({});
 
+  console.log(location[location?.length - 1])
+
   React.useEffect(() => {
     FleetServices.fetchVehicle(location[location?.length - 1]).then(
       (response) => {
@@ -51,7 +53,7 @@ const FleetView = () => {
         <BreadCrumb
           icon={<Transaction />}
           title={`Fleet management /`}
-          subtitle={location[location?.length - 1]}
+          subtitle={vehicle?.reg_number || "_"}
         />
         <Box className="flex gap-3 ">
           <Box className={"w-1/3"} flex={"1"}>

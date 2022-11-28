@@ -1,35 +1,28 @@
 import { Box, Button, Center, HStack, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/general/BreadCrumb";
-import Table from "../components/general/Table";
+import { ConfigProvider, Table } from "antd";
 import Wrapper from "../components/general/Wrapper";
 
 import _ from "lodash";
-import { BiSort } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { RiCarLine, RiDeleteBin5Line } from "react-icons/ri";
-import { VscFilter } from "react-icons/vsc";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Lorry } from "../assets/svg";
 import CInput from "../components/general/Input";
 import FleetServices from "../utils/services/FleetServices";
-import Loader from "../components/Loader";
-import useTable from "../hooks/UseTable";
-import TableFooter from "../components/Table/Footer";
 
 const Fleet = () => {
   const navigate = useNavigate();
   const [vehicles, setVehicles] = useState([]);
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [stateLoading, setStateLoading] = useState(true);
 
-  const [page, setPage] = useState(1);
-  const { slice, range } = useTable(filteredVehicles, page, 20);
 
-  const handleViewFleet = (plate) => {
-    navigate(`${plate}`, plate);
+  const handleViewFleet = (fleet) => {
+    navigate(`${fleet?.id}`, fleet?.id);
   };
 
   const handleSearch = (arr, cond) => {
@@ -50,11 +43,62 @@ const Fleet = () => {
 
   useEffect(() => {
     FleetServices.fetchVehicles().then((response) => {
-      setVehicles(response);
-      setFilteredVehicles(response);
-      setLoading(false);
-    });
+      let arr = [];
+      response.forEach((element) => {
+        const fleetObj = {
+          regNumber: element?.reg_number || "",
+          fullname: element?.owner?.first_name + " " + element?.owner?.last_name || "",
+          insuranceExpiry: element?.insurance_expiry || "",
+          id: element?.id,
+        };
+        arr.push(fleetObj)
+      })
+      setVehicles(arr);
+      setFilteredVehicles(arr);
+      setStateLoading(false);
+    })
   }, []);
+
+  const columns = [
+    {
+      title: "Registration",
+      dataIndex: "regNumber",
+      sorter: (a, b) => a?.regNumber.localeCompare(b?.regNumber),
+    },
+    {
+      title: "Driver",
+      dataIndex: "fullname",
+      render: (text, u) => (
+        <Link as={"a"} to={"/fleet/" + u?.id}>
+          {text}
+        </Link>
+      ),
+      sorter: (a, b) => a?.fullname.localeCompare(b?.fullname),
+    },
+    {
+      title: "Insurance Expiry",
+      dataIndex: "insuranceExpiry",
+      sorter: (a, b) => a?.insuranceExpiry.localeCompare(b?.insuranceExpiry),
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (_, n) => {
+        return (
+          <Box className="flex gap-6 justify-start">
+            <ActionButton handlePress={() => handleViewFleet(n)}>
+              <FiEye />
+            </ActionButton>
+
+            <ActionButton>
+              <RiDeleteBin5Line />
+            </ActionButton>
+          </Box>
+        );
+      },
+    },
+  ]
+
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
       <BreadCrumb icon={<RiCarLine />} title={"Fleet management"} />
@@ -75,92 +119,38 @@ const Fleet = () => {
               setSearch(e?.target?.value);
             }}
           />
-          {/* actions */}
-          <HStack gap={"2"}>
-            <TableAction
-              icon={<VscFilter className="text-lg" />}
-              text={"Filter"}
-            />
-            <TableAction icon={<BiSort className="text-lg" />} text={"Sort"} />
-          </HStack>
         </HStack>
 
-        {/* body */}
-        <Box>
-          <Table
-            headers={[...Object.keys(tableData[0]), "Actions"]}
-            footer={
-              <TableFooter
-                range={range}
-                slice={slice}
-                setPage={setPage}
-                page={page}
-              />
-            }
-          >
-            {loading ? (
-              <Loader />
-            ) : (
-              slice?.map((data, key) => {
-                const isEven = key % 2;
-                const st = 2;
-                // const status = STATUS_LIST[data?.status];
-                const status = STATUS_LIST[2];
-                const bg =
-                  st === 0
-                    ? "bg-primary_red"
-                    : st === 2
-                    ? "bg-primary_green"
-                    : "bg-primary_yellow_light";
-                // registration: "kcb 4457k",
-                // driver: "Brooke Manor",
-                // "license expiry": "Collins joe",
-                //     status: 4,
-                return (
-                  <tr
-                    className={`h-10 capitalize ${
-                      isEven ? "bg-[#F9F9F9]" : "white"
-                    }`}
-                  >
-                    <td className="  py-3 px-4">{data?.reg_number}</td>
-                    <td className="  py-3 px-4">
-                      {data?.owner?.first_name + " " + data?.owner?.last_name}
-                    </td>
-                    <td className=" py-3 px-4">{data?.insurance_expiry}</td>
-
-                    <td className={` text-white py-3 px-4 `}>
-                      <Box className="flex">
-                        <Box
-                          py={"1"}
-                          px={"2"}
-                          fontSize={"xs"}
-                          className={`${bg} rounded-md font-medium  `}
-                        >
-                          {status}
-                        </Box>
-                      </Box>
-                    </td>
-                    {/* actions table */}
-                    <td className={` text-white py-3 px-4 w-32`}>
-                      <Box className="flex gap-4">
-                        <ActionButton
-                          handlePress={() => handleViewFleet(data?.id)}
-                          bg={bg}
-                        >
-                          <FiEye />
-                        </ActionButton>
-
-                        <ActionButton bg={bg}>
-                          <RiDeleteBin5Line />
-                        </ActionButton>
-                      </Box>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </Table>
-        </Box>
+         {/* body */}
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: "#EFAF1C",
+              colorPrimaryTextActive: "#19411D",
+              colorPrimaryText: "#19411D",
+              // colorBgBase: "#19411D",
+              colorPrimaryBg: "#EFAF1C",
+            },
+          }}
+        >
+          <Box>
+            <Table
+              rowKey={(data) => data.id}
+              loading={stateLoading}
+              pagination={{
+                defaultPageSize: 15,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "15", "20", "30"],
+              }}
+              // rowSelection={{
+              //   type: "checkbox",
+              //   ...rowSelection,
+              // }}
+              columns={columns}
+              dataSource={filteredVehicles}
+            />
+          </Box>
+        </ConfigProvider>
       </Wrapper>
     </Box>
   );
@@ -168,19 +158,19 @@ const Fleet = () => {
 
 export default Fleet;
 
-const tableData = [
-  {
-    registration: "kcb 4457k",
-    driver: "Brooke Manor",
-    "insurance expiry": "Collins joe",
-    status: 1,
-  },
-];
-const STATUS_LIST = {
-  1: "busy",
-  2: "available",
-  0: "offline",
-};
+// const tableData = [
+//   {
+//     registration: "kcb 4457k",
+//     driver: "Brooke Manor",
+//     "insurance expiry": "Collins joe",
+//     status: 1,
+//   },
+// ];
+// const STATUS_LIST = {
+//   1: "busy",
+//   2: "available",
+//   0: "offline",
+// };
 const ActionButton = ({ bg, children, handlePress }) => (
   <Button
     fontSize={"lg"}
@@ -192,12 +182,7 @@ const ActionButton = ({ bg, children, handlePress }) => (
     {children}
   </Button>
 );
-const TableAction = ({ icon, text }) => (
-  <button className="bg-zinc-200 px-3 py-1.5 gap-1 rounded-md text-sm capitalize flex  ">
-    {icon}
-    {text}
-  </button>
-);
+
 const cards_data = [
   {
     text: "total vehicles",
