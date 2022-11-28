@@ -14,7 +14,7 @@ import BookingService from "../utils/services/BookingServices";
 const Dashboard = () => {
   // Bar chart data
   const [bookings, setBookings] = useState([]);
-  const [barchartMonths, setBarChartMonths] = useState([]);
+  const [barChartMonths, setBarChartMonths] = useState([]);
   const [createdBooking, setCreatedBooking] = useState("");
   const [completedBooking, setCompletedBooking] = useState("");
 
@@ -24,6 +24,8 @@ const Dashboard = () => {
   // Doughnat chart data vehicle type fliters
   const [vehicleTypeCount, setVehicleTypeCount] = useState("");
   const [vehiclesTypes, setVehiclesType] = useState("");
+  const [createdBookingPerVehicleType, setCreatedBookingPerVehicleType]= useState("");
+  const [completedBookingPerVehicleType, setCompletedBookingPerVehicleType]= useState("");
  
   // const [loading, setLoading] = useState(true);
 
@@ -118,6 +120,8 @@ const Dashboard = () => {
 
       let vehicleArray = []
       let vehicleCount = []
+      let totalBookingCreatedPerVehicleType = []
+      let totalBookingCompletedPerVehicleType = []
 
 
       vehicles.forEach((item) => {
@@ -129,10 +133,17 @@ const Dashboard = () => {
 
         const totalCountOfVehiclePerType = arrayOfVehicle.reduce((acc, obj) => acc += 1, 0);
         vehicleCount.push(totalCountOfVehiclePerType);
-        console.log(totalCountOfVehiclePerType)
+
+        const totalCreatedBookingPerVehicleType = arrayOfVehicle.reduce((acc, obj) => obj.status >= 0 ? acc += 1 : acc, 0);
+        totalBookingCreatedPerVehicleType.push(totalCreatedBookingPerVehicleType);
+
+        const totalCompletedBookingPerVehicleType = arrayOfVehicle.reduce((acc, obj) => obj.status === 5 ? acc += 1 : acc, 0);
+        totalBookingCompletedPerVehicleType.push(totalCompletedBookingPerVehicleType);
       });
       setVehiclesType(vehicleArray);
       setVehicleTypeCount(vehicleCount);
+      setCreatedBookingPerVehicleType(totalBookingCreatedPerVehicleType);
+      setCompletedBookingPerVehicleType(totalBookingCompletedPerVehicleType);
     }
 
   }, [MONTHS, VECHILE_TYPES, bookings]);
@@ -173,8 +184,8 @@ const Dashboard = () => {
     [vehicleTypeCount, vehiclesTypes]
   );
 
-  const labels = barchartMonths;
-  const barChart = useMemo(
+  
+  const barChartBookingsByVehicleType = useMemo(
     () => ({
       options: {
         // responsive: true,
@@ -191,7 +202,44 @@ const Dashboard = () => {
       },
 
       data: {
-        labels,
+        labels: vehiclesTypes,
+        datasets: [
+          {
+            label: "Created booking",
+            data: createdBookingPerVehicleType,
+            backgroundColor: "#EFAF1D",
+          },
+          {
+            label: "Complete booking",
+            data: completedBookingPerVehicleType,
+            backgroundColor: "#00A406",
+          },
+        ],
+      },
+    }),
+
+    [vehiclesTypes, createdBookingPerVehicleType, completedBookingPerVehicleType]
+  );
+
+
+  const barChartBookingOverview = useMemo(
+    () => ({
+      options: {
+        // responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: "bottom",
+          },
+          // title: {
+          //   display: true,
+          //   text: "Chart.js Bar Chart",
+          // },
+        },
+      },
+
+      data: {
+        labels:barChartMonths,
         datasets: [
           {
             label: "Created booking",
@@ -207,7 +255,7 @@ const Dashboard = () => {
       },
     }),
 
-    [labels, createdBooking, completedBooking]
+    [barChartMonths, createdBooking, completedBooking]
   );
 
   const radialKeys = [
@@ -239,7 +287,7 @@ const Dashboard = () => {
 
           {/* body */}
           <div className="h-[310px]">
-            <BarChart data={barChart?.data} options={barChart?.options} />
+            <BarChart data={barChartBookingOverview?.data} options={barChartBookingOverview?.options} />
           </div>
         </Wrapper>
 
@@ -343,7 +391,7 @@ const Dashboard = () => {
           {/* body */}
 
           <div className="h-[310px]">
-            <BarChart data={barChart?.data} options={barChart?.options} />
+            <BarChart data={barChartBookingsByVehicleType?.data} options={barChartBookingsByVehicleType?.options} />
           </div>
         </Wrapper>
       </HStack>
