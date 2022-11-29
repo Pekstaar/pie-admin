@@ -1,25 +1,92 @@
 import React, { useEffect, useState } from "react";
-import Table from "../../general/Table";
+import { ConfigProvider, Table } from "antd";
 
+import _ from "lodash";
 import { IoSearchOutline } from "react-icons/io5";
 import CInput from "../../general/Input";
 import { Box, HStack } from "@chakra-ui/react";
 import OutlinedButton from "../../general/OutlinedButton";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import EarningServices from "../../../utils/services/EarningServices";
-import Loader from "../../Loader";
 
 const Unpaid = () => {
   const [earnings, setEarnings] = useState([]);
+  const [filterUnpaidEarnings, setFilterUnpaidEarnings] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [stateLoading, setStateLoading] = useState(true);
 
   useEffect(() => {
     EarningServices.fetchRequestEarnings().then((response) => {
-      setEarnings(response);
-      setLoading(false);
+      let arr = [];
+      response.filter((data) => data.status === 1).forEach((element) => {
+        const unpaidEarningsObj = {
+          fullname: element?.owner?.first_name + " " + element?.owner?.last_name || "",
+          amount: element?.amount || 0,
+          createdAt: element?.created_at || "",
+          id: element?.id,
+        };
+        arr.push(unpaidEarningsObj)
+      });
+      setEarnings(arr);
+      setFilterUnpaidEarnings(arr);
+      setStateLoading(false)
     });
   }, []);
+
+  const handleSearch = (arr, cond) => {
+    const newArr = _.filter(arr, (obj) => {
+      if (cond) {
+        return (
+          obj?.fullname?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.createdAt?.toLowerCase()?.includes(cond?.toLowerCase())
+        );
+      }
+    });
+
+    if (cond) return newArr;
+    else return earnings;
+  };
+
+  useEffect(() => {
+    setFilterUnpaidEarnings(handleSearch(earnings, searchValue))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [earnings, searchValue]);
+
+  const columns = [
+    {
+      title: "Date",
+      dataIndex: "createdAt",
+      sorter: (a, b) => a?.createdAt.localeCompare(b?.createdAt),
+    },
+    {
+      title: "Name",
+      dataIndex: "fullname",
+      sorter: (a, b) => a?.fullname.localeCompare(b?.fullname),
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      // render: (text, u) => (
+      //   "Ksh. " + {text}
+      // ),
+      sorter: (a, b) => a?.amount.localeCompare(b?.amount),
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (_, n) => {
+        return (
+          <Box className="flex gap-4">
+            <OutlinedButton
+              icon={<RiDeleteBin6Line className="text-xl" />}
+              text={"Cancel"}
+            />
+          </Box>
+        )
+      }
+    }
+  ];
+
   return (
     <>
       {/* search and table actions */}
@@ -32,115 +99,92 @@ const Unpaid = () => {
           }}
         />
       </HStack>
+
       {/* body */}
-      <Box className="">
-        <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-          {loading ? (
-            <Loader />
-          ) : (
-            earnings
-              ?.filter((data) => {
-                return data === ""
-                  ? data
-                  : data?.created_at
-                      .toLowerCase()
-                      .includes(searchValue.toLowerCase()) ||
-                      data?.owner.first_name
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase()) ||
-                      data?.owner.last_name
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase()) ||
-                      data?.amount
-                        .toLowerCase()
-                        .includes(searchValue.toLowerCase());
-              })
-              .map((data, key) => {
-                const isEven = key % 2;
-
-                return (
-                  <tr
-                    className={`h-14 capitalize ${
-                      isEven ? "bg-[#F9F9F9]" : "white"
-                    }`}
-                  >
-                    <td className="  py-3 px-4">{data?.created_at}</td>
-
-                    <td className=" py-3 px-4">
-                      {data?.owner?.first_name} {data?.owner?.last_name}
-                    </td>
-                    <td className=" py-3 px-4">KES. {data?.amount}</td>
-
-                    {/* actions table */}
-                    <td className={` py-3 px-4 w-32`}>
-                      <Box className="flex gap-4">
-                        <OutlinedButton
-                          icon={<RiDeleteBin6Line className="text-xl" />}
-                          text={"Cancel"}
-                        />
-                      </Box>
-                    </td>
-                  </tr>
-                );
-              })
-          )}
-        </Table>
-      </Box>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#EFAF1C",
+            colorPrimaryTextActive: "#19411D",
+            colorPrimaryText: "#19411D",
+            // colorBgBase: "#19411D",
+            colorPrimaryBg: "#EFAF1C",
+          },
+        }}
+      >
+        <Box>
+          <Table
+            rowKey={(data) => data.id}
+            loading={stateLoading}
+            pagination={{
+              defaultPageSize: 15,
+              showSizeChanger: true,
+              pageSizeOptions: ["10", "15", "20", "30"],
+            }}
+            // rowSelection={{
+            //   type: "checkbox",
+            //   ...rowSelection,
+            // }}
+            columns={columns}
+            dataSource={filterUnpaidEarnings}
+          />
+        </Box>
+      </ConfigProvider>
     </>
   );
 };
 
 export default Unpaid;
 
-const tableData = [
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "13,000",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "13,000",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "10,000",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "13,000",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "10,000",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "18,000",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "18,000",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "10,000",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "10,000",
-  },
-  {
-    date: "12/5/2022",
-    name: "Brooke Manor",
-    amount: "10,000",
-  },
-];
+// const tableData = [
+//   {
+//     date: "12/5/2022",
+//     name: "Brooke Manor",
+//     amount: "13,000",
+//   },
+//   {
+//     date: "12/5/2022",
+//     name: "Brooke Manor",
+//     amount: "13,000",
+//   },
+//   {
+//     date: "12/5/2022",
+//     name: "Brooke Manor",
+//     amount: "10,000",
+//   },
+//   {
+//     date: "12/5/2022",
+//     name: "Brooke Manor",
+//     amount: "13,000",
+//   },
+//   {
+//     date: "12/5/2022",
+//     name: "Brooke Manor",
+//     amount: "10,000",
+//   },
+//   {
+//     date: "12/5/2022",
+//     name: "Brooke Manor",
+//     amount: "18,000",
+//   },
+//   {
+//     date: "12/5/2022",
+//     name: "Brooke Manor",
+//     amount: "18,000",
+//   },
+//   {
+//     date: "12/5/2022",
+//     name: "Brooke Manor",
+//     amount: "10,000",
+//   },
+//   {
+//     date: "12/5/2022",
+//     name: "Brooke Manor",
+//     amount: "10,000",
+//   },
+//   {
+//     date: "12/5/2022",
+//     name: "Brooke Manor",
+//     amount: "10,000",
+//   },
+// ];
