@@ -9,8 +9,7 @@ import CInput from "../general/Input";
 import StatusTag from "../general/StatusTag";
 import Wrapper from "../general/Wrapper";
 
-const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
-  const [booking] = useState(undefined);
+const ViewModal = ({ openModal, handleCloseModal, current }) => {
   const [usersValues, setUserValues] = useState({
     sender: {
       name: "",
@@ -26,6 +25,7 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
       name: "",
       phoneNumber: "",
     },
+    status: "",
   });
 
   // useEffect(() => {
@@ -39,35 +39,28 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
     setUserValues((prev) => ({
       ...prev,
       sender: {
-        name:
-          current?.sender?.owner?.first_name +
-          " " +
-          current?.sender?.owner?.last_name,
-        phoneNumber: current?.sender?.owner?.phonenumber,
-        location: current?.sender?.booking?.formated_address,
+        name: current?.sender,
+        phoneNumber: current?.senderPhoneNumber,
+        location: current?.pickup,
       },
 
       receiver: {
-        name: current?.receiver?.name,
-        phone: current?.receiver?.phonenumber,
-        location: current?.receiver?.formated_address,
+        name: current?.receiver,
+        phone: current?.receiverPhoneNumber,
+        location: current?.destination,
       },
       driver: {
-        name:
-          current?.sender?.driver?.first_name +
-          " " +
-          current?.sender?.driver?.last_name,
-        phone: current?.sender?.driver?.phonenumber,
+        name: current?.driver,
+        phone: current?.driverPhoneNumber,
       },
+      status: current?.status,
     }));
   }, [current]);
 
-  const status = 1;
-
   const statusBG =
-    booking?.status === 0
+    usersValues?.status === 0
       ? "bg-primary_red"
-      : booking?.status === 5
+      : usersValues?.status === 5
       ? "bg-primary_green"
       : "bg-primary_yellow_light";
 
@@ -91,7 +84,7 @@ const ViewModal = ({ bookingId, openModal, handleCloseModal, current }) => {
             bg={statusBG}
             status={
               <Text textTransform={"capitalize"} textColor={"white"}>
-                {STATUS_LIST[status]}
+                {STATUS_LIST[usersValues?.status]}
               </Text>
             }
           />
