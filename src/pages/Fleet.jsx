@@ -25,25 +25,6 @@ const Fleet = () => {
     navigate(`${fleet?.id}`, fleet?.id);
   };
 
-  const handleSearch = (arr, cond) => {
-    const newArr = _.filter(arr, (obj) => {
-      if (cond) {
-        return (
-          obj?.fullname?.toLowerCase()?.includes(cond?.toLowerCase()) ||
-          obj?.regNumber?.toLowerCase()?.includes(cond?.toLowerCase())
-        );
-      }
-    });
-
-    if (cond) return newArr;
-    else return vehicles;
-  };
-
-  React.useEffect(() => {
-    setFilteredVehicles(handleSearch(vehicles, search));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, vehicles]);
-
   useEffect(() => {
     FleetServices.fetchVehicles().then((response) => {
       let arr = [];
@@ -61,6 +42,27 @@ const Fleet = () => {
       setStateLoading(false);
     })
   }, []);
+
+  const handleSearch = (arr, cond) => {
+    const newArr = _.filter(arr, (obj) => {
+      if (cond) {
+        return (
+          obj?.fullname?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.regNumber?.toLowerCase()?.includes(cond?.toLowerCase())
+        );
+      }
+    });
+
+    if (cond) return newArr;
+    else return vehicles;
+  };
+
+  useEffect(() => {
+    setFilteredVehicles(handleSearch(vehicles, search));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, vehicles]);
+
+
 
   const columns = [
     {

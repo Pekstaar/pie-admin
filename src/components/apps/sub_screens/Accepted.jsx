@@ -1,157 +1,207 @@
-import React from "react";
-import Table from "../../general/Table";
+import React, { useState, useEffect } from "react";
+import { ConfigProvider, Table } from "antd";
 
+import { Link } from "react-router-dom";
 import { IoSearchOutline } from "react-icons/io5";
 import CInput from "../../general/Input";
 import { Box, Button, HStack } from "@chakra-ui/react";
-
+import _ from "lodash";
 import { FiEye } from "react-icons/fi";
-import { VscFilter } from "react-icons/vsc";
-import { BiSort } from "react-icons/bi";
 import UserServices from "../../../utils/services/UserServices";
-import { useState } from "react";
-import Loader from "../../Loader";
-import TableFooter from "../../Table/Footer";
-import useTable from "../../../hooks/UseTable";
 
 const Accepted = ({ handleView }) => {
   const [applications, setApplications] = useState();
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const { slice, range } = useTable(applications, page, 20);
+  const [filterAcceptedApplication, setFilterAcceptedApplication] = useState([]);
+  const [stateLoading, setStateLoading] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
 
   React.useEffect(() => {
     UserServices.fetchDrivers(true).then((response) => {
-      setApplications(response);
-      setLoading(false);
+      let arr = [];
+      response.forEach((element) => {
+        const pendingApplicationObj = {
+          fullname: element?.user?.first_name + " " + element?.user?.last_name || "",
+          phone: element?.user?.phonenumber || "",
+          email: element?.user?.email || "",
+          dateJoined: element?.user?.date_joined || "",
+          id: element?.id,
+        };
+        arr.push(pendingApplicationObj)
+      })
+      setApplications(arr);
+      setFilterAcceptedApplication(arr);
+      setStateLoading(false);
     });
   }, []);
+
+  const handleSearch = (arr, cond) => {
+    const newArr = _.filter(arr, (obj) => {
+      if (cond) {
+        return (
+          obj?.fullname?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.phone?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.email?.toLowerCase()?.includes(cond?.toLowerCase())
+        );
+      }
+    });
+
+    if (cond) return newArr;
+    else return applications;
+  };
+
+  useEffect(() => {
+    setFilterAcceptedApplication(handleSearch(applications, searchValue));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [applications, searchValue]);
+
+  const columns = [
+    {
+      title: "Fullname",
+      dataIndex: "fullname",
+      render: (text, u) => (
+        <Link as={"a"} to={"/applications/" + u?.id}>
+          {text}
+        </Link>
+      ),
+      sorter: (a, b) => a?.fullname.localeCompare(b?.fullname),
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+      sorter: (a, b) => a?.phone.localeCompare(b?.phone),
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      sorter: (a, b) => a?.email.localeCompare(b?.email),
+    },
+    {
+      title: "Accepted Date",
+      dataIndex: "dateJoined",
+      sorter: (a, b) => a?.dateJoined.localeCompare(b?.dateJoined),
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (_, n) => {
+        return (
+          <Box className="flex gap-6 justify-start">
+            <ActionButton handleClick={() => handleView(n?.id)}>
+              <FiEye />
+            </ActionButton>
+          </Box>
+        );
+      },
+    },
+  ]
+
   return (
     <>
       {/* search and table actions */}
       <HStack py={"3"} justifyContent={"space-between"}>
         {/* /search input */}
-        <CInput icon={<IoSearchOutline className="text-xl" />} />
-        {/* actions */}
-        <HStack gap={"2"}>
-          <TableAction
-            icon={<VscFilter className="text-lg" />}
-            text={"Filter"}
-          />
-          <TableAction icon={<BiSort className="text-lg" />} text={"Sort"} />
-        </HStack>
+        <CInput
+          icon={<IoSearchOutline className="text-xl" />}
+          handleChange={(e) => {
+            setSearchValue(e?.target?.value);
+          }}
+        />
       </HStack>
 
       {/* body */}
-      <Box>
-        <Table
-          footer={
-            <TableFooter
-              range={range}
-              slice={slice}
-              setPage={setPage}
-              page={page}
-            />
-          }
-          headers={[...Object.keys(tableData[0]), "Actions"]}
-        >
-          {loading ? (
-            <Loader />
-          ) : (
-            slice?.map((data, key) => {
-              const isEven = key % 2;
-
-              return (
-                <tr
-                  className={`h-14 capitalize ${
-                    isEven ? "bg-[#F9F9F9]" : "white"
-                  }`}
-                >
-                  <td className="  py-3 px-4">
-                    {data?.user?.first_name + " " + data?.user?.last_name}
-                  </td>
-                  <td className=" py-3 px-4">{data?.user?.phonenumber}</td>
-                  <td className="  py-3 px-4">{data?.user?.email}</td>
-                  {/* <td className=" py-3 px-4">__</td> */}
-                  <td className=" py-3 px-4">{data?.user?.date_joined}</td>
-                  {/* actions table */}
-                  <td className={`text-center text-white py-3 px-4 w-24 `}>
-                    <Box className="flex gap-4 justify-center">
-                      <ActionButton handleClick={() => handleView(data?.id)}>
-                        <FiEye />
-                      </ActionButton>
-                    </Box>
-                  </td>
-                </tr>
-              );
-            })
-          )}
-        </Table>
-      </Box>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#EFAF1C",
+            colorPrimaryTextActive: "#19411D",
+            colorPrimaryText: "#19411D",
+            // colorBgBase: "#19411D",
+            colorPrimaryBg: "#EFAF1C",
+          },
+        }}
+      >
+        <Box>
+          <Table
+            rowKey={(data) => data.id}
+            loading={stateLoading}
+            pagination={{
+              defaultPageSize: 15,
+              showSizeChanger: true,
+              pageSizeOptions: ["10", "15", "20", "30"],
+            }}
+            // rowSelection={{
+            //   type: "checkbox",
+            //   ...rowSelection,
+            // }}
+            columns={columns}
+            dataSource={filterAcceptedApplication}
+          />
+        </Box>
+      </ConfigProvider>
     </>
   );
 };
 
 export default Accepted;
 
-const tableData = [
-  {
-    fullname: "New User",
-    phone: "0711223344",
-    email: "brook@okapy.com",
-    // vehicle_cat: "Cab",
-    "accepted date": new Date().toLocaleString(),
-  },
-  {
-    fullname: "New User",
-    phone: "0711223344",
-    email: "brook@okapy.com",
-    vehicle_cat: "Truck",
-    "accepted date": new Date().toLocaleString(),
-  },
-  {
-    fullname: "New User",
-    phone: "0711223344",
-    email: "brook@okapy.com",
-    vehicle_cat: "Truck",
-    "accepted date": new Date().toLocaleString(),
-  },
-  {
-    fullname: "New User",
-    phone: "0711223344",
-    email: "brook@okapy.com",
-    vehicle_cat: "Cab",
-    "accepted date": new Date().toLocaleString(),
-  },
-  {
-    fullname: "New User",
-    phone: "0711223344",
-    email: "brook@okapy.com",
-    vehicle_cat: "Cab",
-    "accepted date": new Date().toLocaleString(),
-  },
-  {
-    fullname: "New User",
-    phone: "0711223344",
-    email: "brook@okapy.com",
-    vehicle_cat: "Motorbike",
-    "accepted date": new Date().toLocaleString(),
-  },
-  {
-    fullname: "New User",
-    phone: "0711223344",
-    email: "brook@okapy.com",
-    vehicle_cat: "Motorbike",
-    "accepted date": new Date().toLocaleString(),
-  },
-  {
-    fullname: "New User",
-    phone: "0711223344",
-    email: "brook@okapy.com",
-    vehicle_cat: "Cab",
-    "accepted date": new Date().toLocaleString(),
-  },
-];
+// const tableData = [
+//   {
+//     fullname: "New User",
+//     phone: "0711223344",
+//     email: "brook@okapy.com",
+//     // vehicle_cat: "Cab",
+//     "accepted date": new Date().toLocaleString(),
+//   },
+//   {
+//     fullname: "New User",
+//     phone: "0711223344",
+//     email: "brook@okapy.com",
+//     vehicle_cat: "Truck",
+//     "accepted date": new Date().toLocaleString(),
+//   },
+//   {
+//     fullname: "New User",
+//     phone: "0711223344",
+//     email: "brook@okapy.com",
+//     vehicle_cat: "Truck",
+//     "accepted date": new Date().toLocaleString(),
+//   },
+//   {
+//     fullname: "New User",
+//     phone: "0711223344",
+//     email: "brook@okapy.com",
+//     vehicle_cat: "Cab",
+//     "accepted date": new Date().toLocaleString(),
+//   },
+//   {
+//     fullname: "New User",
+//     phone: "0711223344",
+//     email: "brook@okapy.com",
+//     vehicle_cat: "Cab",
+//     "accepted date": new Date().toLocaleString(),
+//   },
+//   {
+//     fullname: "New User",
+//     phone: "0711223344",
+//     email: "brook@okapy.com",
+//     vehicle_cat: "Motorbike",
+//     "accepted date": new Date().toLocaleString(),
+//   },
+//   {
+//     fullname: "New User",
+//     phone: "0711223344",
+//     email: "brook@okapy.com",
+//     vehicle_cat: "Motorbike",
+//     "accepted date": new Date().toLocaleString(),
+//   },
+//   {
+//     fullname: "New User",
+//     phone: "0711223344",
+//     email: "brook@okapy.com",
+//     vehicle_cat: "Cab",
+//     "accepted date": new Date().toLocaleString(),
+//   },
+// ];
 
 export const ActionButton = ({ bg, children, handleClick }) => (
   <Button
@@ -164,9 +214,4 @@ export const ActionButton = ({ bg, children, handleClick }) => (
     {children}
   </Button>
 );
-const TableAction = ({ icon, text }) => (
-  <button className="bg-zinc-200 px-3 py-1.5 gap-1 rounded-md text-sm capitalize flex  ">
-    {icon}
-    {text}
-  </button>
-);
+
