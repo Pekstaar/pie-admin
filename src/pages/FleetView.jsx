@@ -49,10 +49,11 @@ const FleetView = () => {
             status: element?.status,
             id: element?.id,
           };
-          arr.push(bookingObj)
+          arr.push(bookingObj);
         })
         setUserBookings(arr);
-        setLoading(false);
+        setFilterUserBookings(arr);
+        setTimeout(() => setLoading(false), 1000);
       });
     }
     );

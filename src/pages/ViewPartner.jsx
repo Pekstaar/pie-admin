@@ -48,7 +48,6 @@ const ViewPartner = () => {
       setPartner(response);
       BookingServices.ownersBookings(response?.owner?.id).then((response) => {
         let arr = [];
-        console.log(response)
         response.forEach(async (element) => {
           const receiver = await BookingServices.getBookingReceiver(element?.booking?.id);
           const bookingObj = {
@@ -63,10 +62,11 @@ const ViewPartner = () => {
             status: element?.status,
             id: element?.id,
           };
-          arr.push(bookingObj)
+          arr.push(bookingObj);
         })
         setUserBookings(arr);
-        setLoading(false);
+        setFilterUserBookings(arr);
+        setTimeout(() => setLoading(false), 1000);
       });
     });
   }, [params]);

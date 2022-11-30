@@ -23,7 +23,7 @@ import Wrapper from "../components/general/Wrapper";
 import BookingServices from "../utils/services/BookingServices";
 import UserServices from "../utils/services/UserServices";
 import EditUserModal from "../components/settings_user/EditUserModal";
-import { ConfigProvider, Popconfirm,Table } from "antd";
+import { ConfigProvider, Popconfirm, Table } from "antd";
 import { toastProps } from "../utils/Helper";
 
 const ViewUser = () => {
@@ -50,7 +50,6 @@ const ViewUser = () => {
 
     BookingServices.ownersBookings(id).then((response) => {
       let arr = [];
-      console.log(response)
       response.forEach(async (element) => {
         const receiver = await BookingServices.getBookingReceiver(element?.booking?.id);
         const bookingObj = {
@@ -65,11 +64,13 @@ const ViewUser = () => {
           status: element?.status,
           id: element?.id,
         };
-        arr.push(bookingObj)
+        arr.push(bookingObj);
       })
       setUserBookings(arr);
-      setLoading(false);
+      setFilterUserBookings(arr);
+      setTimeout(() => setLoading(false), 1000);
     });
+
   }, [id]);
 
   const handleSearch = (arr, cond) => {
@@ -262,8 +263,8 @@ const ViewUser = () => {
                   <Box>
                     <DeactivateButton
                       className={`mt-1 cursor-pointer ${user?.is_active === false
-                          ? "bg-primary_green text-white"
-                          : "bg-red-100  text-red-600 "
+                        ? "bg-primary_green text-white"
+                        : "bg-red-100  text-red-600 "
                         }`}
                     // handleClick={() => setShowConfirm(true)}
                     >
@@ -527,34 +528,34 @@ const ViewUser = () => {
 
             {/* body */}
             <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: "#EFAF1C",
-                colorPrimaryTextActive: "#19411D",
-                colorPrimaryText: "#19411D",
-                // colorBgBase: "#19411D",
-                colorPrimaryBg: "#EFAF1C",
-              },
-            }}
-          >
-            <Box>
-              <Table
-                rowKey={(data) => data.id}
-                loading={loading}
-                pagination={{
-                  defaultPageSize: 15,
-                  showSizeChanger: true,
-                  pageSizeOptions: ["10", "15", "20", "30"],
-                }}
-                // rowSelection={{
-                //   type: "checkbox",
-                //   ...rowSelection,
-                // }}
-                columns={columns}
-                dataSource={filterUserBookings}
-              />
-            </Box>
-          </ConfigProvider>
+              theme={{
+                token: {
+                  colorPrimary: "#EFAF1C",
+                  colorPrimaryTextActive: "#19411D",
+                  colorPrimaryText: "#19411D",
+                  // colorBgBase: "#19411D",
+                  colorPrimaryBg: "#EFAF1C",
+                },
+              }}
+            >
+              <Box>
+                <Table
+                  rowKey={(data) => data.id}
+                  loading={loading}
+                  pagination={{
+                    defaultPageSize: 15,
+                    showSizeChanger: true,
+                    pageSizeOptions: ["10", "15", "20", "30"],
+                  }}
+                  // rowSelection={{
+                  //   type: "checkbox",
+                  //   ...rowSelection,
+                  // }}
+                  columns={columns}
+                  dataSource={filterUserBookings}
+                />
+              </Box>
+            </ConfigProvider>
           </Wrapper>
         </Box>
       </Box>

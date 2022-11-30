@@ -53,10 +53,11 @@ const Bookings = () => {
             id: element?.id,
           };
           arr.push(bookingObj);
-          setBookings(arr);
-          setFilterBookings(arr);
         })
-        setStateLoading(false);
+        setBookings(arr);
+        setFilterBookings(arr);
+        setTimeout(() => setStateLoading(false), 800);
+
       })
     });
   }, []);
