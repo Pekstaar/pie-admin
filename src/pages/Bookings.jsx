@@ -5,7 +5,7 @@ import BreadCrumb from "../components/general/BreadCrumb";
 import { ConfigProvider, Table } from "antd";
 import _ from "lodash";
 import Wrapper from "../components/general/Wrapper";
-import BookingService from "../utils/services/BookingServices";
+import BookingServices from "../utils/services/BookingServices";
 import { FiEye } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -35,32 +35,31 @@ const Bookings = () => {
   }, []);
 
   useEffect(() => {
-    BookingService.fetchBookings().then((response) => {
+    BookingServices.fetchBookings().then((response) => {
       let arr = [];
       console.log(response)
       response.forEach(async (element) => {
-        const receiver = await BookingService.getBookingReceiver(element?.booking?.id);
-        const bookingObj = {
-          pickup: element?.booking?.formated_address || "",
-          destination: receiver?.formated_address || "",
-          sender: element?.owner?.first_name + " " + element?.owner?.last_name || "",
-          senderPhoneNumber: element?.owner?.phonenumber || "",
-          receiver: receiver?.name || "",
-          receiverPhoneNumber: receiver?.phonenumber || "",
-          driver: element?.driver?.first_name + " " + element?.driver?.last_name || "",
-          driverPhoneNumber: element?.driver?.phonenumber || "",
-          status: element?.status,
-          id: element?.id,
-        };
-        arr.push(bookingObj)
+        await BookingServices.getBookingReceiver(element?.booking?.id).then((res) => {
+          const bookingObj = {
+            pickup: element?.booking?.formated_address || "",
+            destination: res?.formated_address || "",
+            sender: element?.owner?.first_name + " " + element?.owner?.last_name || "",
+            senderPhoneNumber: element?.owner?.phonenumber || "",
+            receiver: res?.name || "",
+            receiverPhoneNumber: res?.phonenumber || "",
+            driver: element?.driver?.first_name + " " + element?.driver?.last_name || "",
+            driverPhoneNumber: element?.driver?.phonenumber || "",
+            status: element?.status,
+            id: element?.id,
+          };
+          arr.push(bookingObj);
+          setBookings(arr);
+          setFilterBookings(arr);
+        })
+        setStateLoading(false);
       })
-      setBookings(arr);
-      setFilterBookings(arr);
-      setStateLoading(false);
     });
   }, []);
-
-  console.log(current)
 
   const handleSearch = (arr, cond) => {
     const newArr = _.filter(arr, (obj) => {

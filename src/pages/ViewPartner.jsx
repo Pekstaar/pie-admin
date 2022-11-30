@@ -2,19 +2,20 @@ import { Box, Button, HStack, Image, Text } from "@chakra-ui/react";
 import React, { useState, useCallback } from "react";
 import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
-import Table from "../components/general/Table";
+import { ConfigProvider, Table } from "antd";
 import Wrapper from "../components/general/Wrapper";
 
-import { BiSort } from "react-icons/bi";
+import _ from "lodash";
+
 import { FiEye } from "react-icons/fi";
 import { GrEdit } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
-import { VscFilter } from "react-icons/vsc";
 import { useNavigate, useParams } from "react-router-dom";
 import BusinessImage from "../assets/images/business_image.png";
 import CInput from "../components/general/Input";
 import PrimaryButton from "../components/general/PrimaryButton";
 import PartnerServices from "../utils/services/PartnerServices";
+import BookingServices from "../utils/services/BookingServices";
 import { partnerCategories } from "./Partners";
 import EditPartnerModal from "../components/partner/EditPartnerModal";
 
@@ -25,6 +26,10 @@ const ViewPartner = () => {
   const [partner, setPartner] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [current, setCurrent] = useState({});
+  const [userBookings, setUserBookings] = useState([]);
+  const [filterUserBookings, setFilterUserBookings] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [loading, setLoading] = useState(true)
 
   const handleViewUser = (user) => {
     navigate(`/users/${user}`, user);
@@ -41,10 +46,112 @@ const ViewPartner = () => {
   React.useEffect(() => {
     PartnerServices.fetchSinglePartner(params.id).then((response) => {
       setPartner(response);
-      console.log(response)
+      BookingServices.ownersBookings(response?.owner?.id).then((response) => {
+        let arr = [];
+        console.log(response)
+        response.forEach(async (element) => {
+          const receiver = await BookingServices.getBookingReceiver(element?.booking?.id);
+          const bookingObj = {
+            pickup: element?.booking?.formated_address || "",
+            destination: receiver?.formated_address || "",
+            sender: element?.owner?.first_name + " " + element?.owner?.last_name || "",
+            senderPhoneNumber: element?.owner?.phonenumber || "",
+            receiver: receiver?.name || "",
+            receiverPhoneNumber: receiver?.phonenumber || "",
+            driver: element?.driver?.first_name + " " + element?.driver?.last_name || "",
+            driverPhoneNumber: element?.driver?.phonenumber || "",
+            status: element?.status,
+            id: element?.id,
+          };
+          arr.push(bookingObj)
+        })
+        setUserBookings(arr);
+        setLoading(false);
+      });
     });
   }, [params]);
   // const
+
+  const handleSearch = (arr, cond) => {
+    const newArr = _.filter(arr, (obj) => {
+      if (cond) {
+        return (
+          obj?.pickup?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.destination?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.sender?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.receiver?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.driver?.toLowerCase()?.includes(cond?.toLowerCase())
+        );
+      }
+    });
+
+    if (cond) return newArr;
+    else return userBookings;
+  };
+
+  React.useEffect(() => {
+    setFilterUserBookings(handleSearch(userBookings, searchValue));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userBookings, searchValue]);
+
+  const columns = [
+    {
+      title: "Destination",
+      dataIndex: "destination",
+      sorter: (a, b) => a?.destination.localeCompare(b?.destination),
+    },
+    {
+      title: "Receiver",
+      dataIndex: "receiver",
+      sorter: (a, b) => a?.receiver.localeCompare(b?.receiver),
+    },
+    {
+      title: "Driver",
+      dataIndex: "driver",
+      sorter: (a, b) => a?.driver.localeCompare(b?.driver),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (text) => {
+        const bg =
+          text === 0
+            ? "bg-primary_red"
+            : text === 5
+              ? "bg-primary_green"
+              : "bg-primary_yellow_light";
+
+        return (
+          <Box display={"flex"}>
+            <Box
+              py={"1"}
+              px={"2"}
+              fontSize={"xs"}
+              textTransform={"capitalize"}
+              className={`${bg} rounded-md font-medium text-center text-white`}
+            >
+              {STATUS_LIST[text]}
+            </Box>
+          </Box>
+        );
+      }
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (_, n) => {
+        return (
+          <Box className="flex gap-6 justify-start">
+            <ActionButton >
+              <FiEye onClick={() => handleViewUser(n?.id)}
+              />
+            </ActionButton>
+          </Box>
+        );
+      },
+    },
+  ]
+
   return (
     <>
       <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
@@ -208,18 +315,14 @@ const ViewPartner = () => {
             {/* search and table actions */}
             <HStack py={"7"} justifyContent={"space-between"}>
               {/* /search input */}
-              <CInput icon={<IoSearchOutline className="text-xl" />} />
+              <CInput
+                icon={<IoSearchOutline className="text-xl" />}
+                handleChange={(e) => {
+                  setSearchValue(e?.target?.value);
+                }}
+              />
               {/* actions */}
               <HStack gap={"2"}>
-                <TableAction
-                  icon={<VscFilter className="text-lg" />}
-                  text={"Filter"}
-                />
-                <TableAction
-                  icon={<BiSort className="text-lg" />}
-                  text={"Sort"}
-                />
-
                 <PrimaryButton className={"font-medium"}>
                   Reconcile payments
                 </PrimaryButton>
@@ -227,61 +330,35 @@ const ViewPartner = () => {
             </HStack>
 
             {/* body */}
-
+            <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: "#EFAF1C",
+                colorPrimaryTextActive: "#19411D",
+                colorPrimaryText: "#19411D",
+                // colorBgBase: "#19411D",
+                colorPrimaryBg: "#EFAF1C",
+              },
+            }}
+          >
             <Box>
               <Table
-                headers={[...Object.keys(tableData[0]), "Actions"]}
-                hasCheckbox
-              >
-                {[]?.map((data, key) => {
-                  const isEven = key % 2;
-                  const status = STATUS_LIST[data?.status];
-                  const bg =
-                    data?.status === 0
-                      ? "bg-primary_red"
-                      : data?.status === 5
-                        ? "bg-primary_green"
-                        : "bg-primary_yellow_light";
-
-                  return (
-                    <tr
-                      className={`h-14 capitalize ${isEven ? "bg-[#F9F9F9]" : "white"
-                        }`}
-                    >
-                      <td className="  py-3 px-3 bg-white">
-                        <input type="checkbox" className="h-[20px] w-[20px]" />
-                      </td>
-                      <td className="  py-3 px-4">{data?.destination}</td>
-                      <td className=" py-3 px-4">{data?.sender}</td>
-                      <td className=" py-3 px-4">{data?.receiver}</td>
-                      <td className={` text-white py-3 px-4 `}>
-                        <Box className="flex ">
-                          <Box
-                            py={"1"}
-                            px={"2"}
-                            fontSize={"xs"}
-                            className={`${bg} rounded-md font-medium  `}
-                          >
-                            {status}
-                          </Box>
-                        </Box>
-                      </td>
-                      {/* actions table */}
-                      <td className={` text-white py-3 px-4`}>
-                        <Box className="flex gap-4 ">
-                          <ActionButton
-                            bg={bg}
-                            handleClick={() => handleViewUser(data?.driver)}
-                          >
-                            <FiEye />
-                          </ActionButton>
-                        </Box>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </Table>
+                rowKey={(data) => data.id}
+                loading={loading}
+                pagination={{
+                  defaultPageSize: 15,
+                  showSizeChanger: true,
+                  pageSizeOptions: ["10", "15", "20", "30"],
+                }}
+                // rowSelection={{
+                //   type: "checkbox",
+                //   ...rowSelection,
+                // }}
+                columns={columns}
+                dataSource={filterUserBookings}
+              />
             </Box>
+          </ConfigProvider>
           </Wrapper>
         </Box>
       </Box>
@@ -298,56 +375,56 @@ const ViewPartner = () => {
 
 export default ViewPartner;
 
-const tableData = [
-  {
-    destination: "Brooke Manor",
-    sender: "ken Driver",
-    receiver: "Ben Doe",
-    status: 4,
-  },
-  {
-    destination: "Brooke Manor",
-    sender: "ken Driver",
-    receiver: "Ben Doe",
-    status: 5,
-  },
-  {
-    destination: "Brooke Manor",
-    sender: "ken Driver",
-    receiver: "Ben Doe",
-    status: 0,
-  },
-  {
-    destination: "Brooke Manor",
-    sender: "ken Driver",
-    receiver: "Ben Doe",
-    status: 1,
-  },
-  {
-    destination: "Brooke Manor",
-    sender: "ken Driver",
-    receiver: "Ben Doe",
-    status: 2,
-  },
-  {
-    destination: "Brooke Manor",
-    sender: "ken Driver",
-    receiver: "Ben Doe",
-    status: 3,
-  },
-  {
-    destination: "Brooke Manor",
-    sender: "ken Driver",
-    receiver: "Ben Doe",
-    status: 4,
-  },
-  {
-    destination: "Brooke Manor",
-    sender: "ken Driver",
-    receiver: "Ben Doe",
-    status: 5,
-  },
-];
+// const tableData = [
+//   {
+//     destination: "Brooke Manor",
+//     sender: "ken Driver",
+//     receiver: "Ben Doe",
+//     status: 4,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     sender: "ken Driver",
+//     receiver: "Ben Doe",
+//     status: 5,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     sender: "ken Driver",
+//     receiver: "Ben Doe",
+//     status: 0,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     sender: "ken Driver",
+//     receiver: "Ben Doe",
+//     status: 1,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     sender: "ken Driver",
+//     receiver: "Ben Doe",
+//     status: 2,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     sender: "ken Driver",
+//     receiver: "Ben Doe",
+//     status: 3,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     sender: "ken Driver",
+//     receiver: "Ben Doe",
+//     status: 4,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     sender: "ken Driver",
+//     receiver: "Ben Doe",
+//     status: 5,
+//   },
+// ];
 const STATUS_LIST = {
   1: "arrived at pickup",
   2: "picked up",
@@ -366,12 +443,6 @@ const ActionButton = ({ bg, children, handleClick }) => (
   >
     {children}
   </Button>
-);
-const TableAction = ({ icon, text }) => (
-  <button className="bg-zinc-200 px-3 py-1.5 gap-1 rounded-md text-sm capitalize flex  ">
-    {icon}
-    {text}
-  </button>
 );
 
 // const MiniCard = ({ text, no, icon }) => (

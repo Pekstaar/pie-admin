@@ -8,32 +8,31 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useCallback } from "react";
-import { BiSort } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
 import { GrEdit } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
-import { VscFilter } from "react-icons/vsc";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Transaction } from "../assets/svg";
 import BreadCrumb from "../components/general/BreadCrumb";
 import CustomModal from "../components/general/CustomModal";
 import DeactivateButton from "../components/general/DeactivateButton";
 // import { GoGraph } from "react-icons/go";
-import Loader from "../components/Loader";
 import CInput from "../components/general/Input";
-import Table from "../components/general/Table";
+import _ from "lodash";
 import Wrapper from "../components/general/Wrapper";
 import BookingServices from "../utils/services/BookingServices";
 import UserServices from "../utils/services/UserServices";
 import EditUserModal from "../components/settings_user/EditUserModal";
-import { ConfigProvider, Popconfirm } from "antd";
+import { ConfigProvider, Popconfirm,Table } from "antd";
 import { toastProps } from "../utils/Helper";
 
 const ViewUser = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState([]);
   const [userBookings, setUserBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [filterUserBookings, setFilterUserBookings] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [loading, setLoading] = useState(true)
   const [openModal, setOpenModal] = useState(false);
   const [current, setCurrent] = useState({});
 
@@ -50,10 +49,108 @@ const ViewUser = () => {
     });
 
     BookingServices.ownersBookings(id).then((response) => {
-      setUserBookings(response);
+      let arr = [];
+      console.log(response)
+      response.forEach(async (element) => {
+        const receiver = await BookingServices.getBookingReceiver(element?.booking?.id);
+        const bookingObj = {
+          pickup: element?.booking?.formated_address || "",
+          destination: receiver?.formated_address || "",
+          sender: element?.owner?.first_name + " " + element?.owner?.last_name || "",
+          senderPhoneNumber: element?.owner?.phonenumber || "",
+          receiver: receiver?.name || "",
+          receiverPhoneNumber: receiver?.phonenumber || "",
+          driver: element?.driver?.first_name + " " + element?.driver?.last_name || "",
+          driverPhoneNumber: element?.driver?.phonenumber || "",
+          status: element?.status,
+          id: element?.id,
+        };
+        arr.push(bookingObj)
+      })
+      setUserBookings(arr);
       setLoading(false);
     });
   }, [id]);
+
+  const handleSearch = (arr, cond) => {
+    const newArr = _.filter(arr, (obj) => {
+      if (cond) {
+        return (
+          obj?.pickup?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.destination?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.sender?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.receiver?.toLowerCase()?.includes(cond?.toLowerCase()) ||
+          obj?.driver?.toLowerCase()?.includes(cond?.toLowerCase())
+        );
+      }
+    });
+
+    if (cond) return newArr;
+    else return userBookings;
+  };
+
+  useEffect(() => {
+    setFilterUserBookings(handleSearch(userBookings, searchValue));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userBookings, searchValue]);
+
+  const columns = [
+    {
+      title: "Destination",
+      dataIndex: "destination",
+      sorter: (a, b) => a?.destination.localeCompare(b?.destination),
+    },
+    {
+      title: "Receiver",
+      dataIndex: "receiver",
+      sorter: (a, b) => a?.receiver.localeCompare(b?.receiver),
+    },
+    {
+      title: "Driver",
+      dataIndex: "driver",
+      sorter: (a, b) => a?.driver.localeCompare(b?.driver),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (text) => {
+        const bg =
+          text === 0
+            ? "bg-primary_red"
+            : text === 5
+              ? "bg-primary_green"
+              : "bg-primary_yellow_light";
+
+        return (
+          <Box display={"flex"}>
+            <Box
+              py={"1"}
+              px={"2"}
+              fontSize={"xs"}
+              textTransform={"capitalize"}
+              className={`${bg} rounded-md font-medium text-center text-white`}
+            >
+              {STATUS_LIST[text]}
+            </Box>
+          </Box>
+        );
+      }
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (_, n) => {
+        return (
+          <Box className="flex gap-6 justify-start">
+            <ActionButton >
+              <FiEye onClick={() => handleViewUser(n?.id)}
+              />
+            </ActionButton>
+          </Box>
+        );
+      },
+    },
+  ]
 
   const handleOpenModal = useCallback(() => {
     setOpenModal(true);
@@ -100,13 +197,14 @@ const ViewUser = () => {
     }
   };
   // const
+
   return (
     <>
       <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
         <BreadCrumb
           icon={<Transaction />}
           title={`User management /`}
-          subtitle={user?.first_name}
+          subtitle={user?.first_name + " " + user?.last_name}
         />
         <Box className="flex gap-3 ">
           <Box className="w-2/5">
@@ -152,8 +250,7 @@ const ViewUser = () => {
                 <Popconfirm
                   placement="top"
                   title={
-                    `Are you sure you want to ${
-                      user.is_active ? "deactivate " : "activate "
+                    `Are you sure you want to ${user.is_active ? "deactivate " : "activate "
                     } ` + user?.first_name
                   }
                   onConfirm={handleDeactivateUser}
@@ -164,12 +261,11 @@ const ViewUser = () => {
                 >
                   <Box>
                     <DeactivateButton
-                      className={`mt-1 cursor-pointer ${
-                        user?.is_active === false
+                      className={`mt-1 cursor-pointer ${user?.is_active === false
                           ? "bg-primary_green text-white"
                           : "bg-red-100  text-red-600 "
-                      }`}
-                      // handleClick={() => setShowConfirm(true)}
+                        }`}
+                    // handleClick={() => setShowConfirm(true)}
                     >
                       <Text
                         fontSize={"sm"}
@@ -195,17 +291,17 @@ const ViewUser = () => {
                   // loading={loading}
                   // handleSave={handleCreate}
                   title={"Add User"}
-                  // isOpen={openModal}
-                  // onClose={() => setOpenModal(false)}
-                  // button={
-                  //   // <PrimaryButton
-                  //   //   className={"text-sm items-end"}
-                  //   //   handleClick={() => setOpenModal(true)}
-                  //   // >
-                  //   //   <GrAdd className="text-lg" />
-                  //   //   <Text fontWeight={"medium"}>Add User</Text>
-                  //   // </PrimaryButton>
-                  // }
+                // isOpen={openModal}
+                // onClose={() => setOpenModal(false)}
+                // button={
+                //   // <PrimaryButton
+                //   //   className={"text-sm items-end"}
+                //   //   handleClick={() => setOpenModal(true)}
+                //   // >
+                //   //   <GrAdd className="text-lg" />
+                //   //   <Text fontWeight={"medium"}>Add User</Text>
+                //   // </PrimaryButton>
+                // }
                 >
                   <VStack gap={"2"} w={"full"}>
                     {/* <Box className="flex w-full flex-col gap-1">
@@ -331,7 +427,7 @@ const ViewUser = () => {
                 <Box className="text-right flex flex-col gap-3">
                   <Text fontWeight={"medium"}>Full name</Text>
                   <Text fontWeight={"medium"}>Category</Text>
-                  <Text fontWeight={"medium"}>Location</Text>
+                  {/* <Text fontWeight={"medium"}>Location</Text> */}
                   <Text fontWeight={"medium"}>Email</Text>
                   <Text fontWeight={"medium"}>Phone number</Text>
                   <Text fontWeight={"medium"}>Onboarding date</Text>
@@ -348,8 +444,8 @@ const ViewUser = () => {
                     {user?.is_admin
                       ? "Admin"
                       : user?.is_driver
-                      ? "Driver"
-                      : "User"}
+                        ? "Driver"
+                        : "User"}
                   </Text>
                   {/* <Text>Nairobi CBD, Nairobi</Text> */}
                   <Text>{user?.email}</Text>
@@ -421,78 +517,44 @@ const ViewUser = () => {
             {/* search and table actions */}
             <HStack py={"6"} justifyContent={"space-between"}>
               {/* /search input */}
-              <CInput icon={<IoSearchOutline className="text-xl" />} />
-              {/* actions */}
-              <HStack gap={"2"}>
-                <TableAction
-                  icon={<VscFilter className="text-lg" />}
-                  text={"Filter"}
-                />
-                <TableAction
-                  icon={<BiSort className="text-lg" />}
-                  text={"Sort"}
-                />
-              </HStack>
+              <CInput
+                icon={<IoSearchOutline className="text-xl" />}
+                handleChange={(e) => {
+                  setSearchValue(e?.target?.value);
+                }}
+              />
             </HStack>
 
             {/* body */}
-
+            <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: "#EFAF1C",
+                colorPrimaryTextActive: "#19411D",
+                colorPrimaryText: "#19411D",
+                // colorBgBase: "#19411D",
+                colorPrimaryBg: "#EFAF1C",
+              },
+            }}
+          >
             <Box>
-              <Table headers={[...Object.keys(tableData[0]), "Actions"]}>
-                {loading ? (
-                  <Loader />
-                ) : (
-                  userBookings?.map((data, key) => {
-                    const isEven = key % 2;
-                    const status = STATUS_LIST[data?.status];
-                    const bg =
-                      data?.status === 0
-                        ? "bg-primary_red"
-                        : data?.status === 5
-                        ? "bg-primary_green"
-                        : "bg-primary_yellow_light";
-
-                    return (
-                      <tr
-                        className={`h-14 capitalize ${
-                          isEven ? "bg-[#F9F9F9]" : "white"
-                        }`}
-                        key={key}
-                      >
-                        <td className=" py-3 px-4">--</td>
-                        <td className="py-3 px-4">--</td>
-                        <td className="py-3 px-4">
-                          {data?.driver?.first_name} {data?.driver?.last_name}
-                        </td>
-                        <td className={`text-white py-3 px-4 `}>
-                          <Box className="flex">
-                            <Box
-                              py={"1"}
-                              px={"2"}
-                              fontSize={"xs"}
-                              className={`${bg} rounded-md font-medium  `}
-                            >
-                              {status}
-                            </Box>
-                          </Box>
-                        </td>
-                        {/* actions table */}
-                        <td className={` text-white py-3 px-4 w-24`}>
-                          <Box className="flex gap-4 justify-center">
-                            <ActionButton
-                              bg={bg}
-                              handleClick={() => handleViewUser(data?.driver)}
-                            >
-                              <FiEye />
-                            </ActionButton>
-                          </Box>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </Table>
+              <Table
+                rowKey={(data) => data.id}
+                loading={loading}
+                pagination={{
+                  defaultPageSize: 15,
+                  showSizeChanger: true,
+                  pageSizeOptions: ["10", "15", "20", "30"],
+                }}
+                // rowSelection={{
+                //   type: "checkbox",
+                //   ...rowSelection,
+                // }}
+                columns={columns}
+                dataSource={filterUserBookings}
+              />
             </Box>
+          </ConfigProvider>
           </Wrapper>
         </Box>
       </Box>
@@ -508,56 +570,56 @@ const ViewUser = () => {
 
 export default ViewUser;
 
-const tableData = [
-  {
-    destination: "Brooke Manor",
-    receiver: "Ben Doe",
-    driver: "ken Driver",
-    status: 4,
-  },
-  {
-    destination: "Brooke Manor",
-    receiver: "Ben Doe",
-    driver: "ken Driver",
-    status: 5,
-  },
-  {
-    destination: "Brooke Manor",
-    receiver: "Ben Doe",
-    driver: "ken Driver",
-    status: 0,
-  },
-  {
-    destination: "Brooke Manor",
-    receiver: "Ben Doe",
-    driver: "ken Driver",
-    status: 1,
-  },
-  {
-    destination: "Brooke Manor",
-    receiver: "Ben Doe",
-    driver: "ken Driver",
-    status: 2,
-  },
-  {
-    destination: "Brooke Manor",
-    receiver: "Ben Doe",
-    driver: "ken Driver",
-    status: 3,
-  },
-  {
-    destination: "Brooke Manor",
-    receiver: "Ben Doe",
-    driver: "ken Driver",
-    status: 4,
-  },
-  {
-    destination: "Brooke Manor",
-    receiver: "Ben Doe",
-    driver: "ken Driver",
-    status: 5,
-  },
-];
+// const tableData = [
+//   {
+//     destination: "Brooke Manor",
+//     receiver: "Ben Doe",
+//     driver: "ken Driver",
+//     status: 4,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     receiver: "Ben Doe",
+//     driver: "ken Driver",
+//     status: 5,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     receiver: "Ben Doe",
+//     driver: "ken Driver",
+//     status: 0,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     receiver: "Ben Doe",
+//     driver: "ken Driver",
+//     status: 1,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     receiver: "Ben Doe",
+//     driver: "ken Driver",
+//     status: 2,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     receiver: "Ben Doe",
+//     driver: "ken Driver",
+//     status: 3,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     receiver: "Ben Doe",
+//     driver: "ken Driver",
+//     status: 4,
+//   },
+//   {
+//     destination: "Brooke Manor",
+//     receiver: "Ben Doe",
+//     driver: "ken Driver",
+//     status: 5,
+//   },
+// ];
 const STATUS_LIST = {
   1: "arrived at pickup",
   2: "picked up",
@@ -576,12 +638,6 @@ const ActionButton = ({ bg, children, handleClick }) => (
   >
     {children}
   </Button>
-);
-const TableAction = ({ icon, text }) => (
-  <button className="bg-zinc-200 px-3 py-1.5 gap-1 rounded-md text-sm capitalize flex  ">
-    {icon}
-    {text}
-  </button>
 );
 
 // const MiniCard = ({ text, no, icon }) => (
