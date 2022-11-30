@@ -1,12 +1,12 @@
 import { HStack, Text } from "@chakra-ui/react";
-import React from "react";
+import React, {useMemo} from "react";
 import { Cancelled, Completed, Picked, Requests } from "../../assets/svg";
 import { Doughnat } from "../charts/Doughnat";
 // import Example from "../charts/Pie";
 import Wrapper from "../general/Wrapper";
 import ActivityItem from "./ActivityItem";
 
-const ActivitiesCard = ({percentageCompleted}) => {
+const ActivitiesCard = ({percentageCompleted, bookingActivities}) => {
   //   const handleChart = useCallback(() => {}, []);
   // const handleChart = React.useMemo(() => );
   const percentageNotCompleted = 100 - percentageCompleted;
@@ -34,6 +34,33 @@ const ActivitiesCard = ({percentageCompleted}) => {
     ],
     text: "40",
   };
+
+  const activities =  useMemo(() => [
+    {
+      title: "Requests",
+      no: bookingActivities[0],
+      icon: <Requests />,
+      bg: "current_bg",
+    },
+    {
+      title: "Picked",
+      no: bookingActivities[1],
+      icon: <Picked />,
+      bg: "picked_bg",
+    },
+    {
+      title: "Completed",
+      no: bookingActivities[2],
+      icon: <Completed />,
+      bg: "completed_bg",
+    },
+    {
+      title: "Cancelled",
+      no: bookingActivities[3],
+      icon: <Cancelled />,
+      bg: "cancelled_bg",
+    },
+  ], [bookingActivities]);
 
   return (
     <Wrapper py={"2"}>
@@ -82,29 +109,4 @@ const ActivitiesCard = ({percentageCompleted}) => {
 
 export default ActivitiesCard;
 
-const activities = [
-  {
-    title: "Requests",
-    no: "32",
-    icon: <Requests />,
-    bg: "current_bg",
-  },
-  {
-    title: "Picked",
-    no: "10",
-    icon: <Picked />,
-    bg: "picked_bg",
-  },
-  {
-    title: "Completed",
-    no: "33",
-    icon: <Completed />,
-    bg: "completed_bg",
-  },
-  {
-    title: "Cancelled",
-    no: "33",
-    icon: <Cancelled />,
-    bg: "cancelled_bg",
-  },
-];
+

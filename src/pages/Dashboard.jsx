@@ -18,15 +18,21 @@ const Dashboard = () => {
   const [createdBooking, setCreatedBooking] = useState("");
   const [completedBooking, setCompletedBooking] = useState("");
 
+  // Activities
+  const [requests, setRequests] = useState("");
+  const [picked, setPicked] = useState("");
+  const [completed, setCompleted] = useState("");
+  const [canceled, setCanceled] = useState("");
+
   // Doughnat chart data total bookings
   const [totalBookingPercentage, setTotalBookingPercentage] = useState("");
 
   // Doughnat chart data vehicle type fliters
   const [vehicleTypeCount, setVehicleTypeCount] = useState("");
   const [vehiclesTypes, setVehiclesType] = useState("");
-  const [createdBookingPerVehicleType, setCreatedBookingPerVehicleType]= useState("");
-  const [completedBookingPerVehicleType, setCompletedBookingPerVehicleType]= useState("");
- 
+  const [createdBookingPerVehicleType, setCreatedBookingPerVehicleType] = useState("");
+  const [completedBookingPerVehicleType, setCompletedBookingPerVehicleType] = useState("");
+
   // const [loading, setLoading] = useState(true);
 
   // Array of Months
@@ -46,9 +52,9 @@ const Dashboard = () => {
   ], []);
 
   const VECHILE_TYPES = useMemo(() => [
-    "Motorbike", 
-    "Vehicle", 
-    "Van", 
+    "Motorbike",
+    "Vehicle",
+    "Van",
     "Truck"
   ], []);
 
@@ -61,6 +67,12 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    // Setting up activities data
+    setRequests(bookings.reduce((acc, obj) => obj.status >= 0 ? acc += 1 : acc, 0));
+    setPicked(bookings.reduce((acc, obj) => obj.status === 3 ? acc += 1 : acc, 0));
+    setCompleted(bookings.reduce((acc, obj) => obj.status === 5 ? acc += 1 : acc, 0));
+    setCanceled(bookings.reduce((acc, obj) => obj.status === 0 ? acc += 1 : acc, 0));
+
     // Bar chart and Doughnat chart data
     if (bookings.length > 0) {
       const months = Object.entries(
@@ -148,6 +160,15 @@ const Dashboard = () => {
 
   }, [MONTHS, VECHILE_TYPES, bookings]);
 
+  const bookingActivities = useMemo(() => [
+    requests,
+    picked,
+    completed,
+    canceled
+  ], [requests, picked, completed, canceled]);
+
+  console.log(bookingActivities)
+
   const bookingsByProduct = useMemo(
     () => ({
       options: {
@@ -184,7 +205,7 @@ const Dashboard = () => {
     [vehicleTypeCount, vehiclesTypes]
   );
 
-  
+
   const barChartBookingsByVehicleType = useMemo(
     () => ({
       options: {
@@ -239,7 +260,7 @@ const Dashboard = () => {
       },
 
       data: {
-        labels:barChartMonths,
+        labels: barChartMonths,
         datasets: [
           {
             label: "Created booking",
@@ -264,12 +285,12 @@ const Dashboard = () => {
     { text: "dissatisfied", color: "#D9D9D9" },
     { text: "very dissatisfied", color: "#BB1600" },
   ];
-
+  
   return (
     <Box p={"3"} className="max-h-[calc(100%-80px)]" overflowY={"scroll"}>
       <Breadcrumb />
 
-      <ActivitiesCard percentageCompleted={totalBookingPercentage} />
+      <ActivitiesCard percentageCompleted={totalBookingPercentage} bookingActivities={bookingActivities}/>
 
       {/* body */}
       {/* Bookings and customer satisfaction */}
