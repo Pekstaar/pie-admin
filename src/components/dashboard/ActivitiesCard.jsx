@@ -24,7 +24,7 @@ const ActivitiesCard = ({percentageCompleted, bookingActivities}) => {
   };
 
   const chartData = {
-    labels: ["Red", "Blue"],
+    labels: ["Completed", "Uncompleted"],
     datasets: [
       {
         label: "# of Votes",
