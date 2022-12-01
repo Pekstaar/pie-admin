@@ -10,26 +10,29 @@ import EarningServices from "../../../utils/services/EarningServices";
 const Paid = () => {
   const [earnings, setEarnings] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [filterPaidEarnings, setFilterPaidEarnings] = useState([])
+  const [filterPaidEarnings, setFilterPaidEarnings] = useState([]);
   const [stateLoading, setStateLoading] = useState(true);
-
 
   React.useEffect(() => {
     EarningServices.fetchEarnings().then((response) => {
-      console.log(response)
+      // console.log(response)
       let arr = [];
-      response.filter((data) => data.status === 1).forEach((element) => {
-        const paidEarningsObj = {
-          fullname: element?.owner?.first_name + " " + element?.owner?.last_name || "",
-          amount: element?.amount || 0,
-          createdAt: element?.created_at || "",
-          id: element?.id,
-        };
-        arr.push(paidEarningsObj)
-      });
+      response
+        .filter((data) => data.status === 1)
+        .forEach((element) => {
+          const paidEarningsObj = {
+            fullname:
+              element?.owner?.first_name + " " + element?.owner?.last_name ||
+              "",
+            amount: element?.amount || 0,
+            createdAt: element?.created_at || "",
+            id: element?.id,
+          };
+          arr.push(paidEarningsObj);
+        });
       setEarnings(arr);
       setFilterPaidEarnings(arr);
-      setStateLoading(false)
+      setStateLoading(false);
     });
   }, []);
 
@@ -48,9 +51,9 @@ const Paid = () => {
   };
 
   React.useEffect(() => {
-    setFilterPaidEarnings(handleSearch(earnings, searchValue))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[earnings, searchValue]);
+    setFilterPaidEarnings(handleSearch(earnings, searchValue));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [earnings, searchValue]);
 
   const columns = [
     {

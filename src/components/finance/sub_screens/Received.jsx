@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
 import { ConfigProvider, Table } from "antd";
+import React, { useEffect, useState } from "react";
 
+import { Box, HStack, Text, useToast } from "@chakra-ui/react";
 import _ from "lodash";
 import { IoSearchOutline } from "react-icons/io5";
-import CInput from "../../general/Input";
-import { Box, HStack } from "@chakra-ui/react";
-import OutlinedButton from "../../general/OutlinedButton";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import EarningServices from "../../../utils/services/EarningServices";
+import CInput from "../../general/Input";
+import { toastProps } from "../../../utils/Helper";
 
 const Received = () => {
+  const toast = useToast();
+
   const [earnings, setEarnings] = useState([]);
   const [filterUnpaidEarnings, setFilterUnpaidEarnings] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -20,19 +21,42 @@ const Received = () => {
       let arr = [];
       response.forEach((element) => {
         const unpaidEarningsObj = {
-          fullname: element?.owner?.first_name + " " + element?.owner?.last_name || "",
+          fullname:
+            element?.owner?.first_name + " " + element?.owner?.last_name || "",
           amount: element?.amount || 0,
           createdAt: element?.created_at || "",
           id: element?.id,
         };
-        arr.push(unpaidEarningsObj)
+        arr.push(unpaidEarningsObj);
       });
       setEarnings(arr);
       setFilterUnpaidEarnings(arr);
-      setStateLoading(false)
+      setStateLoading(false);
     });
   }, []);
 
+  const handleConfirm = async (r) => {
+    setStateLoading(true);
+    try {
+      await EarningServices.confirmPaymentRequest(r?.id);
+
+      toast({
+        ...toastProps,
+        title: "Success!",
+        description: "Request confirmed",
+        status: "success",
+      });
+      setStateLoading(false);
+    } catch (error) {
+      toast({
+        ...toastProps,
+        title: "Error!",
+        description: "Request not confirmed",
+        status: "error",
+      });
+      setStateLoading(false);
+    }
+  };
   const handleSearch = (arr, cond) => {
     const newArr = _.filter(arr, (obj) => {
       if (cond) {
@@ -48,7 +72,7 @@ const Received = () => {
   };
 
   useEffect(() => {
-    setFilterUnpaidEarnings(handleSearch(earnings, searchValue))
+    setFilterUnpaidEarnings(handleSearch(earnings, searchValue));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [earnings, searchValue]);
 
@@ -77,14 +101,16 @@ const Received = () => {
       render: (_, n) => {
         return (
           <Box className="flex gap-4">
-            <OutlinedButton
-              icon={<RiDeleteBin6Line className="text-xl" />}
-              text={"Cancel"}
-            />
+            <button
+              className="bg-primary_yellow rounded-md items-center flex gap-2 px-5 py-2"
+              onClick={() => handleConfirm(n)}
+            >
+              <Text fontWeight={"semibold"}>Confirm</Text>
+            </button>
           </Box>
-        )
-      }
-    }
+        );
+      },
+    },
   ];
 
   return (

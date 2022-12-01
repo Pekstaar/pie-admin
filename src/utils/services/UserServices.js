@@ -4,7 +4,6 @@ import AxiosUtility, { setAuthToken } from "./AxiosService";
 async function fetchUsers() {
   setAuthToken(AxiosUtility);
   const res = await AxiosUtility.get("/admins/api/users/");
-  
 
   return res.data;
 }
@@ -27,7 +26,7 @@ async function createUser(data) {
 
 async function updateUser(data) {
   setAuthToken(AxiosUtility);
-  const res = await AxiosUtility.patch(`/admins/api/user/update/`,data);
+  const res = await AxiosUtility.patch(`/admins/api/user/update/`, data);
 
   return res.data;
 }
@@ -54,8 +53,16 @@ async function createDriver(data) {
 
 async function deleteUser() {
   setAuthToken(AxiosUtility);
-  const res = await AxiosUtility.delete(
-    "/users/api/user/delete/"
+  const res = await AxiosUtility.delete("/users/api/user/delete/");
+
+  return res.data;
+}
+
+async function getDriverBankDetails(id) {
+  setAuthToken(AxiosUtility);
+  // https://apidev.okapy.world/admins/api/driver/banking/information/74/
+  const res = await AxiosUtility.get(
+    "/admins/api/driver/banking/information/" + id + "/"
   );
 
   return res.data;
@@ -68,7 +75,8 @@ const UserServices = {
   updateUser,
   createDriver,
   fetchDrivers,
-  deleteUser
+  deleteUser,
+  getDriverBankDetails,
 };
 
 export default UserServices;
