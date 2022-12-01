@@ -21,14 +21,14 @@ const Finance = () => {
     // Paid invoices
     EarningServices.fetchEarnings().then((response) => {
       setPaidInvoices(response.filter((data) => data.status === 1));
-      setPaidInvoicesCount(response.reduce((acc, obj) => obj.status === 1 ? acc += 1 : acc, 0));
+      setPaidInvoicesCount(response.reduce((acc, obj) => obj.status === 1 ? acc += parseInt(obj.amount) : acc, 0));
       setStateLoading(false);
     });
 
     // Unpaid invoices
     EarningServices.fetchRequestEarnings().then((response) => {
       setUnPaidInvoices(response);
-      setUnPaidInvoicesCount(response.reduce((acc, obj) => acc += 1, 0));
+      setUnPaidInvoicesCount(response.reduce((acc, obj) => acc += parseInt(obj.amount), 0));
       setStateLoading(false);
     });
 
