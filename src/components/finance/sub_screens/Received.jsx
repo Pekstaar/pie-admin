@@ -14,7 +14,7 @@ const Received = ({ unPaidInvoices, loading }) => {
   const [earnings, setEarnings] = useState([]);
   const [filterUnpaidEarnings, setFilterUnpaidEarnings] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const setStateLoading = useState(true);
+  // const [stateLoading, setStateLoading] = useState(true);
 
   useEffect(() => {
     let arr = [];
@@ -33,7 +33,6 @@ const Received = ({ unPaidInvoices, loading }) => {
   }, [unPaidInvoices]);
 
   const handleConfirm = async (r) => {
-    setStateLoading(true);
     try {
       await EarningServices.confirmPaymentRequest(r?.id);
 
@@ -43,7 +42,6 @@ const Received = ({ unPaidInvoices, loading }) => {
         description: "Request confirmed",
         status: "success",
       });
-      setStateLoading(false);
     } catch (error) {
       toast({
         ...toastProps,
@@ -51,7 +49,6 @@ const Received = ({ unPaidInvoices, loading }) => {
         description: "Request not confirmed",
         status: "error",
       });
-      setStateLoading(false);
     }
   };
   const handleSearch = (arr, cond) => {
