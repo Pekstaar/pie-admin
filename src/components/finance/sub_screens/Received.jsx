@@ -64,7 +64,7 @@ const Received = () => {
       sorter: (a, b) => a?.fullname.localeCompare(b?.fullname),
     },
     {
-      title: "Amount",
+      title: "Amount (KES)",
       dataIndex: "amount",
       // render: (text, u) => (
       //   "Ksh. " + {text}
