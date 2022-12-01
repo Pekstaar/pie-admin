@@ -15,18 +15,21 @@ const Finance = () => {
   const [unPaidInvoices, setUnPaidInvoices] = useState([]);
   const [paidInvoicesCount, setPaidInvoicesCount] = useState([]);
   const [unPaidInvoicesCount, setUnPaidInvoicesCount] = useState([]);
+  const [stateLoading, setStateLoading] = useState(true);
 
   useEffect(() => {
     // Paid invoices
     EarningServices.fetchEarnings().then((response) => {
       setPaidInvoices(response.filter((data) => data.status === 1));
       setPaidInvoicesCount(response.reduce((acc, obj) => obj.status === 1 ? acc += 1 : acc, 0));
+      setStateLoading(false);
     });
 
     // Unpaid invoices
     EarningServices.fetchRequestEarnings().then((response) => {
       setUnPaidInvoices(response);
       setUnPaidInvoicesCount(response.reduce((acc, obj) => acc += 1, 0));
+      setStateLoading(false);
     });
 
   }, []);
@@ -114,9 +117,9 @@ const Finance = () => {
           </HStack>
 
           {currentSubNav === "paid" ? (
-            <Paid paidInvoices={paidInvoices}/>
+            <Paid paidInvoices={paidInvoices} loading={stateLoading}/>
           ) : (
-            currentSubNav === "unpaid" && <Received unPaidInvoices={unPaidInvoices}/>
+            currentSubNav === "unpaid" && <Received unPaidInvoices={unPaidInvoices} loading={stateLoading}/>
           )}
         </Wrapper>
 

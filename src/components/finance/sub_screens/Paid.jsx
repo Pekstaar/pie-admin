@@ -6,11 +6,10 @@ import { Box, HStack } from "@chakra-ui/react";
 import { IoSearchOutline } from "react-icons/io5";
 import CInput from "../../../components/general/Input";
 
-const Paid = ({ paidInvoices }) => {
+const Paid = ({ paidInvoices, loading }) => {
   const [earnings, setEarnings] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [filterPaidEarnings, setFilterPaidEarnings] = useState([]);
-  const [stateLoading, setStateLoading] = useState(true);
 
   React.useEffect(() => {
     let arr = [];
@@ -27,7 +26,6 @@ const Paid = ({ paidInvoices }) => {
     });
     setEarnings(arr);
     setFilterPaidEarnings(arr);
-    setStateLoading(false);
   }, [paidInvoices]);
 
   const handleSearch = (arr, cond) => {
@@ -99,7 +97,7 @@ const Paid = ({ paidInvoices }) => {
         <Box>
           <Table
             rowKey={(data) => data.id}
-            loading={stateLoading}
+            loading={loading}
             pagination={{
               defaultPageSize: 15,
               showSizeChanger: true,

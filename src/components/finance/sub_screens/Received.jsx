@@ -8,13 +8,13 @@ import EarningServices from "../../../utils/services/EarningServices";
 import CInput from "../../general/Input";
 import { toastProps } from "../../../utils/Helper";
 
-const Received = ({ unPaidInvoices }) => {
+const Received = ({ unPaidInvoices, loading }) => {
   const toast = useToast();
 
   const [earnings, setEarnings] = useState([]);
   const [filterUnpaidEarnings, setFilterUnpaidEarnings] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const [stateLoading, setStateLoading] = useState(true);
+  const setStateLoading = useState(true);
 
   useEffect(() => {
     let arr = [];
@@ -30,7 +30,6 @@ const Received = ({ unPaidInvoices }) => {
     });
     setEarnings(arr);
     setFilterUnpaidEarnings(arr);
-    setStateLoading(false);
   }, [unPaidInvoices]);
 
   const handleConfirm = async (r) => {
@@ -139,7 +138,7 @@ const Received = ({ unPaidInvoices }) => {
         <Box>
           <Table
             rowKey={(data) => data.id}
-            loading={stateLoading}
+            loading={loading}
             pagination={{
               defaultPageSize: 15,
               showSizeChanger: true,
