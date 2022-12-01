@@ -17,13 +17,15 @@ import EditVehicleModal from "../components/apps/EditVehicleInfoModal";
 
 const ViewDriver = () => {
   const location = useLocation()?.pathname.split("/");
-  const [openPersonalInfoModal, setOpenPersonalInfoModal] = React.useState(false);
+  const [openPersonalInfoModal, setOpenPersonalInfoModal] =
+    React.useState(false);
   const [openVehicleInfoModal, setOpenVehicleInfoModal] = React.useState(false);
   const [openRejectModal, setOpenRejectModal] = React.useState(false);
   const [current, setCurrent] = React.useState({});
   const [user] = useState({});
   const [vehicle, setVehicle] = useState({});
   const [driverProfile, setDriverProfile] = useState({});
+  const [bankDetails, setBankDetails] = useState({});
   const toast = useToast();
   const [loading, setLoading] = useState(false);
 
@@ -57,15 +59,22 @@ const ViewDriver = () => {
     // UserServices.fetchUsers().then((response) => {
     //   setUser(response.find((user) => user.id === parseInt(profileId)));
     // });
-    auth.getProfiles().then((response) => {
+    auth.getProfiles().then(async (response) => {
       setDriverProfile(
         response.find((user) => user.id === parseInt(profileId))
       );
+
+      const bankDetails = await UserServices.getDriverBankDetails(profileId);
+
+      setBankDetails(bankDetails);
+      console.log("DRIVER DETAILS:", bankDetails);
     });
 
-    FleetServices.fetchDriversVehicles(driverProfile?.user?.id).then((response) => {
-      setVehicle(response[0] || {});
-    });
+    FleetServices.fetchDriversVehicles(driverProfile?.user?.id).then(
+      (response) => {
+        setVehicle(response[0] || {});
+      }
+    );
   }, [profileId, driverProfile?.user?.id]);
 
   const handleApprove = () => {
@@ -141,8 +150,8 @@ const ViewDriver = () => {
                 {driverProfile?.user?.is_driver
                   ? "Driver"
                   : driverProfile?.user?.is_admin
-                    ? "Admin"
-                    : "User"}
+                  ? "Admin"
+                  : "User"}
                 :{" "}
                 {driverProfile?.user?.first_name +
                   " " +
@@ -157,8 +166,7 @@ const ViewDriver = () => {
                   Personal information
                 </Text>
 
-                <ActionButton
-                >
+                <ActionButton>
                   <GrEdit
                     onClick={() => {
                       setCurrent({
@@ -169,8 +177,8 @@ const ViewDriver = () => {
                         is_driver: driverProfile?.user?.is_driver,
                         email: driverProfile?.user?.email,
                         phonenumber: driverProfile?.user?.phonenumber,
-                      })
-                      handleEditPersonalInfoOpenModal()
+                      });
+                      handleEditPersonalInfoOpenModal();
                     }}
                   />
                 </ActionButton>
@@ -204,8 +212,8 @@ const ViewDriver = () => {
                     {driverProfile?.user?.is_driver
                       ? "Driver"
                       : driverProfile?.user?.is_admin
-                        ? "Admin"
-                        : "User"}
+                      ? "Admin"
+                      : "User"}
                     :{" "}
                     {driverProfile?.user?.first_name +
                       " " +
@@ -219,7 +227,19 @@ const ViewDriver = () => {
                 </Box>
               </Wrapper>
             </Box>
-
+            {/* <GrEdit
+                    onClick={() => {
+                      setCurrent({
+                        id: vehicle?.id,
+                        reg_number: vehicle?.reg_number,
+                        color: vehicle?.color,
+                        vehicle_type: vehicle?.vehicle_type,
+                        model: vehicle?.model,
+                        owner: driverProfile?.user?.id,
+                      });
+                      handleEditVehicleInfoOpenModal();
+                    }}
+                  /> */}
             {/* vehicle information */}
             <Box>
               <Box className="flex justify-between py-2 px-5">
@@ -235,8 +255,8 @@ const ViewDriver = () => {
                         vehicle_type: vehicle?.vehicle_type,
                         model: vehicle?.model,
                         owner: driverProfile?.user?.id,
-                      })
-                      handleEditVehicleInfoOpenModal()
+                      });
+                      handleEditVehicleInfoOpenModal();
                     }}
                   />
                 </ActionButton>
@@ -263,6 +283,33 @@ const ViewDriver = () => {
                   <Text>{vehicle_types[vehicle?.vehicle_type]}</Text>
                   <Text>{vehicle?.model || "__"}</Text>
                   <Text>{vehicle?.owner?.date_joined || "__"}</Text>
+                </Box>
+              </Wrapper>
+            </Box>
+            <Box>
+              <Box className="flex justify-between py-2 px-5">
+                <Text fontWeight={"medium"}>Bank information</Text>
+              </Box>
+              <Wrapper
+                my={"2"}
+                p={"5"}
+                borderRadius={"none"}
+                className={"flex justify-center items-center gap-3 text-sm"}
+              >
+                <Box className="text-right flex flex-col gap-4">
+                  <Text fontWeight={"medium"}>Acc Name</Text>
+                  <Text fontWeight={"medium"}>Acc Number</Text>
+                  <Text fontWeight={"medium"}>Bank Branch</Text>
+                  <Text fontWeight={"medium"}>Bank Name</Text>
+                </Box>
+
+                <div className={"bg-zinc-200 h-40 w-0.5 rounded-full"} />
+
+                <Box className="text-left flex flex-col gap-4">
+                  <Text>{bankDetails?.account_name || "__"}</Text>
+                  <Text>{bankDetails?.account_number || "__"}</Text>
+                  <Text>{bankDetails?.bank_branch || "__"}</Text>
+                  <Text>{bankDetails?.bank_name || "__"}</Text>
                 </Box>
               </Wrapper>
             </Box>

@@ -16,6 +16,20 @@ async function fetchRequestEarnings() {
   return res.data;
 }
 
-const EarningServices = { fetchEarnings, fetchRequestEarnings };
+async function confirmPaymentRequest(owner) {
+  setAuthToken(AxiosUtility);
+
+  const res = await AxiosUtility.patch("admins/api/earnings/request/update", {
+    owner,
+  });
+
+  return res.data;
+}
+
+const EarningServices = {
+  fetchEarnings,
+  fetchRequestEarnings,
+  confirmPaymentRequest,
+};
 
 export default EarningServices;

@@ -11,7 +11,9 @@ import UserServices from "../../../utils/services/UserServices";
 
 const Accepted = ({ handleView }) => {
   const [applications, setApplications] = useState();
-  const [filterAcceptedApplication, setFilterAcceptedApplication] = useState([]);
+  const [filterAcceptedApplication, setFilterAcceptedApplication] = useState(
+    []
+  );
   const [stateLoading, setStateLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
 
@@ -20,14 +22,16 @@ const Accepted = ({ handleView }) => {
       let arr = [];
       response.forEach((element) => {
         const pendingApplicationObj = {
-          fullname: element?.user?.first_name + " " + element?.user?.last_name || "",
+          fullname:
+            element?.user?.first_name + " " + element?.user?.last_name || "",
           phone: element?.user?.phonenumber || "",
           email: element?.user?.email || "",
           dateJoined: element?.user?.date_joined || "",
           id: element?.id,
+          uid: element?.user?.id,
         };
-        arr.push(pendingApplicationObj)
-      })
+        arr.push(pendingApplicationObj);
+      });
       setApplications(arr);
       setFilterAcceptedApplication(arr);
       setStateLoading(false);
@@ -86,14 +90,14 @@ const Accepted = ({ handleView }) => {
       render: (_, n) => {
         return (
           <Box className="flex gap-6 justify-start">
-            <ActionButton handleClick={() => handleView(n?.id)}>
+            <ActionButton handleClick={() => handleView(n?.uid)}>
               <FiEye />
             </ActionButton>
           </Box>
         );
       },
     },
-  ]
+  ];
 
   return (
     <>
@@ -214,4 +218,3 @@ export const ActionButton = ({ bg, children, handleClick }) => (
     {children}
   </Button>
 );
-
