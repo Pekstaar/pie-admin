@@ -5,36 +5,30 @@ import _ from "lodash";
 import { Box, HStack } from "@chakra-ui/react";
 import { IoSearchOutline } from "react-icons/io5";
 import CInput from "../../../components/general/Input";
-import EarningServices from "../../../utils/services/EarningServices";
 
-const Paid = () => {
+const Paid = ({ paidInvoices }) => {
   const [earnings, setEarnings] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [filterPaidEarnings, setFilterPaidEarnings] = useState([]);
   const [stateLoading, setStateLoading] = useState(true);
 
   React.useEffect(() => {
-    EarningServices.fetchEarnings().then((response) => {
-      // console.log(response)
-      let arr = [];
-      response
-        .filter((data) => data.status === 1)
-        .forEach((element) => {
-          const paidEarningsObj = {
-            fullname:
-              element?.owner?.first_name + " " + element?.owner?.last_name ||
-              "",
-            amount: element?.amount || 0,
-            createdAt: element?.created_at || "",
-            id: element?.id,
-          };
-          arr.push(paidEarningsObj);
-        });
-      setEarnings(arr);
-      setFilterPaidEarnings(arr);
-      setStateLoading(false);
+    let arr = [];
+    paidInvoices.forEach((element) => {
+      const paidEarningsObj = {
+        fullname:
+          element?.owner?.first_name + " " + element?.owner?.last_name ||
+          "",
+        amount: element?.amount || 0,
+        createdAt: element?.created_at || "",
+        id: element?.id,
+      };
+      arr.push(paidEarningsObj);
     });
-  }, []);
+    setEarnings(arr);
+    setFilterPaidEarnings(arr);
+    setStateLoading(false);
+  }, [paidInvoices]);
 
   const handleSearch = (arr, cond) => {
     const newArr = _.filter(arr, (obj) => {

@@ -1,8 +1,8 @@
 import { Box, Button, HStack, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import BreadCrumb from "../components/general/BreadCrumb";
 import Wrapper from "../components/general/Wrapper";
-
+import EarningServices from "../utils/services/EarningServices";
 import { GoGraph } from "react-icons/go";
 import { Doughnat } from "../components/charts/Doughnat";
 import FinanceCard from "../components/finance/FinanceCard";
@@ -11,8 +11,27 @@ import Received from "../components/finance/sub_screens/Received";
 
 const Finance = () => {
   const [currentSubNav, setCurrent] = useState("paid"); //processing,paid
+  const [paidInvoices, setPaidInvoices] = useState([]);
+  const [unPaidInvoices, setUnPaidInvoices] = useState([]);
+  const [paidInvoicesCount, setPaidInvoicesCount] = useState([]);
+  const [unPaidInvoicesCount, setUnPaidInvoicesCount] = useState([]);
 
-  const bookingsByProduct = React.useMemo(
+  useEffect(() => {
+    // Paid invoices
+    EarningServices.fetchEarnings().then((response) => {
+      setPaidInvoices(response.filter((data) => data.status === 1));
+      setPaidInvoicesCount(response.reduce((acc, obj) => obj.status === 1 ? acc += 1 : acc, 0));
+    });
+
+    // Unpaid invoices
+    EarningServices.fetchRequestEarnings().then((response) => {
+      setUnPaidInvoices(response);
+      setUnPaidInvoicesCount(response.reduce((acc, obj) => acc += 1, 0));
+    });
+
+  }, []);
+
+  const bookingsByProduct = useMemo(
     () => ({
       options: {
         plugins: {
@@ -41,6 +60,28 @@ const Finance = () => {
     }),
     []
   );
+
+  const cards_data = useMemo(
+    () =>  [
+    {
+      text: "Paid",
+      number: paidInvoicesCount,
+    },
+    {
+      text: "Unpaid",
+      number: unPaidInvoicesCount,
+    },
+    // {
+    //   text: "Withdrawal Requests",
+    //   number: 75000,
+    // },
+    // {
+    //   text: "Failed Transactions",
+    //   number: 6,
+    // },
+  ], [paidInvoicesCount, unPaidInvoicesCount]);
+  
+
 
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
@@ -73,9 +114,9 @@ const Finance = () => {
           </HStack>
 
           {currentSubNav === "paid" ? (
-            <Paid />
+            <Paid paidInvoices={paidInvoices}/>
           ) : (
-            currentSubNav === "unpaid" && <Received />
+            currentSubNav === "unpaid" && <Received unPaidInvoices={unPaidInvoices}/>
           )}
         </Wrapper>
 
@@ -249,21 +290,4 @@ const SubNavItem = ({ title, isCurrent, handleClick }) => (
   </Button>
 );
 
-const cards_data = [
-  {
-    text: "Revenue",
-    number: 0,
-  },
-  {
-    text: "Payables",
-    number: 0,
-  },
-  // {
-  //   text: "Withdrawal Requests",
-  //   number: 75000,
-  // },
-  {
-    text: "Failed Transactions",
-    number: 6,
-  },
-];
+

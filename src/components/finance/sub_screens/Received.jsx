@@ -8,7 +8,7 @@ import EarningServices from "../../../utils/services/EarningServices";
 import CInput from "../../general/Input";
 import { toastProps } from "../../../utils/Helper";
 
-const Received = () => {
+const Received = ({ unPaidInvoices }) => {
   const toast = useToast();
 
   const [earnings, setEarnings] = useState([]);
@@ -17,23 +17,21 @@ const Received = () => {
   const [stateLoading, setStateLoading] = useState(true);
 
   useEffect(() => {
-    EarningServices.fetchRequestEarnings().then((response) => {
-      let arr = [];
-      response.forEach((element) => {
-        const unpaidEarningsObj = {
-          fullname:
-            element?.owner?.first_name + " " + element?.owner?.last_name || "",
-          amount: element?.amount || 0,
-          createdAt: element?.created_at || "",
-          id: element?.id,
-        };
-        arr.push(unpaidEarningsObj);
-      });
-      setEarnings(arr);
-      setFilterUnpaidEarnings(arr);
-      setStateLoading(false);
+    let arr = [];
+    unPaidInvoices.forEach((element) => {
+      const unpaidEarningsObj = {
+        fullname:
+          element?.owner?.first_name + " " + element?.owner?.last_name || "",
+        amount: element?.amount || 0,
+        createdAt: element?.created_at || "",
+        id: element?.id,
+      };
+      arr.push(unpaidEarningsObj);
     });
-  }, []);
+    setEarnings(arr);
+    setFilterUnpaidEarnings(arr);
+    setStateLoading(false);
+  }, [unPaidInvoices]);
 
   const handleConfirm = async (r) => {
     setStateLoading(true);
