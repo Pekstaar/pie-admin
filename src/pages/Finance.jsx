@@ -17,21 +17,32 @@ const Finance = () => {
   const [unPaidInvoicesCount, setUnPaidInvoicesCount] = useState([]);
   const [stateLoading, setStateLoading] = useState(true);
 
+  const fetchUnpaid = () => {
+    // Unpaid invoices
+    EarningServices.fetchRequestEarnings().then((response) => {
+      setUnPaidInvoices(response);
+      setUnPaidInvoicesCount(
+        response.reduce((acc, obj) => (acc += parseInt(obj.amount)), 0)
+      );
+      setStateLoading(false);
+    });
+  };
+
   useEffect(() => {
     // Paid invoices
     EarningServices.fetchEarnings().then((response) => {
       setPaidInvoices(response.filter((data) => data.status === 1));
-      setPaidInvoicesCount(response.reduce((acc, obj) => obj.status === 1 ? acc += parseInt(obj.amount) : acc, 0));
+      setPaidInvoicesCount(
+        response.reduce(
+          (acc, obj) =>
+            obj.status === 1 ? (acc += parseInt(obj.amount)) : acc,
+          0
+        )
+      );
       setStateLoading(false);
     });
 
-    // Unpaid invoices
-    EarningServices.fetchRequestEarnings().then((response) => {
-      setUnPaidInvoices(response);
-      setUnPaidInvoicesCount(response.reduce((acc, obj) => acc += parseInt(obj.amount), 0));
-      setStateLoading(false);
-    });
-
+    fetchUnpaid();
   }, []);
 
   const bookingsByProduct = useMemo(
@@ -65,26 +76,26 @@ const Finance = () => {
   );
 
   const cards_data = useMemo(
-    () =>  [
-    {
-      text: "Paid",
-      number: paidInvoicesCount,
-    },
-    {
-      text: "Unpaid",
-      number: unPaidInvoicesCount,
-    },
-    // {
-    //   text: "Withdrawal Requests",
-    //   number: 75000,
-    // },
-    // {
-    //   text: "Failed Transactions",
-    //   number: 6,
-    // },
-  ], [paidInvoicesCount, unPaidInvoicesCount]);
-  
-
+    () => [
+      {
+        text: "Paid",
+        number: paidInvoicesCount,
+      },
+      {
+        text: "Unpaid",
+        number: unPaidInvoicesCount,
+      },
+      // {
+      //   text: "Withdrawal Requests",
+      //   number: 75000,
+      // },
+      // {
+      //   text: "Failed Transactions",
+      //   number: 6,
+      // },
+    ],
+    [paidInvoicesCount, unPaidInvoicesCount]
+  );
 
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
@@ -117,9 +128,15 @@ const Finance = () => {
           </HStack>
 
           {currentSubNav === "paid" ? (
-            <Paid paidInvoices={paidInvoices} loading={stateLoading}/>
+            <Paid paidInvoices={paidInvoices} loading={stateLoading} />
           ) : (
-            currentSubNav === "unpaid" && <Received unPaidInvoices={unPaidInvoices} loading={stateLoading}/>
+            currentSubNav === "unpaid" && (
+              <Received
+                unPaidInvoices={unPaidInvoices}
+                loading={stateLoading}
+                refetch={() => fetchUnpaid()}
+              />
+            )
           )}
         </Wrapper>
 
@@ -292,5 +309,3 @@ const SubNavItem = ({ title, isCurrent, handleClick }) => (
     {title}
   </Button>
 );
-
-

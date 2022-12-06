@@ -16,12 +16,15 @@ async function fetchRequestEarnings() {
   return res.data;
 }
 
-async function confirmPaymentRequest(owner) {
+async function confirmPaymentRequest(id) {
   setAuthToken(AxiosUtility);
 
-  const res = await AxiosUtility.patch("admins/api/earnings/request/update", {
-    owner,
-  });
+  const res = await AxiosUtility.patch(
+    "admins/api/earnings/request/update/" + id + "/",
+    {
+      status: 2,
+    }
+  );
 
   return res.data;
 }

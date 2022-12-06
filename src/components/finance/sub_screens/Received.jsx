@@ -1,14 +1,15 @@
-import { ConfigProvider, Table } from "antd";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { ConfigProvider, Popconfirm, Table } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { Box, HStack, Text, useToast } from "@chakra-ui/react";
 import _ from "lodash";
 import { IoSearchOutline } from "react-icons/io5";
+import { toastProps } from "../../../utils/Helper";
 import EarningServices from "../../../utils/services/EarningServices";
 import CInput from "../../general/Input";
-import { toastProps } from "../../../utils/Helper";
 
-const Received = ({ unPaidInvoices, loading }) => {
+const Received = ({ unPaidInvoices, loading, refetch }) => {
   const toast = useToast();
 
   const [earnings, setEarnings] = useState([]);
@@ -16,7 +17,7 @@ const Received = ({ unPaidInvoices, loading }) => {
   const [searchValue, setSearchValue] = useState("");
   // const [stateLoading, setStateLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchUnpaidEarnings = async () => {
     let arr = [];
     unPaidInvoices.forEach((element) => {
       const unpaidEarningsObj = {
@@ -30,11 +31,16 @@ const Received = ({ unPaidInvoices, loading }) => {
     });
     setEarnings(arr);
     setFilterUnpaidEarnings(arr);
-  }, [unPaidInvoices]);
+  };
+
+  useEffect(() => {
+    fetchUnpaidEarnings();
+  }, []);
 
   const handleConfirm = async (r) => {
     try {
       await EarningServices.confirmPaymentRequest(r?.id);
+      refetch();
 
       toast({
         ...toastProps,
@@ -95,12 +101,19 @@ const Received = ({ unPaidInvoices, loading }) => {
       render: (_, n) => {
         return (
           <Box className="flex gap-4">
-            <button
-              className="bg-primary_yellow rounded-md items-center flex gap-2 px-5 py-2"
-              onClick={() => handleConfirm(n)}
+            <Popconfirm
+              placement="top"
+              title={`Are you sure you want to confirm payment?`}
+              onConfirm={() => handleConfirm(n)}
+              okText="Yes"
+              cancelText="No"
+              okButtonProps={{ type: "default" }}
+              cancelButtonProps={{ type: "link", color: "red" }}
             >
-              <Text fontWeight={"semibold"}>Confirm</Text>
-            </button>
+              <button className="bg-primary_yellow rounded-md items-center flex gap-2 px-5 py-2">
+                <Text fontWeight={"semibold"}>Confirm</Text>
+              </button>
+            </Popconfirm>
           </Box>
         );
       },
