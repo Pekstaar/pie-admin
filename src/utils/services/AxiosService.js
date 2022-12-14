@@ -2,6 +2,7 @@ import axios from "axios";
 
 // export const ENDPOINT = "http://localhost:5500";
 export const ENDPOINT = "https://api.okapy.world/";
+// export const ENDPOINT = "https://apidev.okapy.world/";
 const BASE_URL = ENDPOINT;
 
 const AxiosUtility = axios.create({

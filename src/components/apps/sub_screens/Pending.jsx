@@ -88,7 +88,7 @@ const Pending = ({ handleView }) => {
       render: (_, n) => {
         return (
           <Box className="flex gap-6 justify-start">
-            <ActionButton handleClick={() => handleView(n?.uid)}>
+            <ActionButton handleClick={() => handleView(n?.id)}>
               <FiEye />
             </ActionButton>
           </Box>

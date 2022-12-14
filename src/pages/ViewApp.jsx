@@ -18,17 +18,16 @@ const ViewApp = () => {
   const [current, setCurrent] = React.useState({});
   const [user, setUser] = React.useState({});
 
-  let userId = location[location?.length - 1];
+  let userId = parseInt(location[location?.length - 1]);
   React.useEffect(() => {
     UserServices.fetchUsers().then((response) => {
-      setUser(response.find((user) => user.id === parseInt(userId)));
+      setUser(response.find((user) => parseInt(user.id) === parseInt(userId)));
     });
 
     // BookingServices.ownersBookings(userFirstName).then((response) => {
     //   setUserBookings(response);
     // });
   }, [userId]);
-
 
   const handleOpenModal = React.useCallback(() => {
     setOpenModal(true);
@@ -94,8 +93,8 @@ const ViewApp = () => {
                       is_driver: user?.is_driver,
                       email: user?.email,
                       phone_number: user?.phonenumber,
-                    })
-                    handleOpenModal()
+                    });
+                    handleOpenModal();
                   }}
                 >
                   <GrEdit />
@@ -127,8 +126,8 @@ const ViewApp = () => {
                     {user?.is_admin
                       ? "Admin"
                       : user?.is_driver
-                        ? "Driver"
-                        : "User"}
+                      ? "Driver"
+                      : "User"}
                   </Text>
                   <Text>Nairobi CBD, Nairobi</Text>
                   <Text>{user?.email}</Text>
@@ -153,8 +152,8 @@ const ViewApp = () => {
                       is_driver: user?.is_driver,
                       email: user?.email,
                       phone_number: user?.phonenumber,
-                    })
-                    handleOpenModal()
+                    });
+                    handleOpenModal();
                   }}
                 >
                   <GrEdit />
@@ -233,10 +232,7 @@ const ViewApp = () => {
         current={current}
       />
 
-      <RejectModal
-        handleCloseModal={handleCloseModal}
-        openModal={openModal}
-      />
+      <RejectModal handleCloseModal={handleCloseModal} openModal={openModal} />
     </>
   );
 };
