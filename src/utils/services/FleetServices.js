@@ -36,12 +36,20 @@ async function fetchVehicle(id) {
   return res.data;
 }
 
+async function DeleteVehicle(id) {
+  setAuthToken(AxiosUtility);
+  const res = await AxiosUtility.post("/vehicles/api/delete/vehicle", { id });
+
+  return res.data;
+}
+
 const FleetServices = {
   fetchVehicles,
   fetchDriversVehicles,
   updateDriverVehicle,
   fetchVehicleByParams,
   fetchVehicle,
+  DeleteVehicle,
 };
 
 export default FleetServices;

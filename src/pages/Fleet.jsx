@@ -1,7 +1,7 @@
-import { Box, Button, Center, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, Center, HStack, Text, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "../components/general/BreadCrumb";
-import { ConfigProvider, Table } from "antd";
+import { ConfigProvider, Popconfirm, Table } from "antd";
 import Wrapper from "../components/general/Wrapper";
 
 import _ from "lodash";
@@ -12,14 +12,17 @@ import { useNavigate, Link } from "react-router-dom";
 import { Lorry } from "../assets/svg";
 import CInput from "../components/general/Input";
 import FleetServices from "../utils/services/FleetServices";
+import { toastProps } from "../utils/Helper";
 
 const Fleet = () => {
   const navigate = useNavigate();
+  const toast = useToast();
+
   const [vehicles, setVehicles] = useState([]);
   const [filteredVehicles, setFilteredVehicles] = useState([]);
   const [search, setSearch] = useState("");
   const [stateLoading, setStateLoading] = useState(true);
-
+  const [loading, setLoading] = useState(false);
 
   const handleViewFleet = (fleet) => {
     navigate(`${fleet?.id}`, fleet?.id);
@@ -31,16 +34,17 @@ const Fleet = () => {
       response.forEach((element) => {
         const fleetObj = {
           regNumber: element?.reg_number || "",
-          fullname: element?.owner?.first_name + " " + element?.owner?.last_name || "",
+          fullname:
+            element?.owner?.first_name + " " + element?.owner?.last_name || "",
           insuranceExpiry: element?.insurance_expiry || "",
           id: element?.id,
         };
-        arr.push(fleetObj)
-      })
+        arr.push(fleetObj);
+      });
       setVehicles(arr);
       setFilteredVehicles(arr);
       setStateLoading(false);
-    })
+    });
   }, []);
 
   const handleSearch = (arr, cond) => {
@@ -57,12 +61,34 @@ const Fleet = () => {
     else return vehicles;
   };
 
+  const handleDeleteVehicle = async (id) => {
+    setLoading(true);
+    try {
+      await FleetServices.DeleteVehicle(id);
+
+      toast({
+        ...toastProps,
+        title: "Success!",
+        description: "Vehicle deleted!",
+        status: "success",
+      });
+      setLoading(false);
+    } catch (error) {
+      toast({
+        ...toastProps,
+        title: "Error!",
+        description: "Vehicle not deleted. An error occured! " + error?.message,
+        status: "error",
+      });
+      console.log("DELETE VEHICLE ERROR:", error);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     setFilteredVehicles(handleSearch(vehicles, search));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, vehicles]);
-
-
 
   const columns = [
     {
@@ -95,14 +121,26 @@ const Fleet = () => {
               <FiEye />
             </ActionButton>
 
-            <ActionButton>
-              <RiDeleteBin5Line />
-            </ActionButton>
+            <Popconfirm
+              placement="top"
+              title={`Are you sure you want to Delete ` + n?.regNumber}
+              onConfirm={() => handleDeleteVehicle(n?.id)}
+              okText="Yes"
+              cancelText="No"
+              okButtonProps={{ type: "default" }}
+              cancelButtonProps={{ type: "link", color: "red" }}
+            >
+              <Box>
+                <ActionButton>
+                  <RiDeleteBin5Line />
+                </ActionButton>
+              </Box>
+            </Popconfirm>
           </Box>
         );
       },
     },
-  ]
+  ];
 
   return (
     <Box p={"3"} maxH={"91%"} overflowY={"scroll"}>
@@ -141,7 +179,7 @@ const Fleet = () => {
           <Box>
             <Table
               rowKey={(data) => data.id}
-              loading={stateLoading}
+              loading={loading || stateLoading}
               pagination={{
                 defaultPageSize: 15,
                 showSizeChanger: true,

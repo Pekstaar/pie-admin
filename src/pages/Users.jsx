@@ -18,7 +18,7 @@ import BreadCrumb from "../components/general/BreadCrumb";
 import CustomModal from "../components/general/CustomModal";
 import CInput, { CSelect } from "../components/general/Input";
 import PrimaryButton from "../components/general/PrimaryButton";
-import { ConfigProvider, Table } from "antd";
+import { ConfigProvider, Popconfirm, Table } from "antd";
 import { FiEye } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import Wrapper from "../components/general/Wrapper";
@@ -75,6 +75,30 @@ const Users = () => {
       setStateLoading(false);
     });
   }, []);
+
+  const handleDeleteUser = async (id) => {
+    setLoading(true);
+    try {
+      await UserServices.deleteUser(id);
+
+      toast({
+        ...toastProps,
+        title: "Success!",
+        description: "Vehicle deleted!",
+        status: "success",
+      });
+      setLoading(false);
+    } catch (error) {
+      toast({
+        ...toastProps,
+        title: "Error!",
+        description: "Vehicle not deleted. An error occured! " + error?.message,
+        status: "error",
+      });
+      console.log("DELETE VEHICLE ERROR:", error);
+      setLoading(false);
+    }
+  };
 
   const columns = [
     {
@@ -137,9 +161,21 @@ const Users = () => {
               <FiEye />
             </ActionButton>
 
-            <ActionButton>
-              <RiDeleteBin5Line />
-            </ActionButton>
+            <Popconfirm
+              placement="top"
+              title={`Are you sure you want to Delete ` + n?.fullname}
+              onConfirm={() => handleDeleteUser(n?.id)}
+              okText="Yes"
+              cancelText="No"
+              okButtonProps={{ type: "default" }}
+              cancelButtonProps={{ type: "link", color: "red" }}
+            >
+              <Box>
+                <ActionButton>
+                  <RiDeleteBin5Line />
+                </ActionButton>
+              </Box>
+            </Popconfirm>
           </Box>
         );
       },

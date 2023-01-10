@@ -51,9 +51,9 @@ async function createDriver(data) {
   return res.data;
 }
 
-async function deleteUser() {
+async function deleteUser(id) {
   setAuthToken(AxiosUtility);
-  const res = await AxiosUtility.delete("/users/api/user/delete/");
+  const res = await AxiosUtility.delete("/users/api/user/delete/", { id });
 
   return res.data;
 }
