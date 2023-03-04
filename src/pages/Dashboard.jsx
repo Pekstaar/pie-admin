@@ -73,6 +73,20 @@ const Dashboard = () => {
     });
   }, []);
 
+
+  useEffect(() => {
+
+    const getUser = async () => {
+      const {email,first_name,last_name,phonenumber} = await AuthServices.getUser()
+      setProfile(email, first_name, last_name, phonenumber);
+    }
+
+    if (!user?.first_name) {
+      getUser()
+     
+   }
+  }, [user?.first_name]);
+
   useEffect(() => {
     // Setting up activities data
     setRequests(bookings.reduce((acc, obj) => obj.status >= 0 ? acc += 1 : acc, 0));
@@ -174,7 +188,7 @@ const Dashboard = () => {
     canceled
   ], [requests, picked, completed, canceled]);
 
-  console.log(bookingActivities)
+ 
 
   const bookingsByProduct = useMemo(
     () => ({
@@ -295,7 +309,7 @@ const Dashboard = () => {
   
   return (
     <Box p={"3"} className="max-h-[calc(100%-80px)]" overflowY={"scroll"}>
-      <Breadcrumb name={user?.first_name+" "+user?.last_name} />
+      <Breadcrumb name={user?.first_name||"Admin"+" "+user?.last_name||""} />
 
       <ActivitiesCard percentageCompleted={totalBookingPercentage} bookingActivities={bookingActivities}/>
 
