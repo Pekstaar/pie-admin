@@ -7,9 +7,16 @@ const useUserStore = create(
       (set) => ({
         user: {
           token: null,
+          email: null,
+          first_name: null,
+          last_name: null,
+          phonenumber:null
         },
         setToken: (tkn) =>
           set((state) => ({ user: { ...state.user, token: tkn } })),
+        
+        setProfile: (email,first_name,last_name,phonenumber) =>
+          set((state) => ({ user: { ...state.user, email,first_name,last_name,phonenumber} })),
       }),
       { name: "okapy_user" }
     )
@@ -17,3 +24,6 @@ const useUserStore = create(
 );
 
 export default useUserStore;
+// setProfile: (email,first_name,last_name,phonenumber) =>
+// set((state) => ({ user: { ...state.user, token: tkn } })),
+// })

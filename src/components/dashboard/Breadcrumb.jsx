@@ -1,11 +1,11 @@
 import { Box, Text } from "@chakra-ui/react";
 import React from "react";
 
-const Breadcrumb = () => {
+const Breadcrumb = ({name}) => {
   return (
     <Box p={"1"}>
       <Text fontWeight={"semibold"} className={"text-xl"}>
-        Hi Sam,
+        Hi {name},
       </Text>
 
       <Text className={"text-sm"}>Have a look at today’s activities</Text>

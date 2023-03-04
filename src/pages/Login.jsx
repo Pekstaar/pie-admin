@@ -11,6 +11,7 @@ import useUserStore from "../utils/zustand/Store";
 const Login = () => {
   const toast = useToast();
   const setToken = useUserStore((state) => state.setToken);
+  const setProfile = useUserStore((state) => state.setProfile);
 
   const [state, setState] = useState({
     emailPhone: "",
@@ -66,6 +67,10 @@ const Login = () => {
 
       setToken(response?.key);
 
+      // get user
+      const {email,first_name,last_name,phonenumber} = await AuthServices.getUser()
+      setProfile(email, first_name, last_name, phonenumber);
+      
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -79,6 +84,7 @@ const Login = () => {
       console.log("LOGIN ERROR!:", error);
     }
   };
+
   return (
     <Center className="h-screen bg-slate-100 ">
       <form

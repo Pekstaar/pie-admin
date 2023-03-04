@@ -10,8 +10,13 @@ import Breadcrumb from "../components/dashboard/Breadcrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
 import BookingService from "../utils/services/BookingServices";
+import useUserStore from "../utils/zustand/Store";
 
 const Dashboard = () => {
+
+  const user = useUserStore((state) => state.user);
+
+
   // Bar chart data
   const [bookings, setBookings] = useState([]);
   const [barChartMonths, setBarChartMonths] = useState([]);
@@ -32,6 +37,8 @@ const Dashboard = () => {
   const [vehiclesTypes, setVehiclesType] = useState("");
   const [createdBookingPerVehicleType, setCreatedBookingPerVehicleType] = useState("");
   const [completedBookingPerVehicleType, setCompletedBookingPerVehicleType] = useState("");
+
+
 
   // const [loading, setLoading] = useState(true);
 
@@ -288,7 +295,7 @@ const Dashboard = () => {
   
   return (
     <Box p={"3"} className="max-h-[calc(100%-80px)]" overflowY={"scroll"}>
-      <Breadcrumb />
+      <Breadcrumb name={user?.first_name+" "+user?.last_name} />
 
       <ActivitiesCard percentageCompleted={totalBookingPercentage} bookingActivities={bookingActivities}/>
 
