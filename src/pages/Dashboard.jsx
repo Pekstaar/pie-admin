@@ -1,5 +1,6 @@
+/* eslint-disable no-useless-concat */
 import { Box, HStack, Text } from "@chakra-ui/react";
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { BarChart } from "../components/charts/Bar";
 import { Doughnat } from "../components/charts/Doughnat";
 // import { Doughnat } from "../components/charts/Doughnat";
@@ -9,12 +10,14 @@ import ActivitiesCard from "../components/dashboard/ActivitiesCard";
 import Breadcrumb from "../components/dashboard/Breadcrumb";
 import Table from "../components/general/Table";
 import Wrapper from "../components/general/Wrapper";
+import AuthServices from "../utils/services/AuthServices";
 import BookingService from "../utils/services/BookingServices";
 import useUserStore from "../utils/zustand/Store";
 
 const Dashboard = () => {
 
   const user = useUserStore((state) => state.user);
+  const setProfile = useUserStore((state) => state.setProfile);
 
 
   // Bar chart data
@@ -85,6 +88,7 @@ const Dashboard = () => {
       getUser()
      
    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.first_name]);
 
   useEffect(() => {
